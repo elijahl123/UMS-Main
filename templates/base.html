@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <meta name="description"
+          content="Untitled Management Software is a software I created to help manage class information and finances.">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block header %}
+        <title>Untitled Management Software</title>
+    {% endblock %}
+</head>
+
+<body onload="$('.toast').toast('show'); $('#no-school').modal('show');">
+
+{% if messages %}
+    <div class="toast-container position-fixed" style="z-index: 100000;bottom: 1rem;right: 1rem;">
+        {% for message in messages %}
+            <div role="alert" data-bs-autohide="false" class="toast fade" id="message_{{ forloop.counter }}">
+                <div class="toast-header">
+                    <img class="me-2" style="width: 30px;height: 30px;" src="{% static 'img/UMSLogo.svg' %}"
+                         alt="Logo"/>
+                    <strong class="me-auto">UMS</strong>
+                    <button class="btn-close ms-2 mb-1 close" data-bs-dismiss="toast">
+
+                    </button>
+                </div>
+                <div role="alert" class="toast-body bg-white"
+                     style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; font-weight: bold">
+                    <span>{{ message|safe }}</span>
+                </div>
+            </div>
+            </div>
+        {% endfor %}
+{% endif %}
+
+{% if not request.user.school %}
+    <div role="dialog" tabindex="-1" class="modal fade show" id="no-school"
+         style="background-color: rgba(0, 0, 0, 0.4)">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" style="color: var(--main-color);font-weight: bold;">Add School</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color: slategray;">It appears you have not yet chosen your school. Please select your
+                        school
+                        from the list below. If your school is not present, please contact the administrator at
+                        <a href="mailto:elijah.kane.1972@gmail.com" style="color: blue">elijah.kane.1972@gmail.com</a>.
+                    </p>
+                    <form action="{% url 'add_school' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <select class="form-select form-select-lg" name="school"
+                                style="border-width: 3px;margin-bottom: 1rem;">
+                            {% for school in schools %}
+                                <option value="{{ school.id }}">{{ school.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-success" type="submit" style="width: 100%;">Add School</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" type="button" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="container-fluid d-flex" style="padding: 0;height: 100vh;">
+    <div class="row g-0 d-flex flex-column flex-grow-1 flex-nowrap flex-lg-row" style="width: 100vw;min-width: 0;">
+        <div class="col-12 col-lg-5 col-xl-4 col-xxl-3 sticky-top">
+            <div class="d-flex flex-column container-fluid" style="height: 100%;background: #f7f7f7;max-height: 100vh;">
+                <div class="row g-0">
+                    <div class="col d-flex justify-content-between align-items-center"
+                         style="font-family: Poppins, sans-serif;padding: 1rem;">
+                        <div class="d-flex align-items-center">
+                            {% if request.user.school.logo %}
+
+                                <img src="{{ request.user.school.logo.url }}" style="height: 5rem;margin-right: 1rem;">
+                            {% else %}
+                                <img src="{% static 'img/UMSLogo.svg' %}/" style="height: 5rem;margin-right: 1rem;"
+                                     alt="UMS Logo">
+                            {% endif %}
+                            <h3 class="d-none d-lg-block" style="color: var(--main-color);font-weight: bold;margin: 0;">
+                                Untitled Management Software</h3>
+                            <h1 class="display-1 d-lg-none"
+                                style="color: var(--main-color);font-weight: bold;margin: 0;">UMS</h1>
+                        </div>
+                        <button class="btn btn-lg d-flex d-lg-none btn-ums" type="button" style="margin-right: 1rem;"
+                                data-bs-toggle="collapse" data-bs-target="#navbar-collapse">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-0 flex-grow-1 collapse d-lg-flex" id="navbar-collapse" style="overflow: auto;">
+                    <div class="col" style="overflow: auto;padding: 1rem;padding-top: 0;height: 100%;">
+                        <div class="d-flex justify-content-center sticky-top"
+                             style="padding-top: 10px;padding-bottom: 1.5rem;background: var(--secondary-color);margin-bottom: 10px;">
+                            <a class="btn btn-secondary btn-sm" role="button" style="font-weight: bold;"
+                               href="{% url 'account' %}">Account</a>
+                            <a class="btn btn-sm btn-transparent-secondary" role="button" style="margin-left: 10px;"
+                               href="{% url 'account_logout' %}">Log Out</a>
+                        </div>
+                        {% include 'snippets/sidenav-links.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-7 col-xl-8 col-xxl-9 flex-grow-1 overflow-auto">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

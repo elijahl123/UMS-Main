@@ -1,0 +1,75 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center main-container">
+        <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+            <div class="col-12 col-md-8"
+                 style="padding: 1rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <form class="d-flex flex-column" style="padding: 1rem;" method="post" enctype="multipart/form-data"
+                      action="{% url 'account_signup' %}">
+                {% csrf_token %}
+                    <h1 class="display-5 text-center"
+                        style="color: var(--main-color);font-weight: bold;">{% trans "Sign Up" %}</h1>
+                {% get_providers as socialaccount_providers %}
+                    {% if socialaccount_providers %}
+                        <p class="text-center" style="color: slategray;">
+                            <p class="text-center">Already have an account? Then please
+                                <a href="{% url 'account_login' %}" style="color: blue;">Sign In</a>
+                                or use a Third Party Account
+                            </p>
+                        </p>
+                        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                        <div class="d-flex justify-content-center align-items-center position-relative"
+                             style="margin: 1rem 0;">
+                            <hr style="color: slategray;height: 3px;width: 100%;">
+                            <span class="position-absolute"
+                                  style="padding: 0 15px;background: white;color: slategray;font-weight: bold;">Or</span>
+                        </div>
+                    {% endif %}
+                    <div class="form-floating" style="margin-bottom: 1rem;">
+                        <input class="form-control" type="email" id="id_email" name="email" placeholder=" "
+                               style="font-weight: bold;border-width: 3px;" {% if form.email.value %}value="{{ form.email.value }}{% endif %}">
+                        <label class="form-label" for="id_email">Email Address</label>
+                    </div>
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    <div class="form-floating" style="margin-bottom: 1rem;">
+                        <input class="form-control" type="text" id="id_username" name="username" placeholder=" "
+                               style="border-width: 3px;border-style: solid;font-weight: bold" {% if form.username.value %}value="{{ form.username.value }}{% endif %}">
+                        <label class="form-label" for="id_username">Username</label>
+                    </div>
+                {% for error in form.username.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    <div class="form-floating" style="margin-bottom: 1rem;">
+                        <input class="form-control" type="password" id="id_password1" placeholder=" "
+                               style="border-width: 3px;" name="password1">
+                        <label class="form-label" for="id_password1">Password</label>
+                    </div>
+                {% for error in form.password1.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    <div class="form-floating" style="margin-bottom: 1rem;">
+                        <input class="form-control" type="password" id="id_password2" placeholder=" "
+                               style="border-width: 3px;" name="password2">
+                        <label class="form-label" for="id_password2">Retype Password</label>
+                    </div>
+                {% for error in form.password2.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    {{ form.non_field_errors }}
+                    <button class="btn btn-success btn-lg" type="submit" style="width: 100%;margin-bottom: 10px;">Sign
+                        Up
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

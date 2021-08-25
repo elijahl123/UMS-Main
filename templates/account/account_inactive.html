@@ -1,0 +1,17 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block content %}
+<div class="container d-flex flex-column justify-content-center align-items-center main-container">
+    <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+        <div class="col-12 col-md-6" style="padding: 2rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+            <i class="fas fa-times" style="text-align: center;width: 100%;font-size: 3rem;margin-bottom: 1rem;color: var(--main-color);"></i>
+            <h1 style="font-weight: bold;color: var(--main-color);text-align: center;">Account Inactive<br /></h1>
+            <p class="lead" style="text-align: center;color: slategray;">This account is inactive.<br /></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

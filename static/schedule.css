@@ -1,0 +1,23 @@
+.calendar-dates {
+    border-right: 2px solid var(--main-accent);
+}
+
+.calendar-dates:last-child {
+    border: none;
+}
+
+.calendar-times > .col {
+    border-bottom: 2px solid var(--main-accent);
+}
+
+.calendar-times:nth-last-child(2) > .col {
+    border: none;
+}
+
+.coursetime::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.coursetime::-webkit-scrollbar-track {
+    background-color: transparent;
+}

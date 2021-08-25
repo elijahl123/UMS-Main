@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    <title>Class Schedule</title>
+    <link rel="stylesheet" href="{% static 'schedule.css' %}">
+    <script src="{% static 'js/schedule.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid d-flex flex-column" style="padding: 1rem;">
+            <div class="row g-0" style="margin-bottom: 1rem;">
+                <div class="col d-flex flex-column align-items-center"
+                     style="padding: 1rem;border: 3px solid var(--main-accent);border-radius: 8px;">
+                    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Class
+                        Schedule</h1>
+                    <p style="text-align: center;color: slategray;">Here you can view the courses you&#39;re enrolled in
+                        for the semester</p>
+                    <a class="btn btn-transparent-ums" role="button" href="{% url 'manage_schedule' %}">Manage</a>
+                </div>
+            </div>
+            <div class="row g-0 flex-grow-1 overflow-auto"
+                 style="height: 100%;border-radius: 8px;border-style: solid;border-color: var(--main-accent);">
+                <div class="col" style="min-width: 1000px;position: relative;">
+                    <div class="row g-0 calendar-times">
+                        <div class="col" style="height: 80px;"></div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">9am</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">10am</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">11am</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">12pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">1pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">2pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">3pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">4pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">5pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">6pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">7pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">8pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0 calendar-times">
+                        <div class="col d-flex align-items-center" style="height: 100px;">
+                            <span style="margin-left: 1rem;">9pm</span>
+                        </div>
+                    </div>
+                    <div class="row g-0" style="height: 100%;position: absolute;inset: 0;">
+                        <div class="col d-flex flex-column align-items-center calendar-dates"
+                             style="flex: 0 0 auto;width: 105px;"></div>
+                        {% for name, day in weekdays %}
+                            <div class="col d-flex flex-column align-items-center calendar-dates"
+                                 style="flex: 0 0 auto;width: calc(100% / 7 - 15px);position: relative;">
+                                <span style="margin-top: 1rem;font-size: 25px;color: slategray;">{{ name }}</span>
+                                {% for class in coursetimes %}
+                                    {% if day in class.weekdays %}
+                                        <a href="#" data-start-time="{{ class.start_time|time:'H:i' }}"
+                                           data-end-time="{{ class.end_time|time:'H:i' }}" data-bs-toggle="modal"
+                                           data-bs-target="#date-event-{{ class.id }}"  role="button"
+                                           class="d-flex flex-column justify-content-center align-items-center overflow-auto btn btn-{{ class.color }} coursetime"
+                                           style="width: 95%;position: absolute;padding: 0.5rem;margin-top: 80px;">
+                                            <span>{{ class.course.name }}</span>
+                                            <span>{{ class.location|default:'Online' }}<br/></span>
+                                        </a>
+
+                                        {% include 'snippets/coursetime_modal.html' with class=class %}
+
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

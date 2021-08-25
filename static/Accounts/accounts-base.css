@@ -1,0 +1,15 @@
+.main-container {
+  min-height: calc(100vh - 80px);
+  padding: 1rem;
+}
+
+.navbar-brand {
+  padding: .3125rem;
+  border-radius: 8px;
+  transition-duration: 0.2s;
+  transition-property: background;
+}
+
+.navbar-brand:hover {
+  background: whitesmoke;
+}

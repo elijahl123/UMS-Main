@@ -1,0 +1,160 @@
+<form method="post" enctype="multipart/form-data"
+      action="{% url 'add_coursetime' %}">
+    {% csrf_token %}
+    <input type="hidden" name="user" value="{{ request.user.id }}">
+    <input type="hidden" name="course" value="{{ course.id }}">
+    <div class="d-flex flex-column" style="margin-bottom: 1rem;">
+        <label class="form-label"
+               style="font-weight: bold;font-size: 20px;margin: 0;">Weekday</label>
+        <small class="form-text" style="margin: 0 0 8px;">Choose
+            all that apply</small>
+        <div class="row justify-content-center g-0">
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Sunday
+                </button>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Monday
+                </button>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Tuesday
+                </button>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Wednesday
+                </button>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Thursday
+                </button>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Friday
+                </button>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3" style="padding: 5px;">
+                <button class="btn btn-lg d-flex flex-column justify-content-center align-items-center w-100 h-100 btn-transparent-primary weekday-choices-{{ course.id }}"
+                        type="button"
+                        style="padding: 1rem;font-weight: bold"
+                        onclick="addDate(this, {{ course.id }})"
+                        data-checked="false">
+                    <i class="far fa-calendar-alt"
+                       style="font-size: 25px;margin-bottom: 10px;"></i>Saturday
+                </button>
+            </div>
+        </div>
+        <input type="hidden" name="weekday" value="">
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <label class="form-label"
+               style="font-weight: bold;font-size: 20px;">Start
+            Time</label>
+        <input class="form-control form-control-lg" type="time"
+               name="start_time" min="09:00" max="21:00"
+               style="border-width: 3px;" required/>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <label class="form-label"
+               style="font-weight: bold;font-size: 20px;">End
+            Time</label>
+        <input class="form-control form-control-lg" type="time"
+               name="end_time" min="09:00" max="21:00"
+               style="border-width: 3px;" required/>
+    </div>
+    <div class="d-flex flex-column" style="margin-bottom: 1rem;">
+        <label class="form-label" for="id_location"
+               style="font-weight: bold;font-size: 20px;">Location</label>
+        <small class="form-text" style="margin: 0 0 8px;">Leave
+            blank if class is Online</small>
+        <textarea class="form-control form-control-lg" id="id_location"
+                  style="border-width: 3px;" name="location"></textarea>
+    </div>
+    <div class="d-flex flex-column" style="margin-bottom: 1rem;">
+        <label class="form-label"
+               style="font-weight: bold;font-size: 20px;">Color</label>
+        <div class="d-flex flex-column flex-lg-row btn-group">
+            <input type="radio" id="color-blue-{{ course.id }}" class="btn-check"
+                   name="color" value="primary" checked
+                   style="font-weight: bold;"/>
+            <label class="form-label btn-outline-primary btn btn-lg"
+                   for="color-blue-{{ course.id }}"
+                   style="font-weight: bold;">Blue</label>
+            <input type="radio" id="color-gray-{{ course.id }}" class="btn-check"
+                   name="color" value="secondary"
+                   style="font-weight: bold;"/>
+            <label class="form-label btn-outline-secondary btn btn-lg"
+                   for="color-gray-{{ course.id }}"
+                   style="font-weight: bold;">Gray</label>
+            <input type="radio" id="color-red-{{ course.id }}" class="btn-check"
+                   name="color" value="danger"
+                   style="font-weight: bold;"/>
+            <label class="form-label btn-outline-danger btn btn-lg"
+                   for="color-red-{{ course.id }}"
+                   style="font-weight: bold;">Red</label>
+            <input type="radio" id="color-green-{{ course.id }}" class="btn-check"
+                   name="color" value="success"
+                   style="font-weight: bold;"/>
+            <label class="form-label btn-outline-success btn btn-lg"
+                   for="color-green-{{ course.id }}"
+                   style="font-weight: bold;">Green</label>
+            <input type="radio" id="color-turquoise-{{ course.id }}" class="btn-check"
+                   name="color" value="info"
+                   style="font-weight: bold;"/>
+            <label class="form-label btn-outline-info btn btn-lg"
+                   for="color-turquoise-{{ course.id }}" style="font-weight: bold;">Turquoise</label>
+            <input type="radio" id="color-yellow-{{ course.id }}" class="btn-check"
+                   name="color" value="warning"
+                   style="font-weight: bold;"/>
+            <label class="form-label btn-outline-warning btn btn-lg"
+                   for="color-yellow-{{ course.id }}"
+                   style="font-weight: bold;">Yellow</label>
+        </div>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <label class="form-label"
+               style="font-weight: bold;font-size: 20px;">Zoom
+            Link</label>
+        <textarea class="form-control form-control-lg"
+                  style="border-width: 3px;" name="link"></textarea>
+    </div>
+    <button class="btn btn-success btn-lg" type="submit"
+            style="width: 100%;">Submit
+    </button>
+</form>

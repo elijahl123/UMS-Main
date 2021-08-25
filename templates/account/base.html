@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description"
+          content="Untitled Management Software is a software I created to help manage class information and finances.">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="icon" type="image/png" sizes="290x290" href="{% static 'img/UMSLogo.png' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:400,600&amp;display=swap">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="{% static 'Accounts/accounts-base.css' %}">
+    <link rel="stylesheet" href="{% static 'Navigation-Clean.css' %}">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>{% block head_title %}{% endblock %}</title>
+    {% block extra_head %}
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean sticky-top" style="padding: 16px;">
+        <div class="container-fluid">
+            <a class="navbar-brand d-none d-lg-block" href="{% url 'account' %}" style="color: var(--main-color); font-weight: bold">Untitled
+                Management
+                Software</a>
+            <a class="navbar-brand d-lg-none" href="{% url 'account' %}" style="color: var(--main-color); font-weight: bold">UMS</a>
+            <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+                <span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse align-items-center" id="navcol-1">
+                {% if messages %}
+                    <ul class="navbar-nav mx-auto">
+                        {% for message in messages %}
+                            <li class="nav-item" style="padding: 5px;">
+                                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert" style="margin: 0; padding: 6px 12px">
+                                    <span>{{ message }}</span>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item" style="padding: 5px;text-align: center;">
+                            <a class="btn btn-secondary" role="button" href="{% url 'account' %}"
+                               style="font-weight: bold;">Account</a>
+                        </li>
+                        <li class="nav-item" style="padding: 5px;text-align: center;">
+                            <a class="btn btn-transparent-secondary" role="button" href="{% url 'account_logout' %}">Sign
+                                Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item" style="padding: 5px;text-align: center;">
+                            <a class="btn btn-secondary" role="button" href="{% url 'account_login' %}"
+                               style="font-weight: bold;">Log In</a>
+                        </li>
+                        <li class="nav-item" style="padding: 5px;text-align: center;">
+                            <a class="btn btn-transparent-secondary" role="button" href="{% url 'account_signup' %}">Sign
+                                Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+{% endblock %}
+{% block extra_body %}
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

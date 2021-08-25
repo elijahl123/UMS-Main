@@ -1,0 +1,33 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
+
+
+{% block content %}
+<div class="container d-flex flex-column justify-content-center align-items-center main-container">
+        <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+            <div class="col-12 col-md-6" style="padding: 1rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <h1 style="font-weight: bold;color: var(--main-color);text-align: center;">Confirm E-mail Address</h1>
+                {% if confirmation %}
+                {% user_display confirmation.email_address.user as user_display %}
+                <p class="lead" style="text-align: center;color: slategray;">
+                    Please confirm that <a href="mailto:{{ confirmation.email_address.email }}" style="color: var(--bs-blue);">{{ confirmation.email_address.email }}</a> is an e-mail address for user
+                </p>
+                <form class="d-flex justify-content-center" action="{% url 'account_confirm_email' confirmation.key %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <button class="btn btn-success btn-lg" type="submit" style="width: 100%;">Confirm</button>
+                </form>
+                {% else %}
+                {% url 'account_email' as email_url %}
+                <p class="lead" style="text-align: center;color: slategray;">
+                    This e-mail confirmation link expired or is invalid. Please &nbsp;<a style="color: var(--bs-blue)" href="{{ email_url }}">issue a new e-mail confirmation request</a>.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+<div role="dialog" tabindex="-1" class="modal fade" id="date-event-{{ class.id }}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"
+                    style="font-weight: bold;color: var(--main-color);">{{ class.course.name }} Course Time</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Title</p>
+                <p class="lead" style="font-weight: bold;text-align: left;">
+                    {{ class.course.title|default:'None' }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Class Time
+                </p>
+                <p class="lead" style="font-weight: bold;text-align: left;">
+                    {{ class.start_time|time:'g:i a' }}
+                    - {{ class.end_time|time:'g:i a' }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Location</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">
+                    {{ class.location|default:'Online' }}</p>
+                {% if class.link %}
+                <a href="{{ class.link }}" target="_blank" class="btn btn-primary">Go to Zoom Link</a>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'edit_coursetime' class.id %}?next={{ request.path }}" class="btn btn-transparent-success me-2">Edit</a>
+                <a href="#" class="btn btn-transparent-danger me-2">Delete</a>
+                <button class="btn btn-transparent-secondary" type="button"
+                        data-bs-dismiss="modal">Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

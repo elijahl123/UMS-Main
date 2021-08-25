@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <title>Account</title>
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid d-flex flex-column" style="padding: 1rem;">
+            <div class="row g-0"
+                 style="border-radius: 8px;border-style: solid;border-color: var(--main-accent);padding: 1rem;margin-bottom: 1rem;">
+                <div class="col">
+                    <h1 style="color: var(--main-color);font-weight: bold;">Account</h1>
+                    <p style="color: slategray;margin: 0;">Manage your personal info and make changes to you UMS
+                        Account</p>
+                </div>
+            </div>
+            <div class="row g-0 d-flex flex-column flex-grow-1 flex-lg-row" style="height: 100%;">
+                <div class="col-12 col-lg-4" style="padding: 1rem;">
+                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
+                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;" href="{% url 'account' %}">
+                        <i class="fas fa-user" style="margin-right: 1rem;"></i>Account Info
+                    </a>
+                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
+                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;" href="{% url 'account_email' %}">
+                        <i class="fas fa-envelope" style="margin-right: 1rem;"></i>Change Email
+                    </a>
+                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
+                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;"
+                       href="{% url 'account_change_password' %}">
+                        <i class="fas fa-lock" style="margin-right: 1rem;"></i>Change Password
+                    </a>
+                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
+                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;"
+                       href="{% url 'socialaccount_connections' %}">
+                        <i class="fas fa-link" style="margin-right: 1rem;"></i>Linked Accounts
+                    </a>
+                </div>
+                <div class="col-12 col-lg-8 flex-grow-1" style="padding: 1rem;">
+                    <div class="row g-0"
+                         style="height: 100%;border-radius: 8px;border-style: solid;border-color: var(--main-accent);padding: 1rem;">
+                        <div class="col">
+                            {% block account_content %}
+                                <form method="post" enctype="multipart/form-data" class="flex-column d-flex h-100">
+                                    {% csrf_token %}
+                                    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
+                                        Account Info</h1>
+                                    <div class="flex-grow-1">
+                                        {% for field in form %}
+                                            {% if field.name != 'school' %}
+                                                <div class="form-floating" style="margin-bottom: 1rem;">
+                                                    <input type="text" id="{{ field.id_for_label }}"
+                                                           class="form-control" name="{{ field.html_name }}"
+                                                           placeholder=" "
+                                                           style="border-width: 3px;font-weight: bold;"
+                                                           value="{% if field.value %}{{ field.value }}{% endif %}"/>
+                                                    <label class="form-label"
+                                                           for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                                </div>
+                                                {% if field.errors %}
+                                                    {% for error in field.errors %}
+                                                        <div class="alert alert-danger">{{ error }}</div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% else %}
+                                                <hr>
+                                                <label class="form-label"
+                                                       style="font-size: 20px;font-weight: bold;">School</label>
+                                                {{ form.school }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <button class="btn btn-success btn-lg" type="submit" style="width: 100%;">Save
+                                        Changes
+                                    </button>
+                                </form>
+                            {% endblock %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

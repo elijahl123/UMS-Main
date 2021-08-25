@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <title>Untitled Management Software</title>
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid d-flex" style="padding: 0;">
+            <div class="row g-0 flex-grow-1">
+                <div class="col d-flex flex-column" style="padding: 1rem;height: 100vh;">
+                    <h1 style="font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Hello, {{ account.first_name|default:account.username }}!</h1>
+                    <input type="text" class="form-control-lg form-control search-input" placeholder="Search..."
+                           style="border-style: none;font-weight: bold;margin-bottom: 1rem;" name="search"
+                           autocomplete="off"/>
+                    <div class="row g-0 flex-grow-1 overflow-auto" style="height: 100%;">
+                        <div class="col overflow-auto" style="height: 100%;border-radius: .3rem;">
+                            <div class="row g-0">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

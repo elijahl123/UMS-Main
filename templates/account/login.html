@@ -1,0 +1,67 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+    <div class="container d-flex flex-column justify-content-center align-items-center main-container">
+        <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+            <div class="col-12 col-md-6"
+                 style="padding: 1rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <form class="d-flex flex-column" style="padding: 1rem;" method="post" enctype="multipart/form-data"
+                      action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    <h1 class="display-5 text-center"
+                        style="color: var(--main-color);font-weight: bold;">{% trans "Sign In" %}</h1>
+                    {% get_providers as socialaccount_providers %}
+                    {% if socialaccount_providers %}
+                        <p class="text-center" style="color: slategray;">
+                            Please sign in with one of your existing third party accounts
+                        </p>
+                        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                        <div class="d-flex justify-content-center align-items-center position-relative"
+                             style="margin: 1rem 0;">
+                            <hr style="color: slategray;height: 3px;width: 100%;">
+                            <span class="position-absolute"
+                                  style="padding: 0 15px;background: white;color: slategray;font-weight: bold;">Or</span>
+                        </div>
+                    {% endif %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    <div class="form-floating" style="margin-bottom: 1rem;">
+                        <input class="form-control" type="email" id="id_login" name="login" placeholder=" "
+                               style="font-weight: bold;border-width: 3px;">
+                        <label class="form-label" for="id_email">Email Address</label>
+                    </div>
+                {% for error in form.login.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    <div class="form-floating" style="margin-bottom: 1rem;">
+                        <input class="form-control" type="password" id="id_password" name="password" placeholder=" "
+                               style="border-width: 3px;">
+                        <label class="form-label" for="id_password">Password</label>
+                    </div>
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                    <div class="form-check d-flex justify-content-center" style="margin-bottom: 1rem;">
+                        <input class="form-check-input" type="checkbox" id="formCheck-1" name="remember">
+                        <label class="form-check-label" for="id_remember" style="margin-left: 10px;">Remember Me</label>
+                    </div>
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <button class="btn btn-success btn-lg" type="submit"
+                            style="width: 100%;margin-bottom: 10px;">{% trans "Sign In" %}</button>
+                    <a class="btn btn-link btn-sm" role="button" href="{% url 'account_reset_password' %}">Forgot
+                        Password?</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "socialaccount/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center main-container">
+    <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+        <div class="col-12 col-md-6"
+             style="padding: 1rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+            <h1 style="font-weight: bold;color: var(--main-color);text-align: center;">{% trans "Sign Up" %}<br></h1>
+            <p class="text-start" style="color: slategray;font-size: 18px;">
+                {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use
+                    your {{ provider_name }} account to login to
+                    {{ site_name }}. As a final step, please complete the following form:{% endblocktrans %}<br></p>
+            <form class="d-flex flex-column justify-content-center" action="{% url 'socialaccount_signup' %}"
+                  method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-floating" style="margin-bottom: 1rem;">
+                    <input class="form-control" type="email" id="id_email" placeholder=" " name="email"
+                           {% if form.email.value %}value="{{ form.email.value }}"{% endif %}
+                           style="font-weight: bold;">
+                    <label class="form-label" for="id_email">Email Address</label>
+                </div>
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                <div class="form-floating" style="margin-bottom: 1rem;">
+                    <input class="form-control" type="text" id="id_username" placeholder=" " name="username"
+                           {% if form.username.value %}value="{{ form.username.value }}"{% endif %}
+                           style="font-weight: bold;">
+                    <label class="form-label" for="id_username">Username</label>
+                </div>
+                {% for error in form.username.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                {% endif %}
+                <button class="btn btn-success btn-lg" type="submit" style="width: 100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

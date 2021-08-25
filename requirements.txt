@@ -4,6 +4,7 @@ django-admin==2.0.1
 django-excel-base==1.0.4
 django-excel-response2==3.0.2
 django-six==1.0.4
+Pillow==8.3.1
 pytz==2021.1
 screen==1.0.1
 sqlparse==0.4.1
