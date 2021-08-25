@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    <title>Calendar</title>
+    <link rel="stylesheet" href="{% static 'calendar.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid d-flex flex-column" style="height: 100vh;padding: 1rem;">
+        <div class="row g-0" style="margin-bottom: 1rem;background: #ffffff;">
+            <div class="col d-flex flex-column align-items-center"
+                 style="padding: 1rem;border: 3px solid var(--main-accent);border-radius: 8px;">
+                <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">{{ this_month }}, {{ this_year }}</h1>
+                <p style="text-align: center;color: slategray;">Here you can view upcoming events and deadlines</p>
+                <div class="d-flex">
+                <a href="{% url 'calendar_custom' previous_year previous_month %}" class="btn btn-transparent-secondary me-3">
+                    <i class="fa fa-arrow-left"></i>
+                </a>
+                <a class="btn btn-transparent-ums" role="button" href="#">Add Event</a>
+                <a href="{% url 'calendar_custom' next_year next_month %}" class="btn btn-transparent-secondary ms-3">
+                    <i class="fa fa-arrow-right"></i>
+                </a>
+                </div>
+            </div>
+        </div>
+        <div class="row g-0 d-none d-lg-flex">
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Sunday</h4>
+            </div>
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Monday</h4>
+            </div>
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Tuesday</h4>
+            </div>
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Wednesday</h4>
+            </div>
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Thursday</h4>
+            </div>
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Friday</h4>
+            </div>
+            <div class="col" style="width: calc(100% / 7);flex: 0 0 auto;">
+                <h4 style="text-align: center;margin-bottom: 1rem;color: slategray;">Saturday</h4>
+            </div>
+        </div>
+        <div class="row g-0 flex-grow-1 overflow-auto"
+             style="height: 100%;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+            <div class="col" style="height: 100%;">
+                <div style="height: 100%;">
+                    <div class="row g-0" style="height: 100%;">
+                        {% for month in days %}
+                            {% for day in month %}
+                                <div class="col-12 calendar-date overflow-auto" style="height: 20%;">
+                                    <div style="min-height: 100%;padding: 5px;">
+                                        <button class="btn btn-light btn-sm d-block sticky-top" type="button"
+                                                style="font-size: 26px;margin-bottom: 8px;width: 100%;"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#date-{{ day|date:'m-d' }}-{{ date|date:'m-d' }}">{{ day|date:'d' }}
+                                        </button>
+                                        {% for class in coursetimes %}
+                                            {% if day|date:'l' in class.weekday %}
+                                                <a class="btn btn-sm d-block btn-transparent-{{ class.color }}"
+                                                   role="button"
+                                                   style="width: 100%;text-align: left;margin-bottom: 8px;"
+                                                   href="{% url 'class_schedule' %}">{{ class.course.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div role="dialog" tabindex="-1" class="modal fade" id="date-{{ day|date:'m-d' }}-{{ date|date:'m-d' }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                             role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title"
+                                                        style="font-weight: bold;color: var(--main-color);">
+                                                        {{ day }}</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body d-flex flex-column align-items-center">
+                                                    {% for class in coursetimes %}
+                                                        {% if day|date:'l' in class.weekday %}
+                                                            <a class="btn btn-lg text-start d-flex flex-column btn-transparent-{{ class.color }}"
+                                                               role="button"
+                                                               style="width: 100%;padding: 16px;margin-bottom: 16px;"
+                                                               href="{% url 'class_schedule' %}">
+                                                                <span class="h4" style="font-weight: bold;">{{ class.course.name }}</span>
+                                                                <span style="font-weight: normal;font-size: 16px;">{{ class.start_time|time:'g:i a' }} - {{ class.end_time|time:'g:i a' }}</span>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                <a href="#" class="btn btn-transparent-ums">Add Event</a>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-light" type="button" data-bs-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

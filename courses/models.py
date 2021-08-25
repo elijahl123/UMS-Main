@@ -49,4 +49,4 @@ class CourseTime(models.Model):
 
 
     class Meta:
-        ordering = ['course']
+        ordering = ['start_time']

@@ -1,3 +1,5 @@
+import calendar
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -161,3 +163,4 @@ def edit_coursetime(request, id):
     context['form'] = form
 
     return render(request, 'forms/edit_course.html', context)
+

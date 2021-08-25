@@ -1,0 +1,21 @@
+<div role="dialog" tabindex="-1" class="modal fade" id="course-view-{{ course.id }}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="font-weight: bold;color: var(--main-color);">{{ course.name }}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <p style="color: slategray;margin: 0;text-align: left;">Name</p>
+                <p class="lead" style="font-weight: bold;text-align: left;">{{ course.name }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">Title</p>
+                <p class="lead" style="font-weight: bold;text-align: left;">{{ course.title }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">Teacher</p>
+                <p class="lead" style="font-weight: bold;text-align: left;">{{ course.teacher }}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from class_calendar.views import calendar_events
 from courses.views import *
 from users.views import *
 
@@ -32,7 +33,9 @@ urlpatterns = [
     path('edit-coursetime/<id>/', edit_coursetime, name='edit_coursetime'),
     path('add-course/', add_course, name='add_course'),
     path('edit-course/<id>/', edit_course, name='edit_course'),
-    path('add-school/', add_school, name='add_school')
+    path('add-school/', add_school, name='add_school'),
+    path('calendar/', calendar_events, name='calendar'),
+    path('calendar/<year>/<current_month>/', calendar_events, name='calendar_custom')
 ]
 
 if settings.DEBUG:
