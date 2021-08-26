@@ -7,15 +7,10 @@
             Account Settings</h1>
         <div class="flex-grow-1">
             {% for field in form %}
-                {% if field.name == 'homework_color' %}
-                    <label for="{{ field.id_for_label }}" class="mb-2" style="font-size: 20px;font-weight: bold;">{{ field.label }}</label>
+                <div class="form-check form-switch mb-3">
                     {{ field }}
-                {% else %}
-                    <div class="form-check form-switch mb-3">
-                        {{ field }}
-                        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    </div>
-                {% endif %}
+                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
                 {% if field.errors %}
                     {% for error in field.errors %}
                         <div class="alert alert-danger">{{ error }}</div>

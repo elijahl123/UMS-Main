@@ -48,7 +48,7 @@
                                 </div>
                                 {% for class in coursetimes %}
                                     {% if class.course == course %}
-                                        <a href="#" class="btn btn-transparent-{{ class.color }}" data-bs-toggle="modal"
+                                        <a href="#" class="btn btn-transparent-{{ class.course.color }}" data-bs-toggle="modal"
                                            data-bs-target="#date-event-{{ class.id }}"
                                            style="padding: 1rem;width: 100%;text-align: left;border-radius: 8px;margin-bottom: 1rem;">
                                             <h4 class="text-center text-lg-start"

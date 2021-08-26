@@ -5,7 +5,7 @@
         <hr/>
         {% if row_query %}
             {% for assignment in row_query %}
-                <button class="btn d-flex flex-column btn-transparent-{{ account.homework_color }}" type="button"
+                <button class="btn d-flex flex-column btn-transparent-{{ assignment.course.color }}" type="button"
                         data-bs-toggle="modal"
                         data-bs-target="#homework-{{ assignment.id }}"
                         style="width: 100%;padding: 1rem;font-weight: initial;margin-bottom: 1rem;">

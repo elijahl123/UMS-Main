@@ -15,7 +15,7 @@ color_choices = [
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        exclude = ['password', 'is_active', 'is_admin', 'is_staff', 'is_superuser', 'show_schedule_on_calendar', 'homework_color']
+        exclude = ['password', 'is_active', 'is_admin', 'is_staff', 'is_superuser', 'show_schedule_on_calendar']
 
     def __init__(self, *args, **kwargs):
         super(AccountForm, self).__init__(*args, **kwargs)
@@ -27,8 +27,7 @@ class AccountForm(forms.ModelForm):
 class AccountSettings(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['show_schedule_on_calendar', 'homework_color']
+        fields = ['show_schedule_on_calendar']
         widgets = {
-            'show_schedule_on_calendar': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'homework_color': forms.Select(attrs={'class': 'form-control form-control-lg', 'style': 'border-width: 3px'})
+            'show_schedule_on_calendar': forms.CheckboxInput(attrs={'class': 'form-check-input'})
         }

@@ -103,7 +103,7 @@
                                         <a href="#" data-start-time="{{ class.start_time|time:'H:i' }}"
                                            data-end-time="{{ class.end_time|time:'H:i' }}" data-bs-toggle="modal"
                                            data-bs-target="#date-event-{{ class.id }}"  role="button"
-                                           class="d-flex flex-column justify-content-center align-items-center overflow-auto btn btn-{{ class.color }} coursetime"
+                                           class="d-flex flex-column justify-content-center align-items-center overflow-auto btn btn-{{ class.course.color }} coursetime"
                                            style="width: 95%;position: absolute;padding: 0.5rem;margin-top: 80px;">
                                             <span>{{ class.course.name }}</span>
                                             <span>{{ class.location|default:'Online' }}<br/></span>

@@ -20,6 +20,7 @@ class Course(models.Model):
     title = models.CharField(blank=True, null=True, max_length=120)
     teacher = models.CharField(blank=False, null=True, max_length=120)
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
+    color = models.TextField(max_length=120, default='primary', choices=color_choices)
 
     def __str__(self):
         return self.name
@@ -36,7 +37,6 @@ class CourseTime(models.Model):
     start_time = models.TimeField(blank=False, null=True)
     end_time = models.TimeField(blank=False, null=True)
     weekday = models.TextField(max_length=120, default='Sunday', verbose_name='Weekdays')
-    color = models.TextField(max_length=120, default='primary', choices=color_choices)
     link = models.URLField(max_length=500, null=True, blank=True)
 
     def __str__(self):

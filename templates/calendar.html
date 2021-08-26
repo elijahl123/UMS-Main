@@ -71,7 +71,7 @@
                                         {% if account.show_schedule_on_calendar %}
                                             {% for class in coursetimes %}
                                                 {% if day|date:'l' in class.weekday %}
-                                                    <a class="btn btn-sm d-block btn-transparent-{{ class.color }}"
+                                                    <a class="btn btn-sm d-block btn-transparent-{{ class.course.color }}"
                                                        role="button"
                                                        style="width: 100%;text-align: left;margin-bottom: 8px;"
                                                        href="{% url 'class_schedule' %}">{{ class.course.name }}</a>
@@ -135,7 +135,7 @@
                                         {% endfor %}
                                         {% for assignment in homework_assignments %}
                                             {% if day == assignment.due_date %}
-                                                <a class="btn btn-sm d-block btn-{{ account.homework_color }}"
+                                                <a class="btn btn-sm d-block btn-{{ assignment.course.color }}"
                                                    role="button"
                                                    style="width: 100%;text-align: left;margin-bottom: 8px;"
                                                    href="{% url 'homework' %}">{{ assignment.name }}</a>
@@ -157,7 +157,7 @@
                                                 <div class="modal-body d-flex flex-column align-items-center">
                                                     {% for class in coursetimes %}
                                                         {% if day|date:'l' in class.weekday %}
-                                                            <a class="btn btn-lg text-start d-flex flex-column btn-transparent-{{ class.color }}"
+                                                            <a class="btn btn-lg text-start d-flex flex-column btn-transparent-{{ class.course.color }}"
                                                                role="button"
                                                                style="width: 100%;padding: 16px;margin-bottom: 16px;"
                                                                href="{% url 'class_schedule' %}">
