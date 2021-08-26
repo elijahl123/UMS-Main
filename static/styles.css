@@ -28,6 +28,10 @@ body {
     font-family: Poppins, sans-serif;
 }
 
+.base-container {
+    background: var(--secondary-color)
+}
+
 @media (min-width: 992px) {
     .base-container {
         background: rgb(247, 247, 247) !important;
