@@ -2,7 +2,7 @@
 
 {% block form_content %}
     {% for field in form %}
-        {% if field.name not in excluded_fields %}
+        {% if field.name not in excluded_fields or not excluded_fields %}
             <div style="margin-bottom: 1rem;">
                 <label class="form-label"
                        style="font-size: 20px;font-weight: bold;">{{ field.label }}</label>
@@ -16,17 +16,8 @@
                     {% endfor %}
                 {% endif %}
             </div>
-        {% else %}
-            <input type="hidden" name="school" value="{{ account.school.id }}">
+            {% else %}
             <input type="hidden" name="user" value="{{ account.id }}">
         {% endif %}
-
-
     {% endfor %}
-    {% if form.non_field_errors %}
-        {% for error in form.non_field_errors %}
-            <div class="alert alert-danger mt-3">{{ error }}</div>
-        {% endfor %}
-    {% endif %}
 {% endblock %}
-

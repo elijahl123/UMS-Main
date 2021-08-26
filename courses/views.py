@@ -1,5 +1,3 @@
-import calendar
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,12 +9,6 @@ from school.models import School
 from users.models import Account
 
 context = {'schools': School.objects.all()}
-
-
-@login_required
-def index(request):
-    context['account'] = request.user
-    return render(request, 'index.html', context)
 
 
 @login_required
@@ -44,6 +36,22 @@ def add_course(request):
     context['form'] = form
 
     return render(request, 'forms/add_course.html', context)
+
+
+@login_required
+def add_coursetime(request):
+    context['account'] = request.user
+
+    if request.POST:
+        form = CourseTimeForm(request.POST, request.FILES or None)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            return redirect('manage_schedule')
+        else:
+            messages.error(request, '<strong>Error:</strong> Please enter a valid weekday for the Course Time')
+
+    return redirect('manage_schedule')
 
 
 @login_required
@@ -82,36 +90,13 @@ def class_schedule(request):
 
 
 @login_required
-def manage_schedule(request):
-    context['account'] = request.user
-
-    context['courses'] = Course.objects.filter(user=request.user)
-    context['coursetimes'] = CourseTime.objects.filter(user=request.user)
-
-    return render(request, 'manage_schedule.html', context)
-
-
-@login_required
-def add_coursetime(request):
-    context['account'] = request.user
-
-    if request.POST:
-        form = CourseTimeForm(request.POST, request.FILES or None)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            return redirect('manage_schedule')
-        else:
-            messages.error(request, '<strong>Error:</strong> Please enter a valid weekday for the Course Time')
-
-    return redirect('manage_schedule')
-
-
-@login_required
 def edit_course(request, id):
     context['account'] = request.user
 
     course = get_object_or_404(Course, id=id)
+
+    if not course.user == request.user:
+        return redirect('manage_schedule')
 
     context['form_title'] = 'Edit ' + course.name
     context['form_description'] = 'Edit a course already in your schedule and it will be integrated with the calendar ' \
@@ -142,6 +127,9 @@ def edit_coursetime(request, id):
 
     coursetime = get_object_or_404(CourseTime, id=id)
 
+    if not coursetime.user == request.user:
+        return redirect('manage_schedule')
+
     context['form_title'] = 'Edit ' + coursetime.course.name
     context['form_description'] = 'Edit a course already in your schedule and it will be integrated with the calendar ' \
                                   'and other features '
@@ -164,3 +152,33 @@ def edit_coursetime(request, id):
 
     return render(request, 'forms/edit_course.html', context)
 
+
+@login_required
+def index(request):
+    context['account'] = request.user
+    return render(request, 'index.html', context)
+
+
+@login_required
+def manage_schedule(request):
+    context['account'] = request.user
+
+    context['courses'] = Course.objects.filter(user=request.user)
+    context['coursetimes'] = CourseTime.objects.filter(user=request.user)
+
+    return render(request, 'manage_schedule.html', context)
+
+
+@login_required
+def delete_course(request, id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    course.delete()
+    return redirect('class_schedule')\
+
+@login_required
+def delete_coursetime(request, id):
+    context['account'] = request.user
+    coursetime = get_object_or_404(CourseTime, id=id)
+    coursetime.delete()
+    return redirect('class_schedule')

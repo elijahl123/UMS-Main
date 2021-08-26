@@ -63,6 +63,7 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=False)
+    show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']

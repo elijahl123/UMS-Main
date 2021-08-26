@@ -8,7 +8,7 @@ from users.models import Account
 
 
 class Course(models.Model):
-    name = models.CharField(blank=False, null=True, max_length=120, unique=True)
+    name = models.CharField(blank=False, null=True, max_length=120)
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(blank=True, null=True, max_length=120)
     teacher = models.CharField(blank=False, null=True, max_length=120)
@@ -19,6 +19,7 @@ class Course(models.Model):
 
     class Meta:
         ordering = ['name']
+        unique_together = ['user', 'name']
 
 
 class CourseTime(models.Model):

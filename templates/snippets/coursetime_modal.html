@@ -29,7 +29,7 @@
             </div>
             <div class="modal-footer">
                 <a href="{% url 'edit_coursetime' class.id %}?next={{ request.path }}" class="btn btn-transparent-success me-2">Edit</a>
-                <a href="#" class="btn btn-transparent-danger me-2">Delete</a>
+                <a href="{% url 'delete_coursetime' class.id %}" class="btn btn-transparent-danger me-2">Delete</a>
                 <button class="btn btn-transparent-secondary" type="button"
                         data-bs-dismiss="modal">Close
                 </button>

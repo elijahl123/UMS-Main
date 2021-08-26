@@ -1,0 +1,26 @@
+{% extends 'account.html' %}
+
+{% block account_content %}
+    <form method="post" enctype="multipart/form-data" class="flex-column d-flex h-100">
+        {% csrf_token %}
+        <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
+            Account Info</h1>
+        <div class="flex-grow-1">
+            {% for field in form %}
+                <div class="form-check form-switch">
+                    {{ field }}
+                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <button class="btn btn-success btn-lg" type="submit" style="width: 100%;">Save
+            Changes
+        </button>
+    </form>
+{% endblock %}

@@ -15,7 +15,7 @@
             <div class="row g-0" style="background: white;padding: 1rem;">
                 <div class="col" style="padding: 1.5rem 1rem;border-radius: 8px;border: 3px solid var(--main-accent);">
                     <h1
-                        style="text-align: center;color: var(--main-color);font-weight: bold;">{{ form_title }}</h1>
+                            style="text-align: center;color: var(--main-color);font-weight: bold;">{{ form_title }}</h1>
                     {% if form_description %}
                         <p style="color: slategray;text-align: center;margin: 0;">
                             {{ form_description }}
@@ -48,11 +48,17 @@
                                     </div>
                                 {% endif %}
                             {% endfor %}
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    <div class="alert alert-danger mt-3">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
                         {% endblock %}
                         <div class="row" style="background: white;height: 100%;">
                             <div class="col-12 col-lg-6 d-flex flex-column justify-content-end"
                                  style="padding: 12px;">
-                                <button class="btn btn-outline-secondary btn-lg" type="button" onclick="window.history.back()" style="width: 100%;">
+                                <button class="btn btn-outline-secondary btn-lg" type="button"
+                                        onclick="window.history.back()" style="width: 100%;">
                                     Back
                                 </button>
                             </div>

@@ -14,13 +14,19 @@
                 <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">{{ this_month }}, {{ this_year }}</h1>
                 <p style="text-align: center;color: slategray;">Here you can view upcoming events and deadlines</p>
                 <div class="d-flex">
-                <a href="{% url 'calendar_custom' previous_year previous_month %}" class="btn btn-transparent-secondary me-3">
-                    <i class="fa fa-arrow-left"></i>
-                </a>
-                <a class="btn btn-transparent-ums" role="button" href="#">Add Event</a>
-                <a href="{% url 'calendar_custom' next_year next_month %}" class="btn btn-transparent-secondary ms-3">
-                    <i class="fa fa-arrow-right"></i>
-                </a>
+                    <a href="{% url 'calendar_custom' previous_year previous_month %}"
+                       class="btn btn-transparent-secondary me-3">
+                        <i class="fa fa-arrow-left"></i>
+                    </a>
+                    <a class="btn btn-transparent-ums me-3" role="button" href="{% url 'add_calendar_event' %}">Add
+                        Event</a>
+                    <a class="btn btn-{% if not account.show_schedule_on_calendar %}transparent-{% endif %}primary"
+                       style="font-weight: bold" role="button"
+                       href="{% url 'change_account_calendar_view' %}?next={{ request.path }}">Show Schedule?</a>
+                    <a href="{% url 'calendar_custom' next_year next_month %}"
+                       class="btn btn-transparent-secondary ms-3">
+                        <i class="fa fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -56,21 +62,80 @@
                             {% for day in month %}
                                 <div class="col-12 calendar-date overflow-auto" style="height: 20%;">
                                     <div style="min-height: 100%;padding: 5px;">
-                                        <button class="btn btn-light btn-sm d-block sticky-top" type="button"
-                                                style="font-size: 26px;margin-bottom: 8px;width: 100%;"
+                                        <button class="btn btn-{% if day == today %}primary{% else %}light{% endif %} btn-sm d-block sticky-top"
+                                                type="button"
+                                                style="font-size: 26px;margin-bottom: 8px;width: 100%;{% if this_month != day|date:'F' %}opacity:0.4{% endif %}"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#date-{{ day|date:'m-d' }}-{{ date|date:'m-d' }}">{{ day|date:'d' }}
                                         </button>
-                                        {% for class in coursetimes %}
-                                            {% if day|date:'l' in class.weekday %}
-                                                <a class="btn btn-sm d-block btn-transparent-{{ class.color }}"
+                                        {% if account.show_schedule_on_calendar %}
+                                            {% for class in coursetimes %}
+                                                {% if day|date:'l' in class.weekday %}
+                                                    <a class="btn btn-sm d-block btn-transparent-{{ class.color }}"
+                                                       role="button"
+                                                       style="width: 100%;text-align: left;margin-bottom: 8px;"
+                                                       href="{% url 'class_schedule' %}">{{ class.course.name }}</a>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% for event in calendar_events %}
+                                            {% if event.date == day %}
+                                                <a class="btn btn-sm d-block btn-ums"
                                                    role="button"
                                                    style="width: 100%;text-align: left;margin-bottom: 8px;"
-                                                   href="{% url 'class_schedule' %}">{{ class.course.name }}</a>
+                                                   data-bs-toggle="modal"
+                                                   data-bs-target="#event-{{ event.id }}"
+                                                   href="#">{{ event.title }}</a>
+                                                <div role="dialog" tabindex="-1" class="modal fade"
+                                                     id="event-{{ event.id }}">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title"
+                                                                    style="font-weight: bold;color: var(--main-color);">
+                                                                    {{ event.title }}</h4>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body" style="padding: 2rem;">
+                                                                <p style="color: slategray;margin: 0;text-align: left;">
+                                                                    Title</p>
+                                                                <p class="lead"
+                                                                   style="font-weight: bold;text-align: left;">
+                                                                    {{ event.title }}</p>
+                                                                {% if event.description %}
+                                                                    <p style="color: slategray;margin: 0;text-align: left;">
+                                                                        Description
+                                                                    </p>
+                                                                    <p class="lead"
+                                                                       style="font-weight: bold;text-align: left;">
+                                                                        {{ event.description }}</p>
+                                                                {% endif %}
+                                                                <p style="color: slategray;margin: 0;text-align: left;">
+                                                                    Time</p>
+                                                                <p class="lead"
+                                                                   style="font-weight: bold;text-align: left;">
+                                                                    {{ event.time }}</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a href="{% url 'edit_calendar_event' event.id %}"
+                                                                   class="btn btn-transparent-success me-2">Edit</a>
+                                                                <a href="{% url 'delete_calendar_event' event.id %}"
+                                                                   class="btn btn-transparent-danger me-2">Delete</a>
+                                                                <button class="btn btn-transparent-secondary"
+                                                                        type="button"
+                                                                        data-bs-dismiss="modal">Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
-                                    <div role="dialog" tabindex="-1" class="modal fade" id="date-{{ day|date:'m-d' }}-{{ date|date:'m-d' }}">
+                                    <div role="dialog" tabindex="-1" class="modal fade"
+                                         id="date-{{ day|date:'m-d' }}-{{ date|date:'m-d' }}">
                                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                                              role="document">
                                             <div class="modal-content">
@@ -88,12 +153,25 @@
                                                                role="button"
                                                                style="width: 100%;padding: 16px;margin-bottom: 16px;"
                                                                href="{% url 'class_schedule' %}">
-                                                                <span class="h4" style="font-weight: bold;">{{ class.course.name }}</span>
+                                                                <span class="h4"
+                                                                      style="font-weight: bold;">{{ class.course.name }}</span>
                                                                 <span style="font-weight: normal;font-size: 16px;">{{ class.start_time|time:'g:i a' }} - {{ class.end_time|time:'g:i a' }}</span>
                                                             </a>
                                                         {% endif %}
                                                     {% endfor %}
-                                                <a href="#" class="btn btn-transparent-ums">Add Event</a>
+                                                    {% for event in calendar_events %}
+                                                        {% if event.date == day %}
+                                                            <a class="btn btn-lg text-start d-flex flex-column btn-transparent-ums"
+                                                               role="button"
+                                                               style="width: 100%;padding: 16px;margin-bottom: 16px;"
+                                                               href="{% url 'calendar' %}">
+                                                                <span class="h4"
+                                                                      style="font-weight: bold;">{{ event.title }}</span>
+                                                                <span style="font-weight: normal;font-size: 16px;">{{ event.time|default:'All Day' }}</span>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    <a href="#" class="btn btn-transparent-ums">Add Event</a>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-light" type="button" data-bs-dismiss="modal">
