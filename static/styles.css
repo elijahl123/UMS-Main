@@ -28,6 +28,13 @@ body {
     font-family: Poppins, sans-serif;
 }
 
+@media (min-width: 992px) {
+    .base-background {
+        background: rgb(247, 247, 247);
+        background: linear-gradient(180deg, rgba(247, 247, 247, 1) 85%, rgba(248, 173, 157, 0.75) 100%);
+    }
+}
+
 .btn {
     transition-duration: 0.2s;
 }
@@ -132,15 +139,15 @@ body {
 }
 
 .btn-transparent-warning {
-    background: rgba(255,193,7,0.14);
-    color: rgb(255,193,7);
+    background: rgba(255, 193, 7, 0.14);
+    color: rgb(255, 193, 7);
     font-family: Poppins, sans-serif;
     font-weight: bold;
 }
 
 .btn-transparent-warning:hover, .btn-transparent-warning:active, .btn-transparent-warning:focus {
     color: white;
-    background: rgb(255,193,7);
+    background: rgb(255, 193, 7);
     font-family: Poppins, sans-serif;
     font-weight: bold;
 }
