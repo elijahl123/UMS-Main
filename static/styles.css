@@ -29,7 +29,7 @@ body {
 }
 
 @media (min-width: 992px) {
-    .base-background {
+    .base-container {
         background: rgb(247, 247, 247) !important;
         background: linear-gradient(180deg, rgba(247, 247, 247, 1) 85%, rgba(248, 173, 157, 0.75) 100%) !important;
     }
