@@ -90,13 +90,8 @@
                     <div class="col d-flex justify-content-between align-items-center"
                          style="font-family: Poppins, sans-serif;padding: 1rem;">
                         <div class="d-flex align-items-center">
-                            {% if request.user.school.logo %}
-
-                                <img src="{{ request.user.school.logo.url }}" style="height: 5rem;margin-right: 1rem;">
-                            {% else %}
-                                <img src="{% static 'img/UMSLogo.svg' %}/" style="height: 5rem;margin-right: 1rem;"
+                            <img src="{% static 'img/UMSLogo.png' %}/" style="height: 5rem;margin-right: 1rem;"
                                      alt="UMS Logo">
-                            {% endif %}
                             <h3 class="d-none d-lg-block" style="color: var(--main-color);font-weight: bold;margin: 0;">
                                 Untitled Management Software</h3>
                             <h1 class="display-1 d-lg-none"
