@@ -3,8 +3,15 @@ from django.db import models
 from school.models import School
 from users.models import Account
 
-
 # Create your models here.
+color_choices = [
+    ('primary', 'Blue'),
+    ('secondary', 'Gray'),
+    ('success', 'Green'),
+    ('danger', 'Red'),
+    ('warning', 'Yellow'),
+    ('info', 'Light Blue'),
+]
 
 
 class Course(models.Model):
@@ -23,16 +30,6 @@ class Course(models.Model):
 
 
 class CourseTime(models.Model):
-
-    color_choices = [
-        ('primary', 'Blue'),
-        ('secondary', 'Gray'),
-        ('success', 'Green'),
-        ('danger', 'Red'),
-        ('warning', 'Yellow'),
-        ('info', 'Light Blue'),
-    ]
-
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
     location = models.TextField(blank=True, null=True, help_text='Leave Blank if Class is Online')
@@ -47,7 +44,6 @@ class CourseTime(models.Model):
 
     def weekdays(self):
         return self.weekday[1:-1].replace('\'', '')
-
 
     class Meta:
         ordering = ['start_time']

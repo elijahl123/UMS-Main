@@ -5,6 +5,15 @@ from django.db import models
 # Create your models here.
 from school.models import School
 
+color_choices = [
+    ('primary', 'Blue'),
+    ('secondary', 'Gray'),
+    ('success', 'Green'),
+    ('danger', 'Red'),
+    ('warning', 'Yellow'),
+    ('info', 'Light Blue'),
+]
+
 
 def upload_profile_picture(instance, filename):
     file_path = 'profilePictures/{username}/{filename}'.format(
@@ -64,6 +73,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=False)
     show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
+    homework_color = models.TextField(max_length=120, default='primary', choices=color_choices)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']

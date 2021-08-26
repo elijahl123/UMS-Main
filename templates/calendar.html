@@ -133,6 +133,14 @@
                                                 </div>
                                             {% endif %}
                                         {% endfor %}
+                                        {% for assignment in homework_assignments %}
+                                            {% if day == assignment.due_date %}
+                                                <a class="btn btn-sm d-block btn-{{ account.homework_color }}"
+                                                   role="button"
+                                                   style="width: 100%;text-align: left;margin-bottom: 8px;"
+                                                   href="{% url 'homework' %}">{{ assignment.name }}</a>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
                                     <div role="dialog" tabindex="-1" class="modal fade"
                                          id="date-{{ day|date:'m-d' }}-{{ date|date:'m-d' }}">

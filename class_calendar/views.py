@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from class_calendar.forms import AddEvent
 from class_calendar.models import CalendarEvent
 from courses.models import CourseTime
+from homework.models import HomeworkAssignment
 from school.models import School
 
 context = {'schools': School.objects.all()}
@@ -77,6 +78,7 @@ def calendar_events(request, year=None, current_month=None):
         int(year if year else todays_date.year),
         int(current_month if current_month else todays_date.month)
     )
+    context['homework_assignments'] = HomeworkAssignment.objects.filter(completed=False)
 
     context['calendar_events'] = CalendarEvent.objects.filter(user=request.user)
 

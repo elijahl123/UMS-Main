@@ -4,13 +4,18 @@
     <form method="post" enctype="multipart/form-data" class="flex-column d-flex h-100">
         {% csrf_token %}
         <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
-            Account Info</h1>
+            Account Settings</h1>
         <div class="flex-grow-1">
             {% for field in form %}
-                <div class="form-check form-switch">
+                {% if field.name == 'homework_color' %}
+                    <label for="{{ field.id_for_label }}" class="mb-2" style="font-size: 20px;font-weight: bold;">{{ field.label }}</label>
                     {{ field }}
-                    <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                </div>
+                {% else %}
+                    <div class="form-check form-switch mb-3">
+                        {{ field }}
+                        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                {% endif %}
                 {% if field.errors %}
                     {% for error in field.errors %}
                         <div class="alert alert-danger">{{ error }}</div>
