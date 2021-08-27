@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
@@ -17,14 +18,30 @@ def homework(request):
     context['account'] = request.user
 
     dt = datetime.datetime.today()
+    dt_time = datetime.datetime.now().strftime('%H:%M:%S')
     week_dates = [dt + datetime.timedelta(days=i) for i in range(7)]
 
-    context['late_assignments'] = HomeworkAssignment.objects.filter(due_date__lt=dt, completed=False,
-                                                                        course__user=request.user)
+    context['late_assignments'] = HomeworkAssignment.objects.filter(
+        due_date__lte=dt,
+        completed=False,
+        course__user=request.user,
+        due_time__lt=dt_time
+    )
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user, due_date__gte=dt)
+    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(
+        due_date__in=week_dates,
+        completed=False,
+        course__user=request.user,
+        due_date__gte=dt,
+        due_time__gte=dt_time
+    )
 
-    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(completed=False, course__user=request.user, due_date__gte=dt)
+    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(
+        completed=False,
+        course__user=request.user,
+        due_date__gte=dt,
+        due_time__gte=dt_time
+    )
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
@@ -72,6 +89,7 @@ def delete_assignment(request, id):
     assignment = get_object_or_404(HomeworkAssignment, id=id)
     assignment.delete()
     return redirect('homework')
+
 
 @login_required
 def complete_assignment(request, id):

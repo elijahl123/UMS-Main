@@ -162,12 +162,13 @@ def index(request):
     context['account'] = request.user
 
     dt = datetime.datetime.today()
+    dt_time = datetime.datetime.now().strftime('%H:%M:%S')
     week_dates = [dt + datetime.timedelta(days=i) for i in range(3)]
     today_weekday = datetime.datetime.now().strftime("%A")
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user, due_date__gte=dt)
+    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user, due_date__gte=dt, due_time__gte=dt_time)
 
-    context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, course__user=request.user, due_date__lt=dt)
+    context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, course__user=request.user, due_date__lte=dt, due_time__lt=dt_time)
 
     context['today_and_tomorrow'] = CalendarEvent.objects.filter(user=request.user, date__in=week_dates)
 
