@@ -50,6 +50,9 @@
                                 {% if not assignment.completed %}
                                     <a href="{% url 'complete_assignment' assignment.id %}" class="btn btn-success"
                                        type="button">Complete</a>
+                                    {% else %}
+                                    <a href="{% url 'complete_assignment' assignment.id %}" class="btn btn-danger"
+                                       type="button">Not Completed?</a>
                                 {% endif %}
                             </div>
                             <div class="modal-footer">

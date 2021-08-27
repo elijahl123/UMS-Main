@@ -19,9 +19,12 @@ def homework(request):
     dt = datetime.datetime.today()
     week_dates = [dt + datetime.timedelta(days=i) for i in range(7)]
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user)
+    context['late_assignments'] = HomeworkAssignment.objects.filter(due_date__lt=dt, completed=False,
+                                                                        course__user=request.user)
 
-    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(completed=False, course__user=request.user)
+    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user, due_date__gte=dt)
+
+    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(completed=False, course__user=request.user, due_date__gte=dt)
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
@@ -73,6 +76,11 @@ def delete_assignment(request, id):
 @login_required
 def complete_assignment(request, id):
     context['account'] = request.user
-    assignment = HomeworkAssignment.objects.filter(id=id)
-    assignment.update(completed=True)
+    assignment = get_object_or_404(HomeworkAssignment, id=id)
+    if assignment.completed:
+        assignment.completed = False
+        assignment.save()
+    else:
+        assignment.completed = True
+        assignment.save()
     return redirect('homework')

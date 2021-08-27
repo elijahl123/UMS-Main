@@ -12,7 +12,7 @@
         {% if widget_title == 'Today and Tomorrow' %}
             <span class="h4" style="font-weight: bold;">{{ item.title }}</span>
             <span>{{ item.date }} {{ item.time|default:'' }}</span>
-        {% elif widget_title == 'Upcoming Assignments' %}
+        {% elif widget_title == 'Upcoming Assignments' or widget_title == 'Late Assignments' %}
             <span class="h4" style="font-weight: bold;">{{ item.name }}</span>
             <span>{{ item.due_date }} {{ item.due_time|default:'' }}</span>
         {% elif widget_title == 'Courses Today' %}

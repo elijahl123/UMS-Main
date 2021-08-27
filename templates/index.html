@@ -17,6 +17,7 @@
                                 {% include 'snippets/dashboard_widget.html' with widget_title='Today and Tomorrow' widget_link='calendar' widget_query=today_and_tomorrow widget_none_message='There is Nothing Today or Tomorrow' %}
                                 {% include 'snippets/dashboard_widget.html' with widget_title='Upcoming Assignments' widget_link='homework' widget_query=upcoming_assignments widget_none_message='There are No Upcoming Assignments' %}
                                 {% include 'snippets/dashboard_widget.html' with widget_title='Courses Today' widget_link='class_schedule' widget_query=coursetimes_for_today widget_none_message='There are No Courses Today' %}
+                                {% include 'snippets/dashboard_widget.html' with widget_title='Late Assignments' widget_link='homework' widget_query=late_assignments widget_none_message='There are No Late Assignments' %}
                             </div>
                         </div>
                     </div>
