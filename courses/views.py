@@ -1,10 +1,14 @@
+import datetime
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
+from class_calendar.models import CalendarEvent
 from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm
 from courses.models import CourseTime, Course
 # Create your views here.
+from homework.models import HomeworkAssignment
 from school.models import School
 from users.models import Account
 
@@ -156,6 +160,18 @@ def edit_coursetime(request, id):
 @login_required
 def index(request):
     context['account'] = request.user
+
+    dt = datetime.datetime.today()
+    week_dates = [dt + datetime.timedelta(days=i) for i in range(3)]
+    today_weekday = datetime.datetime.now().strftime("%A")
+
+    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False,
+                                                                        course__user=request.user)
+
+    context['today_and_tomorrow'] = CalendarEvent.objects.filter(user=request.user, date__in=week_dates)
+
+    context['coursetimes_for_today'] = CourseTime.objects.filter(weekday__contains=today_weekday)
+
     return render(request, 'index.html', context)
 
 
@@ -174,8 +190,9 @@ def delete_course(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
     course.delete()
-    return redirect('class_schedule')\
-
+    return redirect('class_schedule') \
+ \
+ \
 @login_required
 def delete_coursetime(request, id):
     context['account'] = request.user

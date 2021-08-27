@@ -2,13 +2,27 @@
     <div class="w-100"
          style="border-style: solid;border-color: var(--main-accent);border-radius: 8px;padding: 1rem;">
         <div style="padding: 1rem;background: var(--secondary-color);border-radius: 8px;">
-            <h3 class="text-center" style="margin: 0;color: var(--main-color);font-weight: bold;">Today
-                &amp; Tomorrow</h3>
+            <h3 class="text-center" style="margin: 0;color: var(--main-color);font-weight: bold;">{{ widget_title }}</h3>
         </div>
-        <button class="btn btn-lg d-flex flex-column w-100 btn-transparent-primary" type="button"
+    {% if widget_query %}
+        {% for item in widget_query %}
+        <a href="{% url widget_link %}"
+           class="btn btn-lg d-flex flex-column w-100 btn-transparent-{% if item.color %}{{ item.color }}{% elif item.course.color %}{{ item.course.color }}{% else %}ums{% endif %}" type="button"
                 style="padding: 1rem;border-radius: 8px;margin-top: 1rem;">
-            <span class="h4" style="font-weight: bold;">Calendar Event</span>
-            <span>This is a description</span>
-        </button>
+        {% if widget_title == 'Today and Tomorrow' %}
+            <span class="h4" style="font-weight: bold;">{{ item.title }}</span>
+            <span>{{ item.date }} {{ item.time|default:'' }}</span>
+        {% elif widget_title == 'Upcoming Assignments' %}
+            <span class="h4" style="font-weight: bold;">{{ item.name }}</span>
+            <span>{{ item.due_date }} {{ item.due_time|default:'' }}</span>
+        {% elif widget_title == 'Courses Today' %}
+            <span class="h4" style="font-weight: bold;">{{ item.course.name }}</span>
+            <span>{{ item.start_time|time:'H:iA' }} to {{ item.end_time|time:'H:iA' }}</span>
+        {% endif %}
+        </a>
+        {% endfor %}
+        {% else %}
+        <p class="lead text-center mt-3">{{ widget_none_message }}</p>
+    {% endif %}
     </div>
 </div>
