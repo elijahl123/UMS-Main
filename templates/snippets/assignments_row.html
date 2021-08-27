@@ -11,9 +11,7 @@
                         style="width: 100%;padding: 1rem;font-weight: initial;margin-bottom: 1rem;">
                                     <span class="h4"
                                           style="font-weight: bold;margin:0">{{ assignment.course }}: {{ assignment.name }}</span>
-                    {% if assignment.description %}
-                        <span style="margin-top: 8px">{{ assignment.description }}</span>
-                    {% endif %}
+                        <span style="margin-top: 8px">Due: {{ assignment.due_date }} at {{ assignment.due_time }}</span>
                 </button>
                 <div role="dialog" tabindex="-1" class="modal fade"
                      id="homework-{{ assignment.id }}">
