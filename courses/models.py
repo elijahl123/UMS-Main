@@ -15,12 +15,12 @@ color_choices = [
 
 
 class Course(models.Model):
-    name = models.CharField(blank=False, null=True, max_length=120)
+    name = models.CharField(blank=False, null=True, max_length=120, help_text='Name of Class (CHEM 161, POLS 110, etc.)')
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.CharField(blank=True, null=True, max_length=120)
+    title = models.CharField(blank=True, null=True, max_length=120, help_text='Full Name of Class (General Chemistry I, etc.)')
     teacher = models.CharField(blank=False, null=True, max_length=120)
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
-    color = models.TextField(max_length=120, default='primary', choices=color_choices)
+    color = models.TextField(max_length=120, default='primary', choices=color_choices, help_text='Color You Want This Class to Show Up as on Calendar and Schedule')
 
     def __str__(self):
         return self.name
