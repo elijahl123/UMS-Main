@@ -46,7 +46,7 @@
                                 <p class="lead"
                                    style="font-weight: bold;text-align: left;">{{ assignment.due_time }}</p>
                                 {% if assignment.link %}
-                                    <a href="{{ assignment.link }}" class="btn btn-primary"
+                                    <a href="{{ assignment.link }}" target="_blank" class="btn btn-primary"
                                        type="button">Go to Homework</a>
                                 {% endif %}
                                 {% if not assignment.completed %}
