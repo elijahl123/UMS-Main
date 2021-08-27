@@ -15,3 +15,6 @@ class HomeworkAssignment(models.Model):
     due_time = models.TimeField(default='09:00:00')
     link = models.URLField(null=True, blank=True)
     completed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['due_date', 'due_time']

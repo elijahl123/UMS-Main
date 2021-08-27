@@ -20,9 +20,15 @@
             <div class="row g-0 flex-grow-1 overflow-auto"
                  style="height: 100%;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
                 <div class="col" style="height: 100%;padding: 1rem;">
-                {% include 'snippets/assignments_row.html' with row_title='Upcoming' row_query=upcoming_assignments %}
-                {% include 'snippets/assignments_row.html' with row_title='Later' row_query=later_assignments %}
-                {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_assignments %}
+                    {% if upcoming_assignments %}
+                        {% include 'snippets/assignments_row.html' with row_title='Upcoming' row_query=upcoming_assignments %}
+                    {% endif %}
+                    {% if later_assignments %}
+                        {% include 'snippets/assignments_row.html' with row_title='Later' row_query=later_assignments %}
+                    {% endif %}
+                    {% if completed_assignments %}
+                        {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_assignments %}
+                    {% endif %}
                 </div>
             </div>
         </div>
