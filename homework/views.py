@@ -19,11 +19,11 @@ def homework(request):
     dt = datetime.datetime.today()
     week_dates = [dt + datetime.timedelta(days=i) for i in range(7)]
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False)
+    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user)
 
-    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(completed=False)
+    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(completed=False, course__user=request.user)
 
-    context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True)
+    context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
     return render(request, 'homework.html', context)
 

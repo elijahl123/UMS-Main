@@ -78,7 +78,7 @@ def calendar_events(request, year=None, current_month=None):
         int(year if year else todays_date.year),
         int(current_month if current_month else todays_date.month)
     )
-    context['homework_assignments'] = HomeworkAssignment.objects.filter(completed=False)
+    context['homework_assignments'] = HomeworkAssignment.objects.filter(completed=False, course__user=request.user)
 
     context['calendar_events'] = CalendarEvent.objects.filter(user=request.user)
 
