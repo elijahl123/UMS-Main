@@ -170,7 +170,7 @@ def index(request):
 
     context['today_and_tomorrow'] = CalendarEvent.objects.filter(user=request.user, date__in=week_dates)
 
-    context['coursetimes_for_today'] = CourseTime.objects.filter(weekday__contains=today_weekday)
+    context['coursetimes_for_today'] = CourseTime.objects.filter(weekday__contains=today_weekday, course__user=request.user)
 
     return render(request, 'index.html', context)
 
@@ -190,9 +190,9 @@ def delete_course(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
     course.delete()
-    return redirect('class_schedule') \
- \
- \
+    return redirect('class_schedule')
+
+
 @login_required
 def delete_coursetime(request, id):
     context['account'] = request.user

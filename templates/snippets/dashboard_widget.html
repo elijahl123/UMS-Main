@@ -17,7 +17,7 @@
             <span>{{ item.due_date }} {{ item.due_time|default:'' }}</span>
         {% elif widget_title == 'Courses Today' %}
             <span class="h4" style="font-weight: bold;">{{ item.course.name }}</span>
-            <span>{{ item.start_time|time:'H:iA' }} to {{ item.end_time|time:'H:iA' }}</span>
+            <span>{{ item.start_time }} to {{ item.end_time }}</span>
         {% endif %}
         </a>
         {% endfor %}
