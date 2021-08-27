@@ -59,8 +59,8 @@ class CourseTimeEditForm(ModelForm):
         model = CourseTime
         exclude = []
         widgets = {
-            'start_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time'}),
-            'end_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time'}),
+            'start_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
+            'end_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
             'location': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
             'color': forms.Select(attrs={'class': 'form-control form-control-lg'}),
             'link': forms.Textarea(attrs={'class': 'form-control form-control-lg'})
