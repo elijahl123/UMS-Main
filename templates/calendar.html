@@ -155,18 +155,20 @@
                                                             aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body d-flex flex-column align-items-center">
-                                                    {% for class in coursetimes %}
-                                                        {% if day|date:'l' in class.weekday %}
-                                                            <a class="btn btn-lg text-start d-flex flex-column btn-transparent-{{ class.course.color }}"
-                                                               role="button"
-                                                               style="width: 100%;padding: 16px;margin-bottom: 16px;"
-                                                               href="{% url 'class_schedule' %}">
+                                                    {% if account.show_schedule_on_calendar %}
+                                                        {% for class in coursetimes %}
+                                                            {% if day|date:'l' in class.weekday %}
+                                                                <a class="btn btn-lg text-start d-flex flex-column btn-transparent-{{ class.course.color }}"
+                                                                   role="button"
+                                                                   style="width: 100%;padding: 16px;margin-bottom: 16px;"
+                                                                   href="{% url 'class_schedule' %}">
                                                                 <span class="h4"
                                                                       style="font-weight: bold;">{{ class.course.name }}</span>
-                                                                <span style="font-weight: normal;font-size: 16px;">{{ class.start_time|time:'g:i a' }} - {{ class.end_time|time:'g:i a' }}</span>
-                                                            </a>
-                                                        {% endif %}
-                                                    {% endfor %}
+                                                                    <span style="font-weight: normal;font-size: 16px;">{{ class.start_time|time:'g:i a' }} - {{ class.end_time|time:'g:i a' }}</span>
+                                                                </a>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endif %}
                                                     {% for event in calendar_events %}
                                                         {% if event.date == day %}
                                                             <a class="btn btn-lg text-start d-flex flex-column btn-transparent-ums"
@@ -179,7 +181,23 @@
                                                             </a>
                                                         {% endif %}
                                                     {% endfor %}
-                                                    <a href="#" class="btn btn-transparent-ums">Add Event</a>
+
+
+                                                    {% for assignment in homework_assignments %}
+                                                        {% if day == assignment.due_date %}
+                                                            <a class="btn btn-lg text-start d-flex flex-column btn-{{ assignment.course.color }}"
+                                                               role="button"
+                                                               style="width: 100%;padding: 16px;margin-bottom: 16px;"
+                                                               href="{% url 'homework' %}">
+                                                                <span class="h4"
+                                                                      style="font-weight: bold;">{{ assignment.name }}</span>
+                                                                <span style="font-weight: normal;font-size: 16px;">Due: {{ assignment.due_date }} at {{ assignment.due_time }}</span>
+                                                            </a>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    <a href="{% url 'add_calendar_event' %}"
+                                                       class="btn btn-transparent-ums">Add Event</a>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-light" type="button" data-bs-dismiss="modal">
