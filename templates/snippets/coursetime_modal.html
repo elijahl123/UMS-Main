@@ -24,7 +24,10 @@
                    style="font-weight: bold;text-align: left;">
                     {{ class.location|default:'Online' }}</p>
                 {% if class.link %}
-                <a href="{{ class.link }}" target="_blank" class="btn btn-primary">Go to Zoom Link</a>
+                    <hr>
+                <a href="{{ class.link }}" target="_blank" class="btn btn-primary mb-2">Go to Zoom Link</a>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Password: {{ class.zoom_password|default:'None' }}</p>
                 {% endif %}
             </div>
             <div class="modal-footer">

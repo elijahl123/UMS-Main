@@ -38,6 +38,7 @@ class CourseTime(models.Model):
     end_time = models.TimeField(blank=False, null=True)
     weekday = models.TextField(max_length=120, default='Sunday', verbose_name='Weekdays')
     link = models.URLField(max_length=500, null=True, blank=True)
+    zoom_password = models.TextField(max_length=120, null=True, blank=True)
 
     def __str__(self):
         return self.course.name

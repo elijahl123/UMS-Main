@@ -63,7 +63,8 @@ class CourseTimeEditForm(ModelForm):
             'end_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
             'location': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
             'color': forms.Select(attrs={'class': 'form-control form-control-lg'}),
-            'link': forms.Textarea(attrs={'class': 'form-control form-control-lg'})
+            'link': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
+            'zoom_password': forms.TextInput(attrs={'class': 'form-control form-control-lg'})
         }
 
     def __init__(self, *args, **kwargs):
