@@ -11,7 +11,7 @@
         <div class="d-flex flex-column flex-lg-row">
             <a class="btn btn-sm btn-transparent-ums me-0 me-lg-3 mb-3 mb-lg-0" role="button" target="_blank" href="{{ file.file.url }}">Download</a>
             <a class="btn btn-sm btn-transparent-success me-0 me-lg-3 mb-3 mb-lg-0" role="button" href="{% url 'edit_course_file' course.id file.id %}">Edit</a>
-            <a class="btn btn-sm btn-transparent-danger me-0 me-lg-3 mb-3 mb-lg-0" role="button" href="#">Delete</a>
+            <a class="btn btn-sm btn-transparent-danger me-0 me-lg-3 mb-3 mb-lg-0" role="button" href="{% url 'delete_course_file' course.id file.id %}">Delete</a>
         </div>
     </div>
     {% endfor %}

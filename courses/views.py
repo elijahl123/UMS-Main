@@ -264,3 +264,15 @@ def add_course_file(request, id, file_id=None):
     context['form'] = form
 
     return render(request, 'form_template.html', context)
+
+
+def delete_course_file(request, id, file_id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+    coursefile = get_object_or_404(CourseFile, id=file_id)
+    coursefile.delete()
+    return redirect('course_files', id)
+
