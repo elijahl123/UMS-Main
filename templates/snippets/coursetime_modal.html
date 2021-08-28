@@ -31,6 +31,7 @@
                 {% endif %}
             </div>
             <div class="modal-footer">
+                <a href="{% url 'course_view' class.course.id %}?next={{ request.path }}" class="btn btn-transparent-ums me-2">View Class</a>
                 <a href="{% url 'edit_coursetime' class.id %}?next={{ request.path }}" class="btn btn-transparent-success me-2">Edit</a>
                 <a href="{% url 'delete_coursetime' class.id %}" class="btn btn-transparent-danger me-2">Delete</a>
                 <button class="btn btn-transparent-secondary" type="button"

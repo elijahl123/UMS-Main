@@ -59,8 +59,10 @@ class CourseTimeEditForm(ModelForm):
         model = CourseTime
         exclude = []
         widgets = {
-            'start_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
-            'end_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
+            'start_time': forms.TimeInput(
+                attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
+            'end_time': forms.TimeInput(
+                attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
             'location': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
             'color': forms.Select(attrs={'class': 'form-control form-control-lg'}),
             'link': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
@@ -76,6 +78,30 @@ class CourseTimeEditForm(ModelForm):
         # Defines the user from the kwargs to prevent the multiple values error
         user = kwargs.pop('user', None)
         super(CourseTimeEditForm, self).__init__(*args, **kwargs)
+        # Changes the user from the default to the request
+        self.fields['course'].queryset = Course.objects.filter(user=user)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['rows'] = '4'
+
+
+class CourseFileForm(forms.ModelForm):
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.filter(user=1),
+        widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
+    )
+
+    class Meta:
+        model = CourseFile
+        exclude = ['uploaded']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control-file', 'style': 'width: 100%'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        # Defines the user from the kwargs to prevent the multiple values error
+        user = kwargs.pop('user', None)
+        super(CourseFileForm, self).__init__(*args, **kwargs)
         # Changes the user from the default to the request
         self.fields['course'].queryset = Course.objects.filter(user=user)
         for visible in self.visible_fields():

@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 from class_calendar.models import CalendarEvent
-from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm
-from courses.models import CourseTime, Course
+from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, CourseFileForm
+from courses.models import CourseTime, Course, CourseFile
 # Create your views here.
 from homework.models import HomeworkAssignment
 from school.models import School
@@ -166,13 +166,17 @@ def index(request):
     week_dates = [dt + datetime.timedelta(days=i) for i in range(3)]
     today_weekday = datetime.datetime.now().strftime("%A")
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False, course__user=request.user, due_date__gte=dt, due_time__gte=dt_time)
+    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False,
+                                                                        course__user=request.user, due_date__gte=dt,
+                                                                        due_time__gte=dt_time)
 
-    context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, course__user=request.user, due_date__lte=dt, due_time__lt=dt_time)
+    context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, course__user=request.user,
+                                                                    due_date__lte=dt, due_time__lt=dt_time)
 
     context['today_and_tomorrow'] = CalendarEvent.objects.filter(user=request.user, date__in=week_dates)
 
-    context['coursetimes_for_today'] = CourseTime.objects.filter(weekday__contains=today_weekday, course__user=request.user)
+    context['coursetimes_for_today'] = CourseTime.objects.filter(weekday__contains=today_weekday,
+                                                                 course__user=request.user)
 
     return render(request, 'index.html', context)
 
@@ -201,3 +205,62 @@ def delete_coursetime(request, id):
     coursetime = get_object_or_404(CourseTime, id=id)
     coursetime.delete()
     return redirect('class_schedule')
+
+
+@login_required
+def course_view(request, id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+    return render(request, 'courses/course_template.html', context)
+
+
+@login_required
+def course_files(request, id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+
+    context['course_files'] = CourseFile.objects.filter(course__user=request.user)
+
+    return render(request, 'courses/course_files.html', context)
+
+
+@login_required
+def add_course_file(request, id, file_id=None):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+
+    context['form_title'] = 'Add Course File'
+    context['form_description'] = 'Here you can add important files to your course'
+
+    coursefile = None
+    if file_id:
+        coursefile = get_object_or_404(CourseFile, id=file_id)
+        context['form_title'] = 'Edit Course File'
+        if coursefile.course.user != request.user:
+            return redirect('course_files')
+
+    if request.POST:
+        form = CourseFileForm(request.POST, request.FILES, instance=coursefile, user=request.user)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            message = 'Course File was added successfully'
+            if file_id:
+                message = 'Course File was edited successfully'
+            messages.success(request, message)
+            return redirect('course_files', course.id)
+    else:
+        form = CourseFileForm(instance=coursefile, user=request.user)
+
+    context['form'] = form
+
+    return render(request, 'form_template.html', context)

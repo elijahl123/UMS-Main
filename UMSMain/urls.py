@@ -39,6 +39,7 @@ urlpatterns = [
     path('add-course/', add_course, name='add_course'),
     path('delete-course/<id>/', delete_course, name='delete_course'),
     path('edit-course/<id>/', edit_course, name='edit_course'),
+    path('courses/', include('courses.course_urls')),
     path('add-school/', add_school, name='add_school'),
     path('calendar/', calendar_events, name='calendar'),
     path('calendar/view/<year>/<current_month>/', calendar_events, name='calendar_custom'),

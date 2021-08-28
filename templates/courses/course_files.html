@@ -1,0 +1,20 @@
+{% extends 'courses/course_template.html' %}
+
+{% block course_content %}
+    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Course Files</h1>
+    <hr/>
+    {% for file in course_files %}
+    <div class="border-success d-flex flex-column align-items-center align-items-lg-start text-success mb-3"
+         style="padding: 1rem;border-radius: 8px;border-width: 3px;border-style: solid;">
+        <h4 class="text-center text-lg-start" style="font-weight: bold;">{{ file.title }}</h4>
+        <p class="text-center text-lg-start">Uploaded: {{ file.uploaded }}</p>
+        <div class="d-flex flex-column flex-lg-row">
+            <a class="btn btn-sm btn-transparent-ums me-0 me-lg-3 mb-3 mb-lg-0" role="button" target="_blank" href="{{ file.file.url }}">Download</a>
+            <a class="btn btn-sm btn-transparent-success me-0 me-lg-3 mb-3 mb-lg-0" role="button" href="{% url 'edit_course_file' course.id file.id %}">Edit</a>
+            <a class="btn btn-sm btn-transparent-danger me-0 me-lg-3 mb-3 mb-lg-0" role="button" href="#">Delete</a>
+        </div>
+    </div>
+    {% endfor %}
+    <a class="btn btn-outline-light btn-lg d-flex justify-content-center align-items-center" role="button" href="{% url 'add_course_file' course.id %}" style="width: 100%;height: 20%;color: var(--main-color);font-weight: bold;font-size: 2rem;border-radius: 8px;border-width: 0px;">
+        <i class="fas fa-plus" style="margin-right: 10px;"></i>Add File</a>
+{% endblock %}

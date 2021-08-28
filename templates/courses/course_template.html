@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <title>{{ course.name }}</title>
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container d-flex flex-column" style="padding: 12px;">
+            <div class="row g-0" style="padding: 1rem;">
+                <div class="col d-flex flex-column align-items-center"
+                     style="padding: 2rem;border-radius: 8px;border: 3px solid var(--main-accent);">
+                    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">{{ course.name }}</h1>
+                    <p style="text-align: center;color: slategray;margin: 0;" class="mb-3">Here you can view information
+                        about your
+                        different classes</p>
+                    <div>
+                        <a href="{% url 'edit_course' course.id %}?next={% url 'course_view' course.id %}" role="button"
+                           class="btn btn-transparent-success me-3">
+                            Edit
+                        </a>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete-item-{{ course.id }}"
+                           class="btn btn-transparent-danger">
+                            Delete
+                        </button>
+                        {% include 'snippets/are_you_sure.html' with item=course delete_url='delete_course' %}
+                    </div>
+                </div>
+            </div>
+            <div class="row g-0 flex-grow-1 overflow-auto">
+                <div class="col-12 col-md-6 col-lg-4 p-3">
+                    <a class="btn btn-lg btn-transparent-ums mb-3 text-start" role="button" style="width: 100%;"
+                       href="{% url 'course_view' course.id %}"><i class="fas fa-info-circle me-3"></i>Class Info</a>
+                    <a class="btn btn-lg btn-transparent-ums mb-3 text-start" role="button" style="width: 100%;"
+                       href="{% url 'course_files' course.id %}"><i class="fas fa-file me-3"></i>Files</a>
+                </div>
+                <div class="col-12 col-md-6 col-lg-8 h-100 overflow-auto p-3">
+                    <div class="h-100 overflow-auto"
+                         style="border-style: solid;border-color: var(--main-accent);border-radius: 8px;padding: 1rem;">
+                        {% block course_content %}
+                            <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
+                                Class Info</h1>
+                            <hr>
+                            <p style="color: slategray;margin: 0;text-align: center;">Name</p>
+                            <p class="lead" style="font-weight: bold;text-align: center;">{{ course.name }}</p>
+                            <p style="color: slategray;margin: 0;text-align: center;">Title</p>
+                            <p class="lead" style="font-weight: bold;text-align: center;">{{ course.title }}</p>
+                            <p style="color: slategray;margin: 0;text-align: center;">Teacher</p>
+                            <p class="lead" style="font-weight: bold;text-align: center;">{{ course.teacher }}</p>
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -1,0 +1,17 @@
+<div role="dialog" tabindex="-1" class="modal fade" id="delete-item-{{ item.id }}">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="font-weight: bold;color: var(--main-color);">Are You Sure?</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="lead" style="margin: 0;text-align: center;color: slategray;">Are you sure you would like to
+                    delete this item?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                <a class="btn btn-danger" role="button" href="{% url delete_url item.id %}">Delete</a></div>
+        </div>
+    </div>
+</div>

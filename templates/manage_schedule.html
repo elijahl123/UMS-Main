@@ -32,7 +32,7 @@
                                      style="width: 100%;margin-bottom: 1rem;">
                                     <h2 style="font-weight: bold;color: var(--main-color);margin: 0;">{{ course.name }}</h2>
                                     <div>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#course-view-{{ course.id }}" role="button" class="btn btn-transparent-ums" style="margin: 5px;">
+                                        <a href="{% url 'course_view' course.id %}" role="button" class="btn btn-transparent-ums" style="margin: 5px;">
                                             View
                                         </a>
                                         {% include 'snippets/course_view_form.html' %}
