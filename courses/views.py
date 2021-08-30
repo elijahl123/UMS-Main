@@ -225,7 +225,7 @@ def course_files(request, id):
         return redirect('class_schedule')
     context['course'] = course
 
-    context['course_files'] = CourseFile.objects.filter(course__user=request.user)
+    context['course_files'] = CourseFile.objects.filter(course__user=request.user, course=course)
 
     return render(request, 'courses/course_files.html', context)
 
