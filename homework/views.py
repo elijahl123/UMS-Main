@@ -39,8 +39,7 @@ def homework(request):
     context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(
         completed=False,
         course__user=request.user,
-        due_date__gte=dt,
-        due_time__gte=dt_time
+        due_date__gte=dt
     )
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)

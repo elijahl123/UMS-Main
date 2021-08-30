@@ -4,7 +4,7 @@
     <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Course Files</h1>
     <hr/>
     {% for file in course_files %}
-    <div class="border-success d-flex flex-column align-items-center align-items-lg-start text-success mb-3"
+    <div class="border-{{ course.color }} d-flex flex-column align-items-center align-items-lg-start text-{{ course.color }} mb-3"
          style="padding: 1rem;border-radius: 8px;border-width: 3px;border-style: solid;">
         <h4 class="text-center text-lg-start" style="font-weight: bold;">{{ file.title }}</h4>
         <p class="text-center text-lg-start">Uploaded: {{ file.uploaded }}</p>
