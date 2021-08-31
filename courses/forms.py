@@ -106,3 +106,8 @@ class CourseFileForm(forms.ModelForm):
         self.fields['course'].queryset = Course.objects.filter(user=user)
         for visible in self.visible_fields():
             visible.field.widget.attrs['rows'] = '4'
+
+
+class FeedbackForm(forms.Form):
+    subject = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))
+    body = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control form-control-lg'}), label='Message')

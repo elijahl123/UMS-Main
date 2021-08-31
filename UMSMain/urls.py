@@ -29,6 +29,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('api.urls')),
     path('', index, name='index'),
+    path('feedback/', feedback, name='feedback'),
     path('account/', account, name='account'),
     path('account/settings/', account_settings, name='account_settings'),
     path('account/settings/change-account-calendar-view/', change_account_calendar_view,

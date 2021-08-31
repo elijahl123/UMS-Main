@@ -83,6 +83,8 @@
     </div>
 {% endif %}
 
+
+
 <div class="container-fluid d-flex" style="padding: 0;height: 100vh;">
     <div class="row g-0 d-flex flex-column flex-grow-1 flex-nowrap flex-lg-row" style="width: 100vw;min-width: 0;">
         <div class="col-12 col-lg-5 col-xl-4 col-xxl-3 sticky-top">
@@ -108,9 +110,11 @@
                     <div class="col" style="overflow: auto;padding: 1rem;padding-top: 0;height: 100%;">
                         <div class="d-flex justify-content-center sticky-top"
                              style="padding-top: 10px;padding-bottom: 1.5rem;margin-bottom: 10px;">
-                            <a class="btn btn-secondary btn-sm" role="button" style="font-weight: bold;"
+                            <a class="btn btn-ums btn-sm me-2" role="button" style="font-weight: bold;"
+                               href="{% url 'feedback' %}?next={{ request.path }}">Feedback</a>
+                            <a class="btn btn-secondary btn-sm me-2" role="button" style="font-weight: bold;"
                                href="{% url 'account' %}">Account</a>
-                            <a class="btn btn-sm btn-transparent-secondary" role="button" style="margin-left: 10px;"
+                            <a class="btn btn-sm btn-transparent-secondary me-2" role="button"
                                href="{% url 'account_logout' %}">Log Out</a>
                         </div>
                         {% include 'snippets/sidenav-links.html' %}

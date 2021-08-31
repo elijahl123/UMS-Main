@@ -2,10 +2,11 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
 
 from class_calendar.models import CalendarEvent
-from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, CourseFileForm
+from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, CourseFileForm, FeedbackForm
 from courses.models import CourseTime, Course, CourseFile
 # Create your views here.
 from homework.models import HomeworkAssignment
@@ -182,6 +183,30 @@ def index(request):
 
 
 @login_required
+def feedback(request):
+    context['account'] = request.user
+
+    context['form_title'] = 'Feedback'
+    context['form_description'] = 'Give the developers feedback on the software and report any problems in the system ' \
+                                  'as well ideas for new features. '
+
+    if request.POST:
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            email = EmailMessage(**form.cleaned_data, to=['elijah.kane.1972@gmail.com'], from_email='%s via UMS <untitledmanagementsoftware@gmail.com>' % request.user.username)
+            email.send()
+            if request.GET.get('next'):
+                return redirect(request.GET.get('next'))
+            return redirect('index')
+    else:
+        form = FeedbackForm()
+
+    context['form'] = form
+
+    return render(request, 'form_template.html', context)
+
+
+@login_required
 def manage_schedule(request):
     context['account'] = request.user
 
@@ -290,8 +315,9 @@ def course_assignments(request, id):
 
     context['class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False, due_date__gte=dt)
 
-    context['late_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False, due_date__lt=dt)
+    context['late_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False,
+                                                                          due_date__lt=dt)
 
     context['completed_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=True)
-    
+
     return render(request, 'courses/course_assignments.html', context)
