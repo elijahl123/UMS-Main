@@ -138,7 +138,7 @@
                                                 <a class="btn btn-sm d-block btn-{{ assignment.course.color }}"
                                                    role="button"
                                                    style="width: 100%;text-align: left;margin-bottom: 8px;"
-                                                   href="{% url 'homework' %}">{{ assignment.name }}</a>
+                                                   href="{% url 'homework' %}#homework-{{ assignment.id }}">{{ assignment.name }}</a>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
@@ -188,7 +188,7 @@
                                                             <a class="btn btn-lg text-start d-flex flex-column btn-{{ assignment.course.color }}"
                                                                role="button"
                                                                style="width: 100%;padding: 16px;margin-bottom: 16px;"
-                                                               href="{% url 'homework' %}">
+                                                               href="{% url 'homework' %}#homework-{{ assignment.id }}">
                                                                 <span class="h4"
                                                                       style="font-weight: bold;">{{ assignment.name }}</span>
                                                                 <span style="font-weight: normal;font-size: 16px;">Due: {{ assignment.due_date }} at {{ assignment.due_time }}</span>
