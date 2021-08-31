@@ -6,12 +6,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="lead" style="margin: 0;text-align: center;color: slategray;">Are you sure you would like to
+                <p class="lead" style="margin: 0;color: slategray;">Are you sure you would like to
                     delete this item?</p>
             </div>
             <div class="modal-footer">
+                {% if previous_modal %}
+                <button class="btn btn-transparent-secondary" type="button" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="{{ previous_modal }}{{ item.id }}" >Close</button>
+                    {% else %}
                 <button class="btn btn-transparent-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                <a class="btn btn-danger" role="button" href="{% url delete_url item.id %}">Delete</a></div>
+                {% endif %}
+                <a class="btn btn-transparent-danger" role="button" href="{% url delete_url item.id %}">Delete</a></div>
         </div>
     </div>
 </div>

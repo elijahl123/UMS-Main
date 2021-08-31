@@ -26,6 +26,8 @@ from users.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include('api.urls')),
     path('', index, name='index'),
     path('account/', account, name='account'),
     path('account/settings/', account_settings, name='account_settings'),

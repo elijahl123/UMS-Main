@@ -1,0 +1,16 @@
+{% extends 'courses/course_template.html' %}
+
+{% block course_content %}
+    {% if class_assignments %}
+        {% include 'snippets/assignments_row.html' with row_title='Assignments' row_query=class_assignments %}
+    {% endif %}
+    {% if late_class_assignments %}
+        {% include 'snippets/assignments_row.html' with row_title='Late' row_query=late_class_assignments %}
+    {% endif %}
+    {% if completed_class_assignments %}
+        {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_class_assignments %}
+    {% endif %}
+
+    <a class="btn btn-outline-light btn-lg d-flex justify-content-center align-items-center" role="button" href="{% url 'add_assignment' %}" style="width: 100%;height: 20%;color: var(--main-color);font-weight: bold;font-size: 2rem;border-radius: 8px;border-width: 0px;">
+        <i class="fas fa-plus" style="margin-right: 10px;"></i>Add Assignment</a>
+{% endblock %}

@@ -40,10 +40,11 @@
                                            style="margin: 5px;">
                                             Edit
                                         </a>
-                                        <a href="{% url 'delete_course' course.id %}" role="button" class="btn btn-transparent-danger"
+                                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete-item-{{ course.id }}" class="btn btn-transparent-danger"
                                            style="margin: 5px;">
                                             Delete
-                                        </a>
+                                        </button>
+                                        {% include 'snippets/are_you_sure.html' with item=course delete_url='delete_course' %}
                                     </div>
                                 </div>
                                 {% for class in coursetimes %}

@@ -11,8 +11,8 @@
                 <div class="col d-flex flex-column" style="padding: 1rem;height: 100vh;">
                     <h1 style="font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
                         Hello, {{ account.first_name|default:account.username }}!</h1>
-                    <div class="row g-0 flex-grow-1 overflow-auto" style="height: 100%;">
-                        <div class="col overflow-auto" style="height: 100%;border-radius: .3rem;">
+                    <div class="row g-0 flex-grow-1" style="height: 100%;">
+                        <div class="col" style="height: 100%;border-radius: .3rem;">
                             <div class="row g-0">
                                 {% include 'snippets/dashboard_widget.html' with widget_title='Today and Tomorrow' widget_link='calendar' widget_query=today_and_tomorrow widget_none_message='There is Nothing Today or Tomorrow' %}
                                 {% include 'snippets/dashboard_widget.html' with widget_title='Upcoming Assignments' widget_link='homework' widget_query=upcoming_assignments widget_none_message='There are No Upcoming Assignments' %}

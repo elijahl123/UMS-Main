@@ -9,7 +9,9 @@ django-admin==2.0.1
 django-allauth==0.45.0
 django-excel-base==1.0.4
 django-excel-response2==3.0.2
+django-rest-framework==0.1.0
 django-six==1.0.4
+djangorestframework==3.12.4
 idna==3.2
 oauthlib==3.1.1
 Pillow==8.3.1

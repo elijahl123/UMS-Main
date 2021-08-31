@@ -266,6 +266,7 @@ def add_course_file(request, id, file_id=None):
     return render(request, 'form_template.html', context)
 
 
+@login_required
 def delete_course_file(request, id, file_id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -276,3 +277,21 @@ def delete_course_file(request, id, file_id):
     coursefile.delete()
     return redirect('course_files', id)
 
+
+@login_required
+def course_assignments(request, id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+
+    dt = datetime.datetime.today()
+
+    context['class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False, due_date__gte=dt)
+
+    context['late_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False, due_date__lt=dt)
+
+    context['completed_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=True)
+    
+    return render(request, 'courses/course_assignments.html', context)

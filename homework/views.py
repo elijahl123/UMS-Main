@@ -2,7 +2,6 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
@@ -28,15 +27,7 @@ def homework(request):
         due_time__lt=dt_time
     )
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(
-        due_date__in=week_dates,
-        completed=False,
-        course__user=request.user,
-        due_date__gte=dt,
-        due_time__gte=dt_time
-    )
-
-    context['later_assignments'] = HomeworkAssignment.objects.exclude(due_date__in=week_dates).filter(
+    context['all_assignments'] = HomeworkAssignment.objects.filter(
         completed=False,
         course__user=request.user,
         due_date__gte=dt

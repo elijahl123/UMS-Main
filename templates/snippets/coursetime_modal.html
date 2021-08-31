@@ -25,15 +25,19 @@
                     {{ class.location|default:'Online' }}</p>
                 {% if class.link %}
                     <hr>
-                <a href="{{ class.link }}" target="_blank" class="btn btn-primary mb-2">Go to Zoom Link</a>
-                <p style="color: slategray;margin: 0;text-align: left;">
-                    Password: {{ class.zoom_password|default:'None' }}</p>
+                    <a href="{{ class.link }}" target="_blank" class="btn btn-primary mb-2">Go to Zoom Link</a>
+                    <p style="color: slategray;margin: 0;text-align: left;">
+                        Password: {{ class.zoom_password|default:'None' }}</p>
                 {% endif %}
             </div>
             <div class="modal-footer">
-                <a href="{% url 'course_view' class.course.id %}?next={{ request.path }}" class="btn btn-transparent-ums me-2">View Class</a>
-                <a href="{% url 'edit_coursetime' class.id %}?next={{ request.path }}" class="btn btn-transparent-success me-2">Edit</a>
-                <a href="{% url 'delete_coursetime' class.id %}" class="btn btn-transparent-danger me-2">Delete</a>
+                <a href="{% url 'course_view' class.course.id %}?next={{ request.path }}"
+                   class="btn btn-transparent-ums me-2">View Class</a>
+                <a href="{% url 'edit_coursetime' class.id %}?next={{ request.path }}"
+                   class="btn btn-transparent-success me-2">Edit</a>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#delete-item-{{ class.id }}" data-bs-dismiss="modal"
+                        class="btn btn-transparent-danger me-2">Delete
+                </button>
                 <button class="btn btn-transparent-secondary" type="button"
                         data-bs-dismiss="modal">Close
                 </button>
@@ -41,3 +45,4 @@
         </div>
     </div>
 </div>
+{% include 'snippets/are_you_sure.html' with item=class delete_url='delete_coursetime' previous_modal='#date-event-' %}
