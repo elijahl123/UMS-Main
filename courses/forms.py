@@ -107,6 +107,29 @@ class CourseFileForm(forms.ModelForm):
         for visible in self.visible_fields():
             visible.field.widget.attrs['rows'] = '4'
 
+class CourseLinkForm(forms.ModelForm):
+    course = forms.ModelChoiceField(
+        queryset=Course.objects.filter(user=1),
+        widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
+    )
+
+    class Meta:
+        model = CourseLink
+        exclude = ['uploaded']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'link': forms.URLInput(attrs={'class': 'form-control form-control-lg'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        # Defines the user from the kwargs to prevent the multiple values error
+        user = kwargs.pop('user', None)
+        super(CourseLinkForm, self).__init__(*args, **kwargs)
+        # Changes the user from the default to the request
+        self.fields['course'].queryset = Course.objects.filter(user=user)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['rows'] = '4'
+
 
 class FeedbackForm(forms.Form):
     subject = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-lg'}))

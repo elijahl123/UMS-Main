@@ -13,6 +13,7 @@ color_choices = [
     ('info', 'Light Blue'),
 ]
 
+
 def upload_course_file(instance, filename):
     file_path = 'course_files/{username}/{filename}'.format(
         username=str(instance.course.user.username), filename=filename
@@ -64,3 +65,19 @@ class CourseFile(models.Model):
     title = models.CharField(null=True, max_length=120)
     file = models.FileField(null=True, upload_to=upload_course_file)
     uploaded = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['uploaded']
+
+
+class CourseLink(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    title = models.CharField(null=True, max_length=120)
+    link = models.URLField(null=True)
+    uploaded = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.course.name
+
+    class Meta:
+        ordering = ['uploaded']

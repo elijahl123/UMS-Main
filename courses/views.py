@@ -6,8 +6,8 @@ from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
 
 from class_calendar.models import CalendarEvent
-from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, CourseFileForm, FeedbackForm
-from courses.models import CourseTime, Course, CourseFile
+from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, CourseFileForm, FeedbackForm, CourseLinkForm
+from courses.models import CourseTime, Course, CourseFile, CourseLink
 # Create your views here.
 from homework.models import HomeworkAssignment
 from school.models import School
@@ -284,7 +284,7 @@ def add_course_file(request, id, file_id=None):
             messages.success(request, message)
             return redirect('course_files', course.id)
     else:
-        form = CourseFileForm(instance=coursefile, user=request.user)
+        form = CourseFileForm(instance=coursefile, user=request.user, initial={'course': id})
 
     context['form'] = form
 
@@ -321,3 +321,63 @@ def course_assignments(request, id):
     context['completed_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=True)
 
     return render(request, 'courses/course_assignments.html', context)
+
+@login_required
+def course_links(request, id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+
+    context['course_links'] = CourseLink.objects.filter(course__user=request.user, course=course)
+
+    return render(request, 'courses/course_links.html', context)
+
+
+@login_required
+def add_course_link(request, id, link_id=None):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+
+    context['form_title'] = 'Add Course Link'
+    context['form_description'] = 'Here you can add important links to your course'
+
+    courselink = None
+    if link_id:
+        courselink = get_object_or_404(CourseLink, id=link_id)
+        context['form_title'] = 'Edit Course Link'
+        if courselink.course.user != request.user:
+            return redirect('course_links')
+
+    if request.POST:
+        form = CourseLinkForm(request.POST, request.FILES, instance=courselink, user=request.user)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            message = 'Course Link was added successfully'
+            if link_id:
+                message = 'Course Link was edited successfully'
+            messages.success(request, message)
+            return redirect('course_links', course.id)
+    else:
+        form = CourseLinkForm(instance=courselink, user=request.user, initial={'course': id})
+
+    context['form'] = form
+
+    return render(request, 'form_template.html', context)
+
+
+@login_required
+def delete_course_link(request, id, link_id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+    courselink = get_object_or_404(CourseLink, id=link_id)
+    courselink.delete()
+    return redirect('course_links', id)
