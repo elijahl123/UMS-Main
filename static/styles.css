@@ -24,6 +24,10 @@
 .col-12.col-lg-7.col-xl-8.col-xxl-9.flex-grow-1 {
 }
 
+* {
+    -webkit-appearance: none;
+}
+
 body {
     font-family: Poppins, sans-serif;
 }
