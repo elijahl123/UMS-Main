@@ -193,7 +193,8 @@ def feedback(request):
     if request.POST:
         form = FeedbackForm(request.POST)
         if form.is_valid():
-            email = EmailMessage(**form.cleaned_data, to=['elijah.kane.1972@gmail.com'], from_email='%s via UMS <untitledmanagementsoftware@gmail.com>' % request.user.username)
+            email = EmailMessage(**form.cleaned_data, to=['elijah.kane.1972@gmail.com'],
+                                 from_email='%s via UMS <untitledmanagementsoftware@gmail.com>' % request.user.username)
             email.send()
             if request.GET.get('next'):
                 return redirect(request.GET.get('next'))
@@ -321,6 +322,7 @@ def course_assignments(request, id):
     context['completed_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=True)
 
     return render(request, 'courses/course_assignments.html', context)
+
 
 @login_required
 def course_links(request, id):

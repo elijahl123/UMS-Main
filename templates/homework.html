@@ -32,7 +32,7 @@
                                      style="padding: 1rem;border-radius: 8px;background: var(--secondary-color);">
                                     <h3 class="text-center text-lg-start"
                                         style="font-weight: bold;color: var(--main-color);">
-                                        {{ assignment_date.due_date|date:'F j' }}</h3>
+                                        {{ assignment_date.due_date|date:'l, F j' }}</h3>
                                     <hr/>
                                     {% for assignment in all_assignments %}
                                         {% if assignment.due_date == assignment_date.due_date %}
