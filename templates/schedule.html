@@ -103,7 +103,7 @@
                             <div class="col d-flex flex-column align-items-center calendar-dates"
                                  style="flex: 0 0 auto;width: calc(100% / 7 - 15px);position: relative;">
                             {% now 'D' as current_day %}
-                                <span {% if name == current_day %}class="bg-primary text-white p-1 rounded"{% endif %} style="margin-top: 1rem;font-size: 25px;color: slategray;">{{ name }}</span>
+                                <span class="py-1 px-2 {% if name == current_day %}bg-primary text-white{% endif %}" style="margin-top: 0.75rem;font-size: 25px;color: slategray;border: white solid 3px;border-radius: 8px">{{ name }}</span>
                                 {% for class in coursetimes %}
                                     {% if day in class.weekdays %}
                                         <a href="#" data-start-time="{{ class.start_time|time:'H:i' }}"
