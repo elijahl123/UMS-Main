@@ -102,7 +102,8 @@
                         {% for name, day in weekdays %}
                             <div class="col d-flex flex-column align-items-center calendar-dates"
                                  style="flex: 0 0 auto;width: calc(100% / 7 - 15px);position: relative;">
-                                <span style="margin-top: 1rem;font-size: 25px;color: slategray;">{{ name }}</span>
+                            {% now 'D' as current_day %}
+                                <span {% if name == current_day %}class="bg-primary text-white p-1 rounded"{% endif %} style="margin-top: 1rem;font-size: 25px;color: slategray;">{{ name }}</span>
                                 {% for class in coursetimes %}
                                     {% if day in class.weekdays %}
                                         <a href="#" data-start-time="{{ class.start_time|time:'H:i' }}"
