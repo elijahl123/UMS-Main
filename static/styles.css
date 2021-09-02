@@ -25,7 +25,7 @@
 }
 
 * {
-    -webkit-appearance: none;
+    -webkit-appearance: none !important;
 }
 
 body {
