@@ -383,3 +383,17 @@ def delete_course_link(request, id, link_id):
     courselink = get_object_or_404(CourseLink, id=link_id)
     courselink.delete()
     return redirect('course_links', id)
+
+
+@login_required
+def course_coursetimes(request, id):
+    context['account'] = request.user
+    course = get_object_or_404(Course, id=id)
+    if course.user != request.user:
+        return redirect('class_schedule')
+    context['course'] = course
+
+    coursetimes = CourseTime.objects.filter(course=course)
+    context['coursetimes'] = coursetimes
+
+    return render(request, 'courses/course_coursetimes.html', context)

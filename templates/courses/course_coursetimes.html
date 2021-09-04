@@ -1,0 +1,20 @@
+{% extends 'courses/course_template.html' %}
+
+{% block course_content %}
+    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Course Times</h1>
+    <hr/>
+    {% for class in coursetimes %}
+        <a href="#" class="btn btn-transparent-{{ class.course.color }}" data-bs-toggle="modal"
+           data-bs-target="#date-event-{{ class.id }}"
+           style="padding: 1rem;width: 100%;text-align: left;border-radius: 8px;margin-bottom: 1rem;">
+            <h4 class="text-center text-lg-start"
+                style="font-weight: bold;">{{ class.weekdays }}</h4>
+            <p class="lead text-center text-lg-start"
+               style="margin-bottom: 8px;">{{ class.start_time|time:'g:i a' }}
+                - {{ class.end_time|time:'g:i a' }}</p>
+            <p class="lead text-center text-lg-start" style="margin-bottom: 0;">
+                {{ class.location|default:'Online' }}</p>
+        </a>
+        {% include 'snippets/coursetime_modal.html' with class=class %}
+    {% endfor %}
+{% endblock %}
