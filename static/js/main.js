@@ -11,4 +11,23 @@ window.addEventListener("load", function () {
             })
         }
     })
+    $.ajax({
+        url: '/api/assignments/view/',
+        success: function (data) {
+            const d = new Date()
+            let late_assignments = 0
+            $.each(data, function (index, element) {
+                const due = new Date(element.due_date + 'T' + element.due_time)
+                if (!element.completed && due < d) {
+                    late_assignments += 1
+                }
+            })
+            if (late_assignments) {
+                $('#homework-nav-link').append(`
+                    <span class="badge bg-danger ms-2">${late_assignments} Late</span>
+                `)
+            }
+        }
+    })
+
 });
