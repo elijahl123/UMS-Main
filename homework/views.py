@@ -90,5 +90,6 @@ def complete_assignment(request, id):
         assignment.save()
     else:
         assignment.completed = True
+        messages.success(request, 'Congratulations! I\'m proud of you!')
         assignment.save()
     return redirect('homework')
