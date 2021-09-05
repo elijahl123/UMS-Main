@@ -196,7 +196,7 @@
                                                         {% endif %}
                                                     {% endfor %}
 
-                                                    <a href="{% url 'add_calendar_event' %}"
+                                                    <a href="{% url 'add_calendar_event' %}?date={{ day|date:'Y-m-d' }}"
                                                        class="btn btn-transparent-ums">Add Event</a>
                                                 </div>
                                                 <div class="modal-footer">

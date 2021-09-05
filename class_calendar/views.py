@@ -39,7 +39,7 @@ def add_calendar_event(request, id=0):
             messages.success(request, 'New Event Added')
             return redirect('calendar')
     else:
-        form = AddEvent(instance=event_instance if id else None)
+        form = AddEvent(instance=event_instance if id else None, initial={'date': request.GET.get('date')})
 
     context['form'] = form
 

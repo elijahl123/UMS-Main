@@ -164,7 +164,7 @@ def index(request):
 
     dt = datetime.datetime.today()
     dt_time = datetime.datetime.now().strftime('%H:%M:%S')
-    week_dates = [dt + datetime.timedelta(days=i) for i in range(3)]
+    week_dates = [dt + datetime.timedelta(days=i) for i in range(2)]
     today_weekday = datetime.datetime.now().strftime("%A")
 
     context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False,
