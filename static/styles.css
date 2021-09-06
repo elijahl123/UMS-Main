@@ -21,11 +21,11 @@
     margin: 3px;
 }
 
-.col-12.col-lg-7.col-xl-8.col-xxl-9.flex-grow-1 {
-}
-
 * {
     -webkit-appearance: none !important;
+}
+input[type='checkbox'] {
+    -webkit-appearance: checkbox !important;
 }
 
 body {
