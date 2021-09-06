@@ -10,7 +10,7 @@ window.addEventListener('load', (event) => {
         $(this).css('height', div_height + 'px')
 
 
-        let div_margin_top = (parseInt(start_time.substring(0, 2)) - 8) * 100 + 80
+        let div_margin_top = (parseInt(start_time.substring(0, 2)) - 7) * 100 + 80
         if (parseInt(start_time.substring(3, 5))) {
             div_margin_top += (parseInt(start_time.substring(3, 5)) / 60) * 100
         }
