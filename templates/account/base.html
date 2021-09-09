@@ -26,10 +26,12 @@
 
     <nav class="navbar navbar-light navbar-expand-md navigation-clean sticky-top" style="padding: 16px;">
         <div class="container-fluid">
-            <a class="navbar-brand d-none d-lg-block" href="{% url 'account' %}" style="color: var(--main-color); font-weight: bold">Untitled
+            <a class="navbar-brand d-none d-lg-block" href="{% url 'account' %}"
+               style="color: var(--main-color); font-weight: bold">Untitled
                 Management
                 Software</a>
-            <a class="navbar-brand d-lg-none" href="{% url 'account' %}" style="color: var(--main-color); font-weight: bold">UMS</a>
+            <a class="navbar-brand d-lg-none" href="{% url 'account' %}"
+               style="color: var(--main-color); font-weight: bold">UMS</a>
             <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
                 <span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span>
             </button>
@@ -38,7 +40,8 @@
                     <ul class="navbar-nav mx-auto">
                         {% for message in messages %}
                             <li class="nav-item" style="padding: 5px;">
-                                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}" role="alert" style="margin: 0; padding: 6px 12px">
+                                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %}"
+                                     role="alert" style="margin: 0; padding: 6px 12px">
                                     <span>{{ message }}</span>
                                 </div>
                             </li>
@@ -71,6 +74,7 @@
     </nav>
     {% block content %}
     {% endblock %}
+    {% include 'snippets/base_footer.html' %}
 {% endblock %}
 {% block extra_body %}
 {% endblock %}

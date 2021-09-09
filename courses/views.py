@@ -397,3 +397,8 @@ def course_coursetimes(request, id):
     context['coursetimes'] = coursetimes
 
     return render(request, 'courses/course_coursetimes.html', context)
+
+def privacy_policy(request):
+    context['account'] = request.user
+
+    return render(request, 'privacy-policy.html', context)

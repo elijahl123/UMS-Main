@@ -94,7 +94,7 @@
                          style="font-family: Poppins, sans-serif;padding: 1rem;">
                         <div class="d-flex align-items-center">
                             <img src="{% static 'img/UMSLogo.png' %}" style="height: 5rem;margin-right: 1rem;"
-                                     alt="UMS Logo">
+                                 alt="UMS Logo">
                             <h3 class="d-none d-lg-block" style="color: var(--main-color);font-weight: bold;margin: 0;">
                                 Untitled Management Software</h3>
                             <h1 class="display-1 d-lg-none"
@@ -126,6 +126,7 @@
             {% block content %}
 
             {% endblock %}
+        {% include 'snippets/base_footer.html' %}
         </div>
     </div>
 </div>
