@@ -33,8 +33,8 @@ credentials = {
         "client_secret": "OunQv9kY3lmfXdaRGBOuo6JH",
         "redirect_uris": ["http://localhost/accounts/google/login/callback/",
                           "https://client.untitledmanagementsoftware.com/accounts/google/login/callback/",
-                          "http://localhost/calendar/save-google-credentials/",
-                          "https://client.untitledmanagementsoftware.com/calendar/save-google-credentials/",
+                          "http://localhost/calendar/",
+                          "https://client.untitledmanagementsoftware.com/calendar/",
                           "http://localhost/",
                           "http://client.untitledmanagementsoftware.com/"]
     }
@@ -137,7 +137,7 @@ def connect_google_calendar(request):
         else:
             flow = InstalledAppFlow.from_client_config(
                 credentials, SCOPES)
-            flow.redirect_uri = request.build_absolute_uri(reverse('save_google_credentials'))
+            flow.redirect_uri = request.build_absolute_uri(reverse('calendar'))
             authorization_url, state = flow.authorization_url(
                 # Enable offline access so that you can refresh an access token without
                 # re-prompting the user for permission. Recommended for web server apps.
@@ -148,12 +148,4 @@ def connect_google_calendar(request):
             # Save the credentials for the next run
             return HttpResponseRedirect(authorization_url)
 
-    return redirect('save_google_credentials')
-
-
-@login_required()
-def save_google_credentials(request):
-    flow = InstalledAppFlow.from_client_config(credentials, SCOPES, state=request.GET.get('state'))
-    token = flow.fetch_token(authorization_response=request.build_absolute_uri(reverse('save_google_credentials')))
-    CalendarToken.objects.update_or_create(user=request.user, token=token)
     return redirect('calendar')
