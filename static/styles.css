@@ -192,5 +192,7 @@ a, a:hover, a:focus, a:active {
 
 main > .container, main > .container-fluid {
     height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
