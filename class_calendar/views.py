@@ -154,6 +154,6 @@ def connect_google_calendar(request):
 @login_required()
 def save_google_credentials(request):
     flow = InstalledAppFlow.from_client_config(credentials, SCOPES, state=request.GET.get('state'))
-    token = flow.fetch_token(authorization_response=reverse('save_google_credentials'))
+    token = flow.fetch_token(authorization_response=request.build_absolute_uri(reverse('save_google_credentials')))
     CalendarToken.objects.update_or_create(user=request.user, token=token)
     return redirect('calendar')
