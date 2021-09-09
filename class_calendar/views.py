@@ -126,7 +126,8 @@ def connect_google_calendar(request):
                                   "https://client.untitledmanagementsoftware.com/accounts/google/login/callback/",
                                   "http://localhost/calendar/connect-google/",
                                   "https://client.untitledmanagementsoftware.com/calendar/connect-google/",
-                                  "http://localhost/"]
+                                  "http://localhost/",
+                                  "http://client.untitledmanagementsoftware.com/"]
             }
             }
             flow = InstalledAppFlow.from_client_config(
