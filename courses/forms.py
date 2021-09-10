@@ -60,9 +60,9 @@ class CourseTimeEditForm(ModelForm):
         exclude = []
         widgets = {
             'start_time': forms.TimeInput(
-                attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
+                attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '07:00', 'max': '22:00'}),
             'end_time': forms.TimeInput(
-                attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '08:00', 'max': '22:00'}),
+                attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '07:00', 'max': '22:00'}),
             'location': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
             'color': forms.Select(attrs={'class': 'form-control form-control-lg'}),
             'link': forms.Textarea(attrs={'class': 'form-control form-control-lg'}),
@@ -106,6 +106,7 @@ class CourseFileForm(forms.ModelForm):
         self.fields['course'].queryset = Course.objects.filter(user=user)
         for visible in self.visible_fields():
             visible.field.widget.attrs['rows'] = '4'
+
 
 class CourseLinkForm(forms.ModelForm):
     course = forms.ModelChoiceField(
