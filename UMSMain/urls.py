@@ -18,7 +18,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from class_calendar.views import calendar_events, add_calendar_event, delete_calendar_event, connect_google_calendar
+from class_calendar.views import calendar_events, add_calendar_event, delete_calendar_event, connect_google_calendar, \
+    save_google_credentials
 from courses.views import *
 from homework.views import homework, add_assignment, delete_assignment, complete_assignment
 from users.views import *
@@ -51,6 +52,7 @@ urlpatterns = [
     path('calendar/delete-event/<id>/', delete_calendar_event, name='delete_calendar_event'),
     path('calendar/edit-event/<int:id>/', add_calendar_event, name='edit_calendar_event'),
     path('calendar/connect-google/', connect_google_calendar, name='connect_google_calendar'),
+    path('calendar/save-google-credentials/', save_google_credentials, name='save_google_credentials'),
     path('homework/', homework, name='homework'),
     path('homework/add-assignment/', add_assignment, name='add_assignment'),
     path('homework/edit-assignment/<id>/', add_assignment, name='edit_assignment'),

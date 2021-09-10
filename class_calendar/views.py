@@ -1,6 +1,5 @@
 import calendar
 import json
-import os
 from datetime import date
 
 from django.contrib import messages
@@ -10,7 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+from google_auth_oauthlib.flow import Flow
 
 # Create your views here.
 from class_calendar.forms import AddEvent
@@ -33,10 +32,10 @@ credentials = {
         "client_secret": "OunQv9kY3lmfXdaRGBOuo6JH",
         "redirect_uris": ["http://localhost/accounts/google/login/callback/",
                           "https://client.untitledmanagementsoftware.com/accounts/google/login/callback/",
-                          "http://localhost/calendar/",
-                          "https://client.untitledmanagementsoftware.com/calendar/",
-                          "http://localhost/",
-                          "http://client.untitledmanagementsoftware.com/"]
+                          "http://localhost/calendar/save-google-credentials/",
+                          "https://client.untitledmanagementsoftware.com/calendar/save-google-credentials/",
+                          "http://localhost/", "http://localhost/calendar/",
+                          "https://client.untitledmanagementsoftware.com/calendar/"]
     }
 }
 
@@ -135,9 +134,9 @@ def connect_google_calendar(request):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_config(
+            flow = Flow.from_client_config(
                 credentials, SCOPES)
-            flow.redirect_uri = request.build_absolute_uri(reverse('calendar'))
+            flow.redirect_uri = request.build_absolute_uri(reverse('save_google_credentials'))
             authorization_url, state = flow.authorization_url(
                 # Enable offline access so that you can refresh an access token without
                 # re-prompting the user for permission. Recommended for web server apps.
@@ -149,3 +148,32 @@ def connect_google_calendar(request):
             return HttpResponseRedirect(authorization_url)
 
     return redirect('calendar')
+
+
+@login_required
+def save_google_credentials(request):
+    flow = Flow.from_client_config(
+        credentials, scopes=None, state=request.GET.get('state'))
+
+    flow.redirect_uri = request.build_absolute_uri(reverse('save_google_credentials'))
+
+    flow.fetch_token(code=request.GET.get('code'))
+    token_credentials = flow.credentials
+    token = {
+        'token': token_credentials.token,
+        'refresh_token': token_credentials.refresh_token,
+        'token_uri': token_credentials.token_uri,
+        'client_id': token_credentials.client_id,
+        'client_secret': token_credentials.client_secret,
+        'scopes': token_credentials.scopes
+    }
+
+    obj, obj_exists = CalendarToken.objects.get_or_create(user=request.user)
+    obj.token = json.dumps(token)
+    obj.save()
+    return redirect('calendar')
+
+
+@login_required
+def get_google_events(request):
+    context['account'] = request.user
