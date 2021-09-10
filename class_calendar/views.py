@@ -20,7 +20,11 @@ from school.models import School
 
 context = {'schools': School.objects.all()}
 
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.calendars',
+    'https://www.googleapis.com/auth/calendar.events'
+]
 
 credentials = {
     "web": {
