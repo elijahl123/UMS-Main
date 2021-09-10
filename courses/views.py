@@ -54,7 +54,8 @@ def add_coursetime(request):
             obj.save()
             return redirect('manage_schedule')
         else:
-            messages.error(request, '<strong>Error:</strong> Please enter a valid weekday for the Course Time')
+            for error in form.errors:
+                messages.error(request, '<strong>Error:</strong> {error}'.format(error=error))
 
     return redirect('manage_schedule')
 
@@ -151,7 +152,7 @@ def edit_coursetime(request, id):
                 return redirect(request.GET.get('next'))
             return redirect('index')
     else:
-        form = CourseTimeEditForm(instance=coursetime, user=request.user)
+        form = CourseTimeEditForm(instance=coursetime, user=request.user, initial={'course': coursetime.course})
 
     context['form'] = form
 
