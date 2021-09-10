@@ -14,10 +14,16 @@
                     <div class="row g-0 flex-grow-1" style="height: 100%;">
                         <div class="col" style="height: 100%;border-radius: .3rem;">
                             <div class="row g-0">
-                                {% include 'snippets/dashboard_widget.html' with widget_title='Today and Tomorrow' widget_link='calendar' widget_query=today_and_tomorrow widget_none_message='There is Nothing Today or Tomorrow' %}
-                                {% include 'snippets/dashboard_widget.html' with widget_title='Upcoming Assignments' widget_link='homework' widget_query=upcoming_assignments widget_none_message='There are No Upcoming Assignments' %}
-                                {% include 'snippets/dashboard_widget.html' with widget_title='Courses Today' widget_link='class_schedule' widget_query=coursetimes_for_today widget_none_message='There are No Courses Today' %}
-                                {% include 'snippets/dashboard_widget.html' with widget_title='Late Assignments' widget_link='homework' widget_query=late_assignments widget_none_message='There are No Late Assignments' %}
+                                <div class="col-12 col-md-6 col-lg-4 px-3">
+                                    {% include 'snippets/dashboard_widget.html' with widget_title='Today and Tomorrow' widget_link='calendar' widget_query=today_and_tomorrow widget_none_message='There is Nothing Today or Tomorrow' %}
+                                    {% include 'snippets/dashboard_widget.html' with widget_title='Late Assignments' widget_link='homework' widget_query=late_assignments widget_none_message='There are No Late Assignments' %}
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4 px-3">
+                                    {% include 'snippets/dashboard_widget.html' with widget_title='Upcoming Assignments' widget_link='homework' widget_query=upcoming_assignments widget_none_message='There are No Upcoming Assignments' %}
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-4 px-3">
+                                    {% include 'snippets/dashboard_widget.html' with widget_title='Courses Today' widget_link='class_schedule' widget_query=coursetimes_for_today widget_none_message='There are No Courses Today' %}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,28 +1,29 @@
-<div class="col-12 col-md-6 col-lg-4" style="padding: 1rem;">
-    <div class="w-100"
-         style="border-style: solid;border-color: var(--main-accent);border-radius: 8px;padding: 1rem;">
-        <a href="{% url widget_link %}" class="btn btn-light d-flex" title="{{ widget_title }}" style="padding: 1rem;border-radius: 8px;">
-            <h3 class="text-center text-truncate w-100" style="margin: 0;color: var(--main-color);font-weight: bold;">{{ widget_title }}</h3>
-        </a>
+<div class="w-100 mb-4"
+     style="border-style: solid;border-color: var(--main-accent);border-radius: 8px;padding: 1rem;">
+    <a href="{% url widget_link %}" class="btn btn-light d-flex" title="{{ widget_title }}"
+       style="padding: 1rem;border-radius: 8px;">
+        <h3 class="text-center text-truncate w-100"
+            style="margin: 0;color: var(--main-color);font-weight: bold;">{{ widget_title }}</h3>
+    </a>
     {% if widget_query %}
         {% for item in widget_query %}
-        <a href="{% url widget_link %}"
-           class="btn btn-lg d-flex flex-column w-100 btn-transparent-{% if item.color %}{{ item.color }}{% elif item.course.color %}{{ item.course.color }}{% else %}ums{% endif %}" type="button"
-                style="padding: 1rem;border-radius: 8px;margin-top: 1rem;">
-        {% if widget_title == 'Today and Tomorrow' %}
-            <span class="h4" style="font-weight: bold;">{{ item.title }}</span>
-            <span>{{ item.date }} {{ item.time|default:'' }}</span>
-        {% elif widget_title == 'Upcoming Assignments' or widget_title == 'Late Assignments' %}
-            <span class="h4" style="font-weight: bold;">{{ item.name }}</span>
-            <span>{{ item.due_date }} {{ item.due_time|default:'' }}</span>
-        {% elif widget_title == 'Courses Today' %}
-            <span class="h4" style="font-weight: bold;">{{ item.course.name }}</span>
-            <span>{{ item.start_time|time:'g:iA' }} to {{ item.end_time|time:'g:iA' }}</span>
-        {% endif %}
-        </a>
+            <a href="{% url widget_link %}"
+               class="btn btn-lg d-flex flex-column w-100 btn-transparent-{% if item.color %}{{ item.color }}{% elif item.course.color %}{{ item.course.color }}{% else %}ums{% endif %}"
+               type="button"
+               style="padding: 1rem;border-radius: 8px;margin-top: 1rem;">
+                {% if widget_title == 'Today and Tomorrow' %}
+                    <span class="h4" style="font-weight: bold;">{{ item.title }}</span>
+                    <span>{{ item.date }} {{ item.time|default:'' }}</span>
+                {% elif widget_title == 'Upcoming Assignments' or widget_title == 'Late Assignments' %}
+                    <span class="h4" style="font-weight: bold;">{{ item.name }}</span>
+                    <span>{{ item.due_date }} {{ item.due_time|default:'' }}</span>
+                {% elif widget_title == 'Courses Today' %}
+                    <span class="h4" style="font-weight: bold;">{{ item.course.name }}</span>
+                    <span>{{ item.start_time|time:'g:iA' }} to {{ item.end_time|time:'g:iA' }}</span>
+                {% endif %}
+            </a>
         {% endfor %}
-        {% else %}
+    {% else %}
         <p class="lead text-center mt-3">{{ widget_none_message }}</p>
     {% endif %}
-    </div>
 </div>
