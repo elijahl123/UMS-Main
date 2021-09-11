@@ -66,7 +66,7 @@ def add_assignment(request, id=None):
                 messages.success(request, 'Assignment added successfully')
             return redirect('homework')
     else:
-        form = HomeworkAssignmentForm(instance=instance if instance else None, user=request.user, initial={'course': request.GET.get('course')})
+        form = HomeworkAssignmentForm(instance=instance if instance else None, user=request.user, initial={'course': request.GET.get('course') or instance.course})
 
     context['form'] = form
 
