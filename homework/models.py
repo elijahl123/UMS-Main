@@ -12,7 +12,7 @@ class HomeworkAssignment(models.Model):
     description = models.TextField(null=True, blank=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
     due_date = models.DateField(null=True)
-    due_time = models.TimeField(default='09:00:00')
+    due_time = models.TimeField(default='23:59:00')
     link = models.URLField(null=True, blank=True)
     completed = models.BooleanField(default=False)
 
