@@ -17,6 +17,21 @@
     <link rel="stylesheet" href="{% static 'Accounts/accounts-base.css' %}">
     <link rel="stylesheet" href="{% static 'Navigation-Clean.css' %}">
     <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-66VY2Y07DM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-66VY2Y07DM');
+    </script>
+
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}

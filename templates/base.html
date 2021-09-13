@@ -19,6 +19,21 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-66VY2Y07DM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-66VY2Y07DM');
+    </script>
+
     {% block header %}
         <title>Untitled Management Software</title>
     {% endblock %}
@@ -126,7 +141,7 @@
             {% block content %}
 
             {% endblock %}
-        {% include 'snippets/base_footer.html' %}
+            {% include 'snippets/base_footer.html' %}
         </div>
     </div>
 </div>
