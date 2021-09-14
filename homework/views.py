@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
-from homework.forms import HomeworkAssignmentForm
-from homework.models import HomeworkAssignment
+from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
+from homework.models import HomeworkAssignment, ReadingAssignment
 from school.models import School
 
 context = {'schools': School.objects.all()}
@@ -18,7 +18,15 @@ def homework(request):
 
     dt = datetime.datetime.today()
     dt_time = datetime.datetime.now().strftime('%H:%M:%S')
-    week_dates = [dt + datetime.timedelta(days=i) for i in range(7)]
+
+    last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
+
+    all_delta = datetime.date(last_assignment.due_date.year, last_assignment.due_date.month,
+                              last_assignment.due_date.day) - datetime.date(dt.year, dt.month, dt.day)
+
+    all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)]
+
+    context['all_dates'] = all_dates
 
     context['late_assignments'] = HomeworkAssignment.objects.filter(
         due_date__lte=dt,
@@ -32,6 +40,19 @@ def homework(request):
         course__user=request.user,
         due_date__gte=dt
     )
+
+    context['reading_assignments'] = ReadingAssignment.get_recommended_readings(request.user)
+
+    used_dates = []
+
+    for assignment in HomeworkAssignment.objects.filter(
+        completed=False, course__user=request.user,due_date__gte=dt):
+        used_dates.append(assignment.due_date)
+    for reading, reading_date, start_page, end_page in ReadingAssignment.get_recommended_readings(request.user):
+        if start_page and end_page:
+            used_dates.append(reading_date)
+
+    context['used_dates'] = set(used_dates)
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
@@ -66,7 +87,8 @@ def add_assignment(request, id=None):
                 messages.success(request, 'Assignment added successfully')
             return redirect('homework')
     else:
-        form = HomeworkAssignmentForm(instance=instance if instance else None, user=request.user, initial={'course': instance.course if instance else request.GET.get('course')})
+        form = HomeworkAssignmentForm(instance=instance if instance else None, user=request.user,
+                                      initial={'course': instance.course if instance else request.GET.get('course')})
 
     context['form'] = form
 
@@ -77,6 +99,54 @@ def add_assignment(request, id=None):
 def delete_assignment(request, id):
     context['account'] = request.user
     assignment = get_object_or_404(HomeworkAssignment, id=id)
+    assignment.delete()
+    return redirect('homework')
+
+
+@login_required
+def add_reading_assignment(request, id=None):
+    context['account'] = request.user
+
+    instance = None
+
+    context['form_title'] = 'Add Reading Assignment'
+    context['form_description'] = 'Here you can add a reading assignment for your class. This is different from a ' \
+                                  'regular assignment because UMS will evenly distribute your reading automatically ' \
+                                  'for you'
+    context['excluded_fields'] = []
+
+    if id:
+        instance = get_object_or_404(ReadingAssignment, id=id)
+        context['form_title'] = 'Edit Assignment'
+        context['form_description'] = 'Here you can edit a reading assignment for your class. This is different from ' \
+                                      'a regular assignment because UMS will evenly distribute your reading ' \
+                                      'automatically for you '
+        if not instance.course.user == request.user:
+            return redirect('homework')
+
+    if request.POST:
+        form = ReadingAssignmentForm(request.POST, instance=instance if instance else None, user=request.user)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            if id:
+                messages.success(request, 'Reading Assignment edited successfully')
+            else:
+                messages.success(request, 'Reading Assignment added successfully')
+            return redirect('homework')
+    else:
+        form = ReadingAssignmentForm(instance=instance if instance else None, user=request.user,
+                                     initial={'course': instance.course if instance else request.GET.get('course')})
+
+    context['form'] = form
+
+    return render(request, 'forms/add_assignment.html', context)
+
+
+@login_required
+def delete_reading_assignment(request, id):
+    context['account'] = request.user
+    assignment = get_object_or_404(ReadingAssignment, id=id)
     assignment.delete()
     return redirect('homework')
 

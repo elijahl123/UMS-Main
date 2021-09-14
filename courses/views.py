@@ -57,7 +57,6 @@ def add_coursetime(request):
             for e in form.errors[error]:
                 messages.error(request, 'Error in \'{}\' field: {}'.format(error, e).title())
 
-
     return redirect('manage_schedule')
 
 

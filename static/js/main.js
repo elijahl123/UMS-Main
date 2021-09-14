@@ -31,10 +31,12 @@ window.addEventListener("load", function () {
                 const due = new Date(element.due_date + 'T' + element.due_time)
                 if (!element.completed && due < today) {
                     late_assignments += 1
+                    console.log(element, 'Late')
                 }
 
                 if (!element.completed && !(due < today) && isSoon(due)) {
                     due_soon += 1
+                    console.log(element, 'Due Soon')
                 }
 
             })

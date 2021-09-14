@@ -21,7 +21,8 @@ from django.urls import path, include
 from class_calendar.views import calendar_events, add_calendar_event, delete_calendar_event, connect_google_calendar, \
     save_google_credentials
 from courses.views import *
-from homework.views import homework, add_assignment, delete_assignment, complete_assignment
+from homework.views import homework, add_assignment, delete_assignment, complete_assignment, add_reading_assignment, \
+    delete_reading_assignment
 from users.views import *
 
 urlpatterns = [
@@ -57,6 +58,9 @@ urlpatterns = [
     path('homework/add-assignment/', add_assignment, name='add_assignment'),
     path('homework/edit-assignment/<id>/', add_assignment, name='edit_assignment'),
     path('homework/delete-assignment/<id>/', delete_assignment, name='delete_assignment'),
+    path('homework/add-reading-assignment/', add_reading_assignment, name='add_reading_assignment'),
+    path('homework/edit-reading-assignment/<id>/', add_reading_assignment, name='edit_reading_assignment'),
+    path('homework/delete-reading-assignment/<id>/', delete_reading_assignment, name='delete_reading_assignment'),
     path('homework/complete-assignment/<id>/', complete_assignment, name='complete_assignment')
 ]
 

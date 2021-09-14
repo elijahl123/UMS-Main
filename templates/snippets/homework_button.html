@@ -1,0 +1,86 @@
+<button class="btn d-flex flex-column btn-transparent-{{ assignment.course.color }}"
+        type="button"
+        data-bs-toggle="modal"
+        data-bs-target="#homework-{{ assignment.id }}"
+        style="width: 100%;padding: 1rem;font-weight: initial;margin-bottom: 1rem;">
+    <span class="h4" style="font-weight: bold;margin:0">{{ assignment.course }}: {{ assignment.name }}</span>
+    <span style="margin-top: 8px">Due: {{ assignment.due_date }} at {{ assignment.due_time }}</span>
+</button>
+<div role="dialog" tabindex="-1" class="modal fade"
+     id="homework-{{ assignment.id }}">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"
+                    style="font-weight: bold;color: var(--main-color);">
+                    {{ assignment.course }}: {{ assignment.name }}</h4>
+                <button type="button" class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Course</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.course }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Assignment
+                    Name</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.name }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Description</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.description|default:'None' }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Due
+                    Date</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.due_date }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Due
+                    Time</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.due_time }}</p>
+            {% if assignment.is_reading %}
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Pages</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.start_page }} to {{ assignment.end_page }}</p>
+            {% endif %}
+                {% if assignment.link %}
+                    <a href="{{ assignment.link }}" target="_blank"
+                       class="btn btn-primary"
+                       type="button">Go to Homework</a>
+                {% endif %}
+                {% if not assignment.completed %}
+                    <a href="{% url 'complete_assignment' assignment.id %}"
+                       class="btn btn-success"
+                       type="button">Complete</a>
+                {% else %}
+                    <a href="{% url 'complete_assignment' assignment.id %}"
+                       class="btn btn-danger"
+                       type="button">Not Completed?</a>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                {% if assignment.is_reading %}
+                <a href="{% url 'edit_reading_assignment' assignment.id %}"
+                   class="btn btn-transparent-success me-2">Edit</a>
+                <a href="{% url 'delete_reading_assignment' assignment.id %}"
+                   class="btn btn-transparent-danger me-2">Delete</a>
+                    {% else %}
+                <a href="{% url 'edit_assignment' assignment.id %}"
+                   class="btn btn-transparent-success me-2">Edit</a>
+                <a href="{% url 'delete_assignment' assignment.id %}"
+                   class="btn btn-transparent-danger me-2">Delete</a>
+                {% endif %}
+                <button class="btn btn-light" type="button"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
