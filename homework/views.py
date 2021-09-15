@@ -1,4 +1,5 @@
 import datetime
+from itertools import chain
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -17,7 +18,7 @@ def homework(request):
     context['account'] = request.user
 
     dt = datetime.datetime.today()
-    dt_time = datetime.datetime.now().strftime('%H:%M:%S')
+    dt_time = datetime.datetime.now()
 
     last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
 
@@ -28,25 +29,32 @@ def homework(request):
 
     context['all_dates'] = all_dates
 
-    context['late_assignments'] = HomeworkAssignment.objects.filter(
-        due_date__lte=dt,
-        completed=False,
-        course__user=request.user,
-        due_time__lt=dt_time
-    )
+    late_assignments = []
 
-    context['all_assignments'] = HomeworkAssignment.objects.filter(
-        completed=False,
-        course__user=request.user,
-        due_date__gte=dt
-    )
+    for object in HomeworkAssignment.objects.filter(course__user=request.user, completed=False):
+        today = datetime.date(dt.year, dt.month, dt.day)
+        now = datetime.time(dt.hour, dt.minute)
+        if object.due_date > today:
+            late_assignments.append(object)
+        elif object.due_date == today and object.due_time < now:
+            late_assignments.append(object)
+
+    context['late_assignments'] = late_assignments
+
+
+    all_assignments = []
+
+    for object in HomeworkAssignment.objects.filter(completed=False, course__user=request.user):
+        if object not in late_assignments:
+            all_assignments.append(object)
+
+    context['all_assignments'] = all_assignments
 
     context['reading_assignments'] = ReadingAssignment.get_recommended_readings(request.user)
 
     used_dates = []
 
-    for assignment in HomeworkAssignment.objects.filter(
-        completed=False, course__user=request.user,due_date__gte=dt):
+    for assignment in all_assignments:
         used_dates.append(assignment.due_date)
     for reading, reading_date, start_page, end_page in ReadingAssignment.get_recommended_readings(request.user):
         if start_page and end_page:
