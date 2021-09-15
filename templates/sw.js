@@ -1,7 +1,5 @@
 const cacheName = 'ums-v1';
-const staticAssets = [
-    './'
-];
+const staticAssets = [];
 
 async function registerSW() {
     if ('serviceWorker' in navigator) {
@@ -14,39 +12,39 @@ async function registerSW() {
 }
 
 self.addEventListener('install', async e => {
-  const cache = await caches.open(cacheName);
-  await cache.addAll(staticAssets);
-  return self.skipWaiting();
+    const cache = await caches.open(cacheName);
+    await cache.addAll(staticAssets);
+    return self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
-  self.clients.claim();
+    self.clients.claim();
 });
 
 self.addEventListener('fetch', async e => {
-  const req = e.request;
-  const url = new URL(req.url);
+    const req = e.request;
+    const url = new URL(req.url);
 
-  if (url.origin === location.origin) {
-    e.respondWith(cacheFirst(req));
-  } else {
-    e.respondWith(networkAndCache(req));
-  }
+    if (url.origin === location.origin) {
+        e.respondWith(cacheFirst(req));
+    } else {
+        e.respondWith(networkAndCache(req));
+    }
 });
 
 async function cacheFirst(req) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(req);
-  return cached || fetch(req);
+    const cache = await caches.open(cacheName);
+    const cached = await cache.match(req);
+    return cached || fetch(req);
 }
 
 async function networkAndCache(req) {
-  const cache = await caches.open(cacheName);
-  try {
-    const fresh = await fetch(req);
-    await cache.put(req, fresh.clone());
-    return fresh;
-  } catch (e) {
-      return await cache.match(req);
-  }
+    const cache = await caches.open(cacheName);
+    try {
+        const fresh = await fetch(req);
+        await cache.put(req, fresh.clone());
+        return fresh;
+    } catch (e) {
+        return await cache.match(req);
+    }
 }

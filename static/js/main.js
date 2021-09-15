@@ -19,11 +19,11 @@ window.addEventListener("load", function () {
             tomorrow.setDate(tomorrow.getDate() + 1)
             const isSoon = (d) => {
                 return (d.getDate() === today.getDate() &&
-                    d.getMonth() === today.getMonth() &&
-                    d.getFullYear() === today.getFullYear()) ||
+                        d.getMonth() === today.getMonth() &&
+                        d.getFullYear() === today.getFullYear()) ||
                     (d.getDate() === tomorrow.getDate() &&
-                    d.getMonth() === tomorrow.getMonth() &&
-                    d.getFullYear() === tomorrow.getFullYear())
+                        d.getMonth() === tomorrow.getMonth() &&
+                        d.getFullYear() === tomorrow.getFullYear())
             }
             let late_assignments = 0
             let due_soon = 0

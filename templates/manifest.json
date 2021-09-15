@@ -1,14 +1,16 @@
+{% load static %}
+
 {
   "short_name": "UMS",
   "name": "Untitled Management Software",
   "icons": [
     {
-      "src": "https://sfo3.digitaloceanspaces.com/umstatic/static/img/UMSLogo.png?AWSAccessKeyId=JN732ZR5XW57CYVFKORZ&Signature=khbf0GarwZEqvaPkFdzoOJlv9JA%3D&Expires=1631687920",
+      "src": "{% static 'img/UMSLogo.png' %}",
       "type": "image/png",
       "sizes": "290x290"
     },
     {
-      "src": "https://sfo3.digitaloceanspaces.com/umstatic/static/img/UMSLogo.png?AWSAccessKeyId=JN732ZR5XW57CYVFKORZ&Signature=khbf0GarwZEqvaPkFdzoOJlv9JA%3D&Expires=1631687920",
+      "src": "{% static 'img/UMSLogo.png' %}",
       "type": "image/png",
       "sizes": "290x290"
     }
