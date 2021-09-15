@@ -27,8 +27,6 @@ def homework(request):
 
     context['all_dates'] = all_dates
 
-    late_assignments = []
-
     context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, due_date__lt=dt, course__user=request.user)
 
     context['all_assignments'] = HomeworkAssignment.objects.filter(completed=False, due_date__gte=dt, course__user=request.user)
