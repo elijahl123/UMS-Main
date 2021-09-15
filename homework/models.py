@@ -30,6 +30,12 @@ class ReadingAssignment(HomeworkAssignment):
     start_page = models.IntegerField(null=True)
     end_page = models.IntegerField(null=True)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['course']
+
     @classmethod
     def get_recommended_readings(cls, user):
 
