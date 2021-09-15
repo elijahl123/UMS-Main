@@ -14,9 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.decorators.cache import cache_control
+from django.views.generic import TemplateView
 
 from class_calendar.views import calendar_events, add_calendar_event, delete_calendar_event, connect_google_calendar, \
     save_google_credentials
@@ -31,6 +34,10 @@ urlpatterns = [
     path('privacy-policy/', privacy_policy, name='privacy_policy'),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('api.urls')),
+    url(r'^sw.js', cache_control(max_age=2592000)(TemplateView.as_view(
+        template_name="sw.js",
+        content_type='application/javascript',
+    )), name='sw.js'),
     path('', index, name='index'),
     path('feedback/', feedback, name='feedback'),
     path('account/', account, name='account'),
