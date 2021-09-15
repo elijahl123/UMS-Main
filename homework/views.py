@@ -1,5 +1,4 @@
 import datetime
-from itertools import chain
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -18,7 +17,6 @@ def homework(request):
     context['account'] = request.user
 
     dt = datetime.datetime.today()
-    dt_time = datetime.datetime.now()
 
     last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
 
@@ -40,7 +38,6 @@ def homework(request):
             late_assignments.append(object)
 
     context['late_assignments'] = late_assignments
-
 
     all_assignments = []
 
