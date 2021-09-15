@@ -50,6 +50,8 @@
                                                 {% include 'snippets/homework_button.html' with assignment=reading %}
                                             {% endif %}
                                         {% endifchanged %}
+                                    {% endfor %}
+                                    {% for reading, reading_date, start_page, end_page in reading_assignments %}
                                         {% if reading_date == date.date and start_page and end_page %}
                                             <div class="d-flex align-items-center mb-3 list-group-item-{{ reading.course.color }} flex-column flex-md-row"
                                                  style="padding: 1rem;border-radius: 8px;">
