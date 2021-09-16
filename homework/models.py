@@ -59,7 +59,7 @@ class HomeworkAssignment(models.Model):
 
 
 class ReadingAssignment(HomeworkAssignment):
-    uploaded = models.DateField(auto_now_add=True)
+    modified = models.DateField(auto_now=True)
     start_page = models.IntegerField(null=True)
     end_page = models.IntegerField(null=True)
 
@@ -76,7 +76,7 @@ class ReadingAssignment(HomeworkAssignment):
 
         for reading in cls.objects.filter(course__user=user, completed=False):
 
-            uploaded = datetime.date(reading.uploaded.year, reading.uploaded.month, reading.uploaded.day)
+            uploaded = datetime.date(reading.modified.year, reading.modified.month, reading.modified.day)
             due = datetime.date(reading.due_date.year, reading.due_date.month, reading.due_date.day)
             delta = (due - uploaded).days
 

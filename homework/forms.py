@@ -38,7 +38,7 @@ class ReadingAssignmentForm(forms.ModelForm):
 
     class Meta:
         model = ReadingAssignment
-        exclude = ['completed', 'uploaded']
+        exclude = ['completed', 'modified']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'description': forms.Textarea(attrs={'class': 'form-control form-control-lg', 'rows': '4'}),
