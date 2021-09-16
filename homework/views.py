@@ -27,21 +27,13 @@ def homework(request):
 
     context['all_dates'] = all_dates
 
-    context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, due_date__lt=dt, course__user=request.user)
+    context['late_assignments'] = HomeworkAssignment.objects.late_assignments(request.user)
 
-    context['all_assignments'] = HomeworkAssignment.objects.filter(completed=False, due_date__gte=dt, course__user=request.user)
+    context['all_assignments'] = HomeworkAssignment.objects.all_assignments(request.user)
 
     context['reading_assignments'] = ReadingAssignment.get_recommended_readings(request.user)
 
-    used_dates = []
-
-    for assignment in HomeworkAssignment.objects.filter(completed=False, due_date__gte=dt, course__user=request.user):
-        used_dates.append(assignment.due_date)
-    for reading, reading_date, start_page, end_page in ReadingAssignment.get_recommended_readings(request.user):
-        if start_page and end_page:
-            used_dates.append(reading_date)
-
-    context['used_dates'] = set(used_dates)
+    context['used_dates'] = HomeworkAssignment.objects.date_range(request.user)
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
