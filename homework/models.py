@@ -9,21 +9,24 @@ from courses.models import Course
 # Create your models here.
 
 class HomeworkManager(models.Manager):
-    def late_assignments(self, user):
+    @staticmethod
+    def late_assignments(user):
         late_assignments = []
         for assignment in HomeworkAssignment.objects.filter(course__user=user, completed=False):
             if assignment.due_datetime < datetime.datetime.now():
                 late_assignments.append(assignment)
         return late_assignments
 
-    def all_assignments(self, user):
+    @staticmethod
+    def all_assignments(user):
         all_assignments = []
         for assignment in HomeworkAssignment.objects.filter(course__user=user, completed=False):
             if assignment.due_datetime >= datetime.datetime.now():
                 all_assignments.append(assignment)
         return all_assignments
 
-    def date_range(self, user):
+    @staticmethod
+    def date_range(user):
         used_dates = []
 
         for assignment in HomeworkAssignment.objects.all_assignments(user):
