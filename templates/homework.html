@@ -44,12 +44,10 @@
                                             {% include 'snippets/homework_button.html' %}
                                         {% endif %}
                                     {% endfor %}
-                                    {% for reading, reading_date, start_page, end_page in reading_assignments %}
-                                        {% ifchanged reading %}
-                                            {% if reading.due_date == date.date %}
-                                                {% include 'snippets/homework_button.html' with assignment=reading %}
-                                            {% endif %}
-                                        {% endifchanged %}
+                                    {% for reading in reading_objects %}
+                                        {% if reading.due_date == date.date %}
+                                            {% include 'snippets/homework_button.html' with assignment=reading %}
+                                        {% endif %}
                                     {% endfor %}
                                     {% for reading, reading_date, start_page, end_page in reading_assignments %}
                                         {% if reading_date == date.date and start_page and end_page %}

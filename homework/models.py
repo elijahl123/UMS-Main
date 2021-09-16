@@ -9,27 +9,24 @@ from courses.models import Course
 # Create your models here.
 
 class HomeworkManager(models.Manager):
-    @staticmethod
-    def late_assignments(user):
+    def late_assignments(self, user):
         late_assignments = []
-        for assignment in HomeworkAssignment.objects.filter(course__user=user, completed=False):
+        for assignment in self.filter(course__user=user, completed=False):
             if assignment.due_datetime < datetime.datetime.now():
                 late_assignments.append(assignment)
         return late_assignments
 
-    @staticmethod
-    def all_assignments(user):
+    def all_assignments(self, user):
         all_assignments = []
-        for assignment in HomeworkAssignment.objects.filter(course__user=user, completed=False):
+        for assignment in self.filter(course__user=user, completed=False):
             if assignment.due_datetime >= datetime.datetime.now():
                 all_assignments.append(assignment)
         return all_assignments
 
-    @staticmethod
-    def date_range(user):
+    def date_range(self, user):
         used_dates = []
 
-        for assignment in HomeworkAssignment.objects.all_assignments(user):
+        for assignment in self.all_assignments(user):
             used_dates.append(assignment.due_date)
         for reading, reading_date, start_page, end_page in ReadingAssignment.get_recommended_readings(user):
             if start_page and end_page:
@@ -59,6 +56,9 @@ class HomeworkAssignment(models.Model):
 
     class Meta:
         ordering = ['due_date', 'due_time']
+
+    def __str__(self):
+        return self.name
 
 
 class ReadingAssignment(HomeworkAssignment):
@@ -99,6 +99,6 @@ class ReadingAssignment(HomeworkAssignment):
 
             for i in range(delta):
                 out_list.append(
-                    (reading, uploaded + datetime.timedelta(days=i), get_pages('start', i), get_pages('end', i)))
+                        (reading, uploaded + datetime.timedelta(days=i), get_pages('start', i), get_pages('end', i)))
 
         return out_list

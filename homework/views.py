@@ -31,6 +31,8 @@ def homework(request):
 
     context['all_assignments'] = HomeworkAssignment.objects.all_assignments(request.user)
 
+    context['reading_objects'] = ReadingAssignment.objects.all_assignments(request.user)
+
     context['reading_assignments'] = ReadingAssignment.get_recommended_readings(request.user)
 
     context['used_dates'] = HomeworkAssignment.objects.date_range(request.user)
