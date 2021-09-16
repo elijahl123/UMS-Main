@@ -22,8 +22,8 @@
             <div class="modal-body" style="padding: 2rem;">
                 <p style="color: slategray;margin: 0;text-align: left;">
                     Course</p>
-                <p class="lead"
-                   style="font-weight: bold;text-align: left;">{{ assignment.course }}</p>
+                <a href="{% url 'course_view' assignment.course.id %}"
+                   class="btn btn-transparent-{{ assignment.course.color }} mb-3 mt-1">{{ assignment.course }}</a>
                 <p style="color: slategray;margin: 0;text-align: left;">
                     Assignment
                     Name</p>
@@ -43,15 +43,16 @@
                     Time</p>
                 <p class="lead"
                    style="font-weight: bold;text-align: left;">{{ assignment.due_time }}</p>
-            {% if assignment.is_reading %}
-                <p style="color: slategray;margin: 0;text-align: left;">
-                    Pages</p>
-                <p class="lead"
-                   style="font-weight: bold;text-align: left;">{{ assignment.start_page }} to {{ assignment.end_page }}</p>
-            {% endif %}
+                {% if assignment.is_reading %}
+                    <p style="color: slategray;margin: 0;text-align: left;">
+                        Pages</p>
+                    <p class="lead"
+                       style="font-weight: bold;text-align: left;">{{ assignment.start_page }}
+                        to {{ assignment.end_page }}</p>
+                {% endif %}
                 {% if assignment.link %}
                     <a href="{{ assignment.link }}" target="_blank"
-                       class="btn btn-primary"
+                       class="btn btn-primary me-2"
                        type="button">Go to Homework</a>
                 {% endif %}
                 {% if not assignment.completed %}
@@ -66,15 +67,15 @@
             </div>
             <div class="modal-footer">
                 {% if assignment.is_reading %}
-                <a href="{% url 'edit_reading_assignment' assignment.id %}"
-                   class="btn btn-transparent-success me-2">Edit</a>
-                <a href="{% url 'delete_reading_assignment' assignment.id %}"
-                   class="btn btn-transparent-danger me-2">Delete</a>
-                    {% else %}
-                <a href="{% url 'edit_assignment' assignment.id %}"
-                   class="btn btn-transparent-success me-2">Edit</a>
-                <a href="{% url 'delete_assignment' assignment.id %}"
-                   class="btn btn-transparent-danger me-2">Delete</a>
+                    <a href="{% url 'edit_reading_assignment' assignment.id %}"
+                       class="btn btn-transparent-success me-2">Edit</a>
+                    <a href="{% url 'delete_reading_assignment' assignment.id %}"
+                       class="btn btn-transparent-danger me-2">Delete</a>
+                {% else %}
+                    <a href="{% url 'edit_assignment' assignment.id %}"
+                       class="btn btn-transparent-success me-2">Edit</a>
+                    <a href="{% url 'delete_assignment' assignment.id %}"
+                       class="btn btn-transparent-danger me-2">Delete</a>
                 {% endif %}
                 <button class="btn btn-light" type="button"
                         data-bs-dismiss="modal">
