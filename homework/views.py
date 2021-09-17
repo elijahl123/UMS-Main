@@ -21,9 +21,9 @@ def homework(request):
     last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
 
     all_delta = datetime.date(last_assignment.due_date.year, last_assignment.due_date.month,
-                              last_assignment.due_date.day) - datetime.date(dt.year, dt.month, dt.day)
+                              last_assignment.due_date.day) - datetime.date(dt.year, dt.month, dt.day) if last_assignment else None
 
-    all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)]
+    all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)] if all_delta else []
 
     context['all_dates'] = all_dates
 

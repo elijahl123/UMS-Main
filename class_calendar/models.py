@@ -1,5 +1,6 @@
 import json
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from google.oauth2.credentials import Credentials
 
@@ -25,6 +26,12 @@ class CalendarTokenManager(models.Manager):
                 GOOGLE_API_CREDENTIALS)
             return creds
         return None
+
+    def get_token(self, user):
+        try:
+            return json.loads(self.get(user=user, token__isnull=False).token)
+        except ObjectDoesNotExist:
+            return None
 
 
 class CalendarToken(models.Model):
