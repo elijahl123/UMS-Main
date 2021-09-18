@@ -18,10 +18,16 @@ def homework(request):
 
     dt = datetime.datetime.today()
 
+    def get_datetime_object(date_obj):
+        try:
+            date_args = [date_obj.year, date_obj.month, date_obj.day]
+            return datetime.date(*date_args)
+        except AttributeError:
+            return None
+
     last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
 
-    all_delta = datetime.date(last_assignment.due_date.year, last_assignment.due_date.month,
-                              last_assignment.due_date.day) - datetime.date(dt.year, dt.month, dt.day) if last_assignment else None
+    all_delta = get_datetime_object(last_assignment) - get_datetime_object(dt) if last_assignment else None
 
     all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)] if all_delta else []
 

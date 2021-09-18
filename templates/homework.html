@@ -77,6 +77,17 @@
                                 </div>
                             </div>
                         {% endif %}
+                    {% empty %}
+                        <div class="row g-0" style="height: 100%;">
+                            <div class="col d-flex flex-column justify-content-center align-items-center p-3">
+                                <img class="mb-4 d-none d-lg-block" src="{% static 'img/UMS404.svg' %}" alt="404 Not Found" style="width: 25vw"/>
+                                <h1 class="display-3 mb-3"
+                                    style="color: var(--main-color);font-weight: bold;text-align: center;">No
+                                    Assignments</h1>
+                                <a class="btn btn-lg btn-transparent-secondary" role="button" href="{% url 'add_assignment' %}">Add
+                                    Assignment</a>
+                            </div>
+                        </div>
                     {% endfor %}
                     {% if completed_assignments %}
                         {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_assignments %}
