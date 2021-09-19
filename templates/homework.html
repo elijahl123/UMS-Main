@@ -35,10 +35,9 @@
                             <div class="row g-0" style="margin-bottom: 1rem;">
                                 <div class="col"
                                      style="padding: 1rem;border-radius: 8px;background: var(--secondary-color);">
-                                    <h3 class="text-center text-lg-start"
+                                    <h3 class="text-center text-lg-start mb-4"
                                         style="font-weight: bold;color: var(--main-color);">
                                         {{ date|date:'l, F j' }}</h3>
-                                    <hr/>
                                     {% for assignment in all_assignments %}
                                         {% if assignment.due_date == date.date and not assignment.is_reading %}
                                             {% include 'snippets/homework_button.html' %}
@@ -77,20 +76,23 @@
                                 </div>
                             </div>
                         {% endif %}
-                    {% empty %}
+                    {% endfor %}
+                    {% if completed_assignments %}
+                        {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_assignments collapsable=True %}
+                    {% endif %}
+                    {% if not late_assignments and completed_assignments and all_dates %}
                         <div class="row g-0" style="height: 100%;">
                             <div class="col d-flex flex-column justify-content-center align-items-center p-3">
-                                <img class="mb-4 d-none d-lg-block" src="{% static 'img/UMS404.svg' %}" alt="404 Not Found" style="width: 25vw"/>
+                                <img class="mb-4 d-none d-lg-block" src="{% static 'img/UMS404.svg' %}"
+                                     alt="404 Not Found" style="width: 25vw"/>
                                 <h1 class="display-3 mb-3"
                                     style="color: var(--main-color);font-weight: bold;text-align: center;">No
                                     Assignments</h1>
-                                <a class="btn btn-lg btn-transparent-secondary" role="button" href="{% url 'add_assignment' %}">Add
+                                <a class="btn btn-lg btn-transparent-secondary" role="button"
+                                   href="{% url 'add_assignment' %}">Add
                                     Assignment</a>
                             </div>
                         </div>
-                    {% endfor %}
-                    {% if completed_assignments %}
-                        {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_assignments %}
                     {% endif %}
                 </div>
             </div>

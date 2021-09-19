@@ -58,14 +58,15 @@ window.addEventListener("load", function () {
 
             let nextClass = []
 
-            let start_time
+            let end_time
 
             $.each(data, function (index, element) {
                 if (element.weekday.includes(weekday)) {
                     const today_date = new Date(today)
-                    today_date.setDate(today_date.getDate() - 1)
-                    start_time = new Date(today_date.toISOString().substring(0, 10) + 'T' + element.start_time)
-                    if (start_time.getTime() > today.getTime()) {
+                    today_date.setDate(today_date.getDate())
+                    end_time = new Date(today_date.toISOString().substring(0, 10) + 'T' + element.end_time)
+                    console.log(end_time)
+                    if (end_time.getTime() > today.getTime()) {
                         nextClass.push(element)
                     }
                 }
@@ -76,14 +77,19 @@ window.addEventListener("load", function () {
             if (coursetime) {
                 let html_str = `<div class="list-group-item-${coursetime.course.color} rounded p-3">
                                     <p class="mb-1" style="font-weight: bold;">Next Class</p>
-                                    <h3 style="font-weight: bold;">${coursetime.course.name}</h3>`
+                                    <h3 style="font-weight: bold;margin-bottom: 0">${coursetime.course.name}</h3>`
                 if (coursetime.link) {
                     let zoom_password = (coursetime.zoom_password) ? coursetime.zoom_password : 'None'
-                    html_str += `<a class="btn btn-${coursetime.course.color} btn-sm" role="button" href="${coursetime.link}" target="_blank" style="font-weight: bold;">
+                    html_str += `
+                                <div class="mt-2">
+                                <a class="btn btn-${coursetime.course.color} btn-sm" role="button" href="${coursetime.link}" target="_blank" style="font-weight: bold;">
                                         Go to Class
-                                    </a>
-                                    <small class="text-white bg-secondary rounded m-2 py-1 px-2" style="font-weight: bold;border: 1px solid transparent">Password: ${zoom_password}</small>
-                                </div>`
+                                </a>
+                                <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm" style="font-weight: bold;border: 1px solid transparent">
+                                Password: ${zoom_password}
+                                </span>
+                                </div>
+                               </div>`
                 } else {
                     html_str += `</div>`
                 }

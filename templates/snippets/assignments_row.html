@@ -2,7 +2,9 @@
     <div class="col" style="padding: 1rem;border-radius: 8px;background: var(--secondary-color);">
         <h3 class="text-center text-lg-start" style="font-weight: bold;color: var(--main-color);">
             {{ row_title }}</h3>
-        <hr/>
+        {% if collapsable %}
+            <div class="collapse" id="assignments-row-{{ row_title|slugify }}">
+        {% endif %}
         {% if row_query %}
             {% for assignment in row_query %}
                 <button class="btn d-flex flex-column btn-transparent-{{ assignment.course.color }}" type="button"
@@ -70,6 +72,9 @@
             {% endfor %}
         {% else %}
             <p class="text-center">There are No {{ row_title }} Assignments</p>
+        {% endif %}
+        {% if collapsable %}
+            </div>
         {% endif %}
     </div>
 </div>
