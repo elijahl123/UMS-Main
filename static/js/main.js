@@ -78,10 +78,11 @@ window.addEventListener("load", function () {
                                     <p class="mb-1" style="font-weight: bold;">Next Class</p>
                                     <h3 style="font-weight: bold;">${coursetime.course.name}</h3>`
                 if (coursetime.link) {
+                    let zoom_password = (coursetime.zoom_password) ? coursetime.zoom_password : 'None'
                     html_str += `<a class="btn btn-${coursetime.course.color} btn-sm" role="button" href="${coursetime.link}" target="_blank" style="font-weight: bold;">
                                         Go to Class
                                     </a>
-                                    <small class="text-white bg-secondary rounded m-2 py-1 px-2" style="font-weight: bold;border: 1px solid transparent">Password: ${coursetime.zoom_password}</small>
+                                    <small class="text-white bg-secondary rounded m-2 py-1 px-2" style="font-weight: bold;border: 1px solid transparent">Password: ${zoom_password}</small>
                                 </div>`
                 } else {
                     html_str += `</div>`
