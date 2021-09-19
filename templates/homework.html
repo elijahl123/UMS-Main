@@ -80,7 +80,7 @@
                     {% if completed_assignments %}
                         {% include 'snippets/assignments_row.html' with row_title='Completed' row_query=completed_assignments collapsable=True %}
                     {% endif %}
-                    {% if not late_assignments and completed_assignments and all_dates %}
+                    {% if not late_assignments and not completed_assignments and not all_dates %}
                         <div class="row g-0" style="height: 100%;">
                             <div class="col d-flex flex-column justify-content-center align-items-center p-3">
                                 <img class="mb-4 d-none d-lg-block" src="{% static 'img/UMS404.svg' %}"
