@@ -1,3 +1,4 @@
+{% load next_class %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -135,6 +136,7 @@
                                href="{% url 'account_logout' %}">Log Out</a>
                         </div>
                         {% include 'snippets/sidenav-links.html' %}
+                        {% next_class %}
                     </div>
                 </div>
             </div>
