@@ -1,7 +1,6 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
-
 # Create your models here.
 from school.models import School
 
@@ -60,7 +59,6 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
-
     first_name = models.CharField(max_length=20, null=True)
     last_name = models.CharField(max_length=20, null=True)
     username = models.CharField(max_length=30, unique=True)
@@ -85,7 +83,7 @@ class Account(AbstractBaseUser):
         verbose_name_plural = 'Accounts'
 
     def __str__(self):
-        return self.email
+        return self.email if not self.first_name and self.last_name else f'{self.first_name} {self.last_name}'
 
         # For checking permissions. to keep it simple all admin have ALL permissions
 

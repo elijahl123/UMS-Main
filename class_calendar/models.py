@@ -17,6 +17,9 @@ class CalendarEvent(models.Model):
     title = models.CharField(max_length=120, null=True)
     description = models.TextField(null=True, blank=True)
 
+    def __str__(self):
+        return self.title
+
 
 class CalendarTokenManager(models.Manager):
     def get_credentials(self, user):
