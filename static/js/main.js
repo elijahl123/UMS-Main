@@ -63,12 +63,16 @@ window.addEventListener("load", function () {
             $.each(data, function (index, element) {
                 if (element.weekday.includes(weekday)) {
                     const today_date = new Date(today)
-                    today_date.setDate(today_date.getDate())
+                    today_date.setDate(today_date.getDate() - 1)
                     end_time = new Date(today_date.toISOString().substring(0, 10) + 'T' + element.end_time)
-                    console.log(end_time)
                     if (end_time.getTime() > today.getTime()) {
                         nextClass.push(element)
                     }
+                    console.log({
+                        "today": today,
+                        "today_date": today_date,
+                        "end_time": end_time,
+                    })
                 }
             })
 
