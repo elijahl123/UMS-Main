@@ -15,7 +15,7 @@ color_choices = [
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        exclude = ['password', 'is_active', 'is_admin', 'is_staff', 'is_superuser', 'show_schedule_on_calendar']
+        exclude = ['password', 'is_active', 'is_admin', 'is_staff', 'is_superuser', 'show_schedule_on_calendar', 'email']
 
     def __init__(self, *args, **kwargs):
         super(AccountForm, self).__init__(*args, **kwargs)

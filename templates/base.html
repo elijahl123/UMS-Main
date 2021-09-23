@@ -136,7 +136,9 @@
                                href="{% url 'account_logout' %}">Log Out</a>
                         </div>
                         {% include 'snippets/sidenav-links.html' %}
+                        {% if account %}
                         {% next_class %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
