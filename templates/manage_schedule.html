@@ -27,72 +27,108 @@
                     <div class="row g-0">
                         {% for course in courses %}
                             <div class="col d-flex flex-column align-items-center col-12 col-lg-6 p-2">
-                            <div class="p-3 w-100" style="border-radius: 8px; background: var(--secondary-color)">
-                                <div class="d-flex flex-column justify-content-between align-items-center flex-lg-row"
-                                     style="width: 100%;margin-bottom: 1rem;">
-                                    <h2 style="font-weight: bold;color: var(--main-color);margin: 0;">{{ course.name }}</h2>
-                                    <div class="d-flex flex-wrap justify-content-center justify-content-md-end">
-                                        <a href="{% url 'course_view' course.id %}" role="button" class="btn btn-transparent-ums" style="margin: 5px;">
-                                            View
-                                        </a>
-                                        {% include 'snippets/course_view_form.html' %}
-                                        <a href="{% url 'edit_course' course.id %}?next={% url 'manage_schedule' %}" role="button" class="btn btn-transparent-success"
-                                           style="margin: 5px;">
-                                            Edit
-                                        </a>
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#delete-item-{{ course.id }}" class="btn btn-transparent-danger"
-                                           style="margin: 5px;">
-                                            Delete
-                                        </button>
-                                        {% include 'snippets/are_you_sure.html' with item=course delete_url='delete_course' %}
-                                    </div>
-                                </div>
-                                {% for class in coursetimes %}
-                                    {% if class.course == course %}
-                                        <a href="#" class="btn btn-transparent-{{ class.course.color }}" data-bs-toggle="modal"
-                                           data-bs-target="#date-event-{{ class.id }}"
-                                           style="padding: 1rem;width: 100%;text-align: left;border-radius: 8px;margin-bottom: 1rem;">
-                                            <h4 class="text-center text-lg-start"
-                                                style="font-weight: bold;">{{ class.weekdays }}</h4>
-                                            <p class="lead text-center text-lg-start"
-                                               style="margin-bottom: 8px;">{{ class.start_time|time:'g:i a' }}
-                                                - {{ class.end_time|time:'g:i a' }}</p>
-                                            <p class="lead text-center text-lg-start" style="margin-bottom: 0;">
-                                                {{ class.location|default:'Online' }}</p>
-                                        </a>
-                                        {% include 'snippets/coursetime_modal.html' with class=class %}
-                                    {% endif %}
-                                {% endfor %}
-                                <button class="btn btn-transparent-success" type="button" style="width: 100%;"
-                                        data-bs-toggle="modal" data-bs-target="#add-coursetime-course-{{ course.id }}">
-                                    <i class="fas fa-plus" style="margin-right: 10px;"></i>Add Course Time
-                                </button>
-                                <div role="dialog" tabindex="-1" class="modal fade"
-                                     id="add-coursetime-course-{{ course.id }}">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
-                                         role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title"
-                                                    style="font-weight: bold;color: var(--main-color);">Add Course
-                                                    Time to {{ course.name }}</h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close">
-
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                {% include 'forms/add_coursetime_form.html' with class=class course=course %}
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-light" type="button" data-bs-dismiss="modal">
-                                                    Close
+                                <div class="p-3 w-100 h-100"
+                                     style="border-radius: 8px; background: var(--secondary-color)">
+                                    <div class="d-flex flex-column justify-content-between align-items-center flex-lg-row"
+                                         style="width: 100%;margin-bottom: 1rem;">
+                                        <h2 style="font-weight: bold;color: var(--main-color);margin: 0;">{{ course.name }}</h2>
+                                        <div class="d-flex flex-wrap justify-content-center justify-content-md-end">
+                                            <a href="{% url 'course_view' course.id %}" role="button"
+                                               class="btn btn-transparent-ums d-xxl-block d-none" style="margin: 5px;">
+                                                View
+                                            </a>
+                                            {% include 'snippets/course_view_form.html' %}
+                                            <a href="{% url 'edit_course' course.id %}?next={% url 'manage_schedule' %}"
+                                               role="button" class="btn btn-transparent-success d-xxl-block d-none"
+                                               style="margin: 5px;">
+                                                Edit
+                                            </a>
+                                            <button type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#delete-item-{{ course.id }}"
+                                                    class="btn btn-transparent-danger d-xxl-block d-none"
+                                                    style="margin: 5px;">
+                                                Delete
+                                            </button>
+                                            {% include 'snippets/are_you_sure.html' with item=course delete_url='delete_course' %}
+                                            <button class="btn btn-transparent-ums d-block d-xxl-none" role="button"
+                                                    style="font-weight: bold; margin: 5px"
+                                                    data-bs-toggle="dropdown"
+                                                    data-bs-target="#individual-course-{{ course.id }}">
+                                                <i class="fa fa-ellipsis-h"></i>
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                 id="individual-course-{{ course.id }}"
+                                                 style="border: none">
+                                                <a class="dropdown-item"
+                                                   style="font-weight: bold; border: none; color: slategray"
+                                                   href="{% url 'course_view' course.id %}">
+                                                    <i class="fas fa-info-circle me-2"></i>
+                                                    View Course
+                                                </a>
+                                                <a class="dropdown-item"
+                                                   style="font-weight: bold; border: none; color: slategray"
+                                                   href="{% url 'course_view' course.id %}">
+                                                    <i class="fas fa-edit me-2"></i>
+                                                    Edit Course
+                                                </a>
+                                                <button class="dropdown-item"
+                                                        style="font-weight: bold; border: none; color: slategray"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#delete-item-{{ course.id }}">
+                                                    <i class="fas fa-trash me-2"></i>
+                                                    Delete Course
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
+                                    {% for class in coursetimes %}
+                                        {% if class.course == course %}
+                                            <a href="#" class="btn btn-transparent-{{ class.course.color }}"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#date-event-{{ class.id }}"
+                                               style="padding: 1rem;width: 100%;text-align: left;border-radius: 8px;margin-bottom: 1rem;">
+                                                <h4 class="text-center text-lg-start"
+                                                    style="font-weight: bold;">{{ class.weekdays }}</h4>
+                                                <p class="lead text-center text-lg-start"
+                                                   style="margin-bottom: 8px;">{{ class.start_time|time:'g:i a' }}
+                                                    - {{ class.end_time|time:'g:i a' }}</p>
+                                                <p class="lead text-center text-lg-start" style="margin-bottom: 0;">
+                                                    {{ class.location|default:'Online' }}</p>
+                                            </a>
+                                            {% include 'snippets/coursetime_modal.html' with class=class %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <button class="btn btn-transparent-success" type="button" style="width: 100%;"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#add-coursetime-course-{{ course.id }}">
+                                        <i class="fas fa-plus" style="margin-right: 10px;"></i>Add Course Time
+                                    </button>
+                                    <div role="dialog" tabindex="-1" class="modal fade"
+                                         id="add-coursetime-course-{{ course.id }}">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
+                                             role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title"
+                                                        style="font-weight: bold;color: var(--main-color);">Add Course
+                                                        Time to {{ course.name }}</h4>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {% include 'forms/add_coursetime_form.html' with class=class course=course %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-light" type="button" data-bs-dismiss="modal">
+                                                        Close
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         {% endfor %}
                     </div>

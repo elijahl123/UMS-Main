@@ -21,15 +21,15 @@
                 style="font-weight: bold; top: 1rem; right: 1rem">
             <i class="fa fa-ellipsis-h"></i>
         </button>
-        <div class="dropdown-menu p-0 mt-2" aria-labelledby="dropdownMenuButton" id="navbar-course-dropdown-menu"
-             style="border-radius: 8px;">
-            <a class="list-group-item list-group-item-action list-group-item-info"
-               style="font-weight: bold; border: none" href="{% url 'course_view' coursetime.course.id %}">
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="navbar-course-dropdown-menu"
+             style="border: none">
+            <a class="dropdown-item"
+               style="font-weight: bold; border: none; color: slategray" href="{% url 'course_view' coursetime.course.id %}">
                 <i class="fas fa-info-circle me-2"></i>
                 View Course
             </a>
-            <a class="list-group-item list-group-item-action list-group-item-success"
-               style="font-weight: bold; border: none" href="{% url 'edit_course' coursetime.course.id %}">
+            <a class="dropdown-item"
+               style="font-weight: bold; border: none; color: slategray" href="{% url 'course_view' coursetime.course.id %}">
                 <i class="fas fa-edit me-2"></i>
                 Edit Course
             </a>
