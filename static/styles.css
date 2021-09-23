@@ -76,6 +76,16 @@ body {
     color: white;
 }
 
+.btn-transparent {
+    background-color: transparent;
+    transition-duration: 0.2s;
+    transition-property: background-color;
+}
+
+.btn-transparent:hover, .btn-transparent:focus, .btn-transparent:active {
+    background-color: rgba(0,0,0,0.14)
+}
+
 .btn-transparent-success {
     background: rgba(40, 167, 69, 0.14);
     color: rgb(40, 167, 69);

@@ -1,18 +1,38 @@
 {% if coursetime %}
-<div class="list-group-item-{{ coursetime.course.color }} rounded p-3">
-    <p class="mb-1" style="font-weight: bold;">Next Class at {{ coursetime.start_time|time:'h:i a' }}</p>
-    <h3 style="font-weight: bold;margin-bottom: 0">
-        {{ coursetime.course.name }}
-    </h3>
-    {% if coursetime.link %}
-    <div class="mt-2">
-        <a class="btn btn-{{ coursetime.course.color }} btn-sm" role="button" href="{{ coursetime.link }}" target="_blank"
-           style="font-weight: bold;">
-            Go to Class
-        </a>
-        <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm"
-              style="font-weight: bold;border: 1px solid transparent">Password: {{ coursetime.zoom_password|default:'None' }}</span>
+    <div class="list-group-item-{{ coursetime.course.color }} rounded p-3 position-relative">
+        <p class="mb-1" style="font-weight: bold;">Next Class at {{ coursetime.start_time|time:'h:i a' }}</p>
+        <h3 style="font-weight: bold;margin-bottom: 0">
+            {{ coursetime.course.name }}
+        </h3>
+        {% if coursetime.link %}
+            <div class="mt-2">
+                <a class="btn btn-{{ coursetime.course.color }} btn-sm" role="button" href="{{ coursetime.link }}"
+                   target="_blank"
+                   style="font-weight: bold;">
+                    Go to Class
+                </a>
+                <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm"
+                      style="font-weight: bold;border: 1px solid transparent">Password: {{ coursetime.zoom_password|default:'None' }}</span>
+            </div>
+        {% endif %}
+
+        <button class="btn btn-transparent btn-sm position-absolute" role="button"
+                data-bs-toggle="dropdown" data-bs-target="#navbar-course-dropdown-menu"
+                style="font-weight: bold; top: 1rem; right: 1rem">
+            <i class="fa fa-ellipsis-h"></i>
+        </button>
+        <div class="dropdown-menu p-0 mt-2" aria-labelledby="dropdownMenuButton" id="navbar-course-dropdown-menu"
+             style="border-radius: 8px;">
+            <a class="list-group-item list-group-item-action list-group-item-info"
+               style="font-weight: bold; border: none" href="{% url 'course_view' coursetime.course.id %}">
+                <i class="fas fa-info-circle me-2"></i>
+                View Course
+            </a>
+            <a class="list-group-item list-group-item-action list-group-item-success"
+               style="font-weight: bold; border: none" href="{% url 'edit_course' coursetime.course.id %}">
+                <i class="fas fa-edit me-2"></i>
+                Edit Course
+            </a>
+        </div>
     </div>
-    {% endif %}
-</div>
 {% endif %}
