@@ -83,7 +83,7 @@ class Account(AbstractBaseUser):
         verbose_name_plural = 'Accounts'
 
     def __str__(self):
-        return self.email if not self.first_name and self.last_name else f'{self.first_name} {self.last_name}'
+        return self.email if self.first_name == '-' and self.last_name == '-' else f'{self.first_name} {self.last_name}'
 
         # For checking permissions. to keep it simple all admin have ALL permissions
 
