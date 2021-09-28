@@ -69,9 +69,8 @@
                                             {% endif %}
                                         {% endfor %}
                                         <hr>
-                                        <label class="form-label"
-                                               style="font-size: 20px;font-weight: bold;">School</label>
-                                        {{ form.school }}
+                                        <h5 class="mb-3" style="color: slategray">Currently Attending: <strong>{{ account.school }}</strong></h5>
+                                        <a href="{% url 'add_school' %}" class="btn btn-transparent-success" style="font-weight: bold">Change School</a>
                                     </div>
 
                                     <button class="btn btn-success btn-lg" type="submit" style="width: 100%;">Save

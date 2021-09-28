@@ -7,9 +7,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
 from homework.models import HomeworkAssignment, ReadingAssignment
-from school.models import School
 
-context = {'schools': School.objects.all()}
+context = {}
 
 
 @login_required

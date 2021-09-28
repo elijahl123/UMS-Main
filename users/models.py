@@ -2,7 +2,6 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 # Create your models here.
-from school.models import School
 
 color_choices = [
     ('primary', 'Blue'),
@@ -69,7 +68,7 @@ class Account(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=False)
+    school = models.CharField(null=True, blank=False, max_length=200)
     show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
 
     USERNAME_FIELD = 'email'

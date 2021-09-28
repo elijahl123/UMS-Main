@@ -3,11 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from school.models import School
 from users.forms import AccountForm, AccountSettings
 from users.models import Account
 
-context = {'schools': School.objects.all()}
+context = {}
 
 
 @login_required

@@ -1,6 +1,5 @@
 from django.db import models
 
-from school.models import School
 from users.models import Account
 
 # Create your models here.
@@ -28,7 +27,6 @@ class Course(models.Model):
     title = models.CharField(blank=True, null=True, max_length=120,
                              help_text='Full Name of Class (General Chemistry I, etc.)')
     teacher = models.CharField(blank=True, null=True, max_length=120, help_text='Not Required')
-    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
     color = models.TextField(max_length=120, default='primary', choices=color_choices,
                              help_text='Color You Want This Class to Show Up as on Calendar and Schedule')
 

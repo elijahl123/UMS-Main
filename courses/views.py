@@ -10,10 +10,9 @@ from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, Course
 from courses.models import CourseTime, Course, CourseFile, CourseLink
 # Create your views here.
 from homework.models import HomeworkAssignment
-from school.models import School
 from users.models import Account
 
-context = {'schools': School.objects.all()}
+context = {}
 
 
 @login_required
@@ -58,19 +57,6 @@ def add_coursetime(request):
                 messages.error(request, 'Error in \'{}\' field: {}'.format(error, e).title())
 
     return redirect('manage_schedule')
-
-
-@login_required
-def add_school(request):
-    context['account'] = request.user
-
-    if request.POST:
-        school = request.POST.get('school')
-        selected_school = get_object_or_404(School, id=school)
-        Account.objects.filter(id=request.user.id).update(school=selected_school)
-        return redirect('index')
-
-    return redirect('index')
 
 
 @login_required
@@ -162,6 +148,8 @@ def edit_coursetime(request, id):
 @login_required
 def index(request):
     context['account'] = request.user
+    if not request.user.school:
+        return redirect('add_school')
 
     dt = datetime.datetime.today()
     dt_time = datetime.datetime.now().strftime('%H:%M:%S')

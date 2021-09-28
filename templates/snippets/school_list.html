@@ -1,0 +1,15 @@
+<li class="list-group-item py-3 px-4" style="background: var(--secondary-color);">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="school" value="{{ school.name }}">
+        <span style="color: slategray;font-size: 20px;font-weight: bold;">{{ school.name }}</span>
+        <div class="d-flex flex-column flex-sm-row mt-2">
+            <button type="submit" class="btn btn-success btn-sm me-sm-2 me-0 mb-2 mb-sm-0"
+                    style="font-weight: bold;">Select Class
+            </button>
+            <a class="btn btn-secondary btn-sm" role="button" style="font-weight: bold;"
+               href="{{ school.webpages.0 }}">School
+                Website</a>
+        </div>
+    </form>
+</li>

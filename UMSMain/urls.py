@@ -26,6 +26,7 @@ from class_calendar.views import calendar_events, add_calendar_event, delete_cal
 from courses.views import *
 from homework.views import homework, add_assignment, delete_assignment, complete_assignment, add_reading_assignment, \
     delete_reading_assignment
+from school.views import add_school
 from users.views import *
 
 urlpatterns = [

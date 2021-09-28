@@ -19,9 +19,8 @@ from class_calendar.forms import AddEvent
 from class_calendar.models import CalendarEvent, CalendarToken
 from courses.models import CourseTime
 from homework.models import HomeworkAssignment
-from school.models import School
 
-context = {'schools': School.objects.all()}
+context = {}
 
 
 @login_required

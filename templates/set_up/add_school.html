@@ -1,0 +1,44 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block head_title %}
+    Select Your School
+{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'add_school.css' %}">
+    <script>
+        let schools;
+        let csrfToken;
+        window.onload = function () {
+            $.getJSON('{% static 'json/world_universities_and_domains.json' %}', function (data) {
+                schools = data;
+            })
+            csrfToken = '{% csrf_token %}'
+        }
+    </script>
+    <script src="{% static 'js/search_for_schools.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center main-container">
+        <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+            <div class="col-12 col-md-6"
+                 style="padding: 2rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <i class="fas fa-plus-circle"
+                   style="text-align: center;width: 100%;font-size: 3rem;margin-bottom: 1rem;color: var(--main-color);"></i>
+                <h1 class="mb-3" style="font-weight: bold;color: var(--main-color);text-align: center;">Select Your School<br/>
+                </h1>
+                <div class="d-flex align-items-center position-relative mb-3" id="search-for-schools-container">
+                    <input type="search" class="form-control form-control-lg" id="search-for-schools"
+                           name="school_search" placeholder="Search for Schools"
+                           style="border-radius: 8px;padding-left: 2.75rem;border-width: 0;background: var(--secondary-color);color: slategray;"
+                           onkeydown="searchForSchools(this)"
+                           autofocus autocomplete="off"/>
+                    <i class="fas fa-search position-absolute" style="font-size: 20px;left: 1rem;color: slategray;"></i>
+                </div>
+                <ul class="list-group list-group-flush overflow-auto" id="schools-searched-list" style="border-radius: 8px;max-height: 305px;">
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
