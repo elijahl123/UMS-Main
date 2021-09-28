@@ -10,7 +10,7 @@
         let schools;
         let csrfToken;
         window.onload = function () {
-            $.getJSON('{% static 'json/world_universities_and_domains.json' %}', function (data) {
+            $.getJSON('https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json', function (data) {
                 schools = data;
             })
             csrfToken = '{% csrf_token %}'
