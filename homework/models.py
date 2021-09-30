@@ -25,9 +25,9 @@ class HomeworkManager(models.Manager):
 
     def upcoming_assignments(self, user):
         upcoming_assignments = []
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        for assignment in self.filter(course__user=user, completed=False):
-            if assignment.due_date >= tomorrow:
+        tomorrow = datetime.datetime.today() + datetime.timedelta(days=2)
+        for assignment in self.all_assignments(user):
+            if assignment.due_datetime <= tomorrow:
                 upcoming_assignments.append(assignment)
         return upcoming_assignments
 
