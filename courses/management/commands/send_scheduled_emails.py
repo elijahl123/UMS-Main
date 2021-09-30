@@ -55,6 +55,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_tuple = []
-        for user in Account.objects.all():
+        for user in Account.objects.filter(send_scheduled_emails=True):
             data_tuple.append(get_daily_summary_tuple(user))
         send_mass_html_mail(tuple(data_tuple))
