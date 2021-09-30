@@ -70,7 +70,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     school = models.CharField(null=True, blank=False, max_length=200)
     show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
-    send_scheduled_emails = models.BooleanField(default=False, verbose_name='Send Daily Summaries')
+    send_scheduled_emails = models.BooleanField(default=True, verbose_name='Send Daily Summaries')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
