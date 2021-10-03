@@ -141,3 +141,5 @@ homework/migrations/
 school/migrations/
 
 users/migrations/
+
+notes/migrations/
