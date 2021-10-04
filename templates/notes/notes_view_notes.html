@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    <title>{{ course.name }} - {{ note.title }}</title>
+    <script src="https://cdn.tiny.cloud/1/4jdu6ejvc1gsy4pyrx7iti7l00sszi76dm0zcth87gsnf1xe/tinymce/5/tinymce.min.js"
+            referrerpolicy="origin"></script>
+    <script src="{% static 'js/notes_view_notes.js' %}"></script>
+{% endblock %}
+
+{% block body_content %}
+    <main>
+        <form class="d-flex flex-column p-0 container-fluid" method="post" enctype="multipart/form-data" id="view_notes_form"
+              style="background: whitesmoke;" action="{{ request.path }}">
+            {% csrf_token %}
+            <div class="container-fluid p-3" style="background: white;">
+                <div class="row g-0 d-flex flex-column justify-content-center flex-md-row">
+                    <div class="col-auto d-flex justify-content-center align-items-center justify-content-md-start p-3">
+                        <a class="btn btn-secondary align-items-center" role="button" style="font-weight: bold;"
+                           href="{% url 'notes_home_course' course.id %}">
+                            <i class="fas fa-arrow-left me-2">
+                            </i>Save and Go Back</a>
+                    </div>
+                    <div class="col d-flex justify-content-center justify-content-md-end p-3">
+                        <input type="text" class="form-control form-control-lg align-items-center"
+                               style="border-style: none;background: whitesmoke;font-weight: bold;color: slategray;text-align: center;" onchange="saveNotes()"
+                               name="title" value="{{ note.title }}" autocomplete="off"/>
+                    </div>
+                    <div class="col-auto d-flex justify-content-center align-items-center justify-content-md-end p-3">
+                        <a class="btn me-2 btn-ums" role="button" style="font-weight: bold;"
+                           href="{% url 'course_view' course.id %}">View Class</a>
+                        <button class="btn btn-danger" type="button" data-bs-toggle="modal"
+                                data-bs-target="#delete-note-{{ note.id }}" style="font-weight: bold;">Delete
+                        </button>
+                        <div role="dialog" tabindex="-1" class="modal fade" id="delete-note-{{ note.id }}">
+                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title"
+                                            style="font-weight: bold;color: var(--main-color);">Are You
+                                            Sure?</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="lead" style="margin: 0;color: slategray;">Are you sure you
+                                            would like to
+                                            delete this item?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-transparent-secondary" type="button"
+                                                data-bs-dismiss="modal">Close
+                                        </button>
+                                        <a class="btn btn-transparent-danger" role="button"
+                                           href="{% url 'notes_delete_notes' course.id note.id %}">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container flex-fill p-0 overflow-auto" style="background: white;">
+                <div class="row g-0 h-100">
+                    <div class="col" style="height: 100%;">
+                        <textarea class="form-control h-100" id="notes-content" name="content"
+                                  style="border-style: none;resize: none;" onchange="console.log('changed')" autofocus>
+                            {{ note.content|default_if_none:''|safe }}
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+    <script>
+        tinymce.init({
+            selector: '#notes-content',
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                    saveNotes()
+                });
+            },
+            plugins: 'advlist autolink lists link image charmap print preview hr anchor table fullscreen wordcount searchreplace',
+            toolbar_mode: 'floating',
+            resize: false,
+            toolbar: 'undo redo | styleselect | bold italic | bullist numlist | link image | table | fullscreen'
+        });
+    </script>
+{% endblock %}

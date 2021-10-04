@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load num_notes %}
+
+{% block header %}
+    <title>Notes for {{ course.name }}</title>
+{% endblock %}
+
+{% block content %}
+    <main>
+        <div class="container-fluid d-flex flex-column p-3">
+            <div class="row g-0" style="padding: 1rem;">
+                <div class="col d-flex flex-column align-items-center" style="padding: 2rem;border-radius: 8px;border: 3px solid var(--main-accent);">
+                    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Notes
+                        for {{ course.name }}</h1>
+                    <p style="text-align: center;color: slategray;">Here you can view notes for this specific
+                        course</p>
+                    <a class="btn btn-transparent-secondary" role="button" href="{% url 'notes_home' %}">Go Back</a>
+                    </a>
+                </div>
+            </div>
+            <div class="row g-0 flex-grow-1 overflow-auto p-3">
+                <div class="col h-100 overflow-auto p-3"
+                     style="border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-6 col-xxl-3 p-2">
+                            <a class="btn btn-lg d-flex flex-column justify-content-center w-100 h-100 btn-ums p-3"
+                               role="button" href="{% url 'notes_add_notes' course.id %}"
+                               style="text-align: center;font-weight: bold;font-size: 25px;border-width: 3px;">
+                                <i class="fas fa-plus mb-2" style="font-size: 3rem;"></i>
+                                <span>Add Notes</span>
+                            </a>
+                        </div>
+                        {% for note in notes %}
+                            <div class="col-12 col-md-6 col-xxl-3 p-2 position-relative">
+                                <a class="text-center text-md-start d-flex flex-column w-100 h-100 btn btn-transparent-{{ note.course.color }} p-3"
+                                   href="{% url 'notes_view_notes' course.id note.id %}">
+                                    <h4 class="text-break" style="font-weight: bold;">{{ note.title }}</h4>
+                                    <p class="text-break h-100" style="font-weight: normal;">{{ note.content|striptags|safe|truncatewords:20 }}</p>
+                                    <span class="align-self-start"
+                                          style="font-weight: normal;">{{ note.modified|date:'M j' }}</span>
+                                </a>
+                                <button class="btn btn-sm position-absolute btn-transparent" type="button"
+                                        style="bottom: 1.5rem;right: 1.5rem;" data-bs-target="#notebook-menu-0"
+                                        data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div id="notebook-menu-0" class="dropdown-menu">
+                                    <button class="dropdown-item" data-bs-toggle="modal"
+                                            data-bs-target="#delete-note-{{ note.id }}"
+                                            style="color: slategray;font-weight: bold;">
+                                        <i class="fas fa-trash me-2"></i>
+                                        Delete
+                                    </button>
+                                </div>
+                                <div role="dialog" tabindex="-1" class="modal fade" id="delete-note-{{ note.id }}">
+                                    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title"
+                                                    style="font-weight: bold;color: var(--main-color);">Are You
+                                                    Sure?</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="lead" style="margin: 0;color: slategray;">Are you sure you
+                                                    would like to
+                                                    delete this item?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                    <button class="btn btn-transparent-secondary" type="button"
+                                                            data-bs-dismiss="modal">Close
+                                                    </button>
+                                                <a class="btn btn-transparent-danger" role="button"
+                                                   href="{% url 'notes_delete_notes' course.id note.id %}">Delete</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

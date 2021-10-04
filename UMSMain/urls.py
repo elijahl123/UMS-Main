@@ -74,7 +74,8 @@ urlpatterns = [
     path('homework/add-reading-assignment/', add_reading_assignment, name='add_reading_assignment'),
     path('homework/edit-reading-assignment/<id>/', add_reading_assignment, name='edit_reading_assignment'),
     path('homework/delete-reading-assignment/<id>/', delete_reading_assignment, name='delete_reading_assignment'),
-    path('homework/complete-assignment/<id>/', complete_assignment, name='complete_assignment')
+    path('homework/complete-assignment/<id>/', complete_assignment, name='complete_assignment'),
+    path('notes/', include('notes.urls'))
 ]
 
 if settings.DEBUG:

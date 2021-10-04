@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load num_notes %}
+
+{% block header %}
+<title>Notes</title>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container-fluid d-flex flex-column p-3">
+        <div class="row g-0" style="padding: 1rem;">
+            <div class="col" style="padding: 2rem;border-radius: 8px;border: 3px solid var(--main-accent);">
+                <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">Notes</h1>
+                <p style="text-align: center;color: slategray;margin: 0;">Here you can view notes for each of your courses</p>
+            </div>
+        </div>
+        <div class="row g-0 flex-grow-1 overflow-auto p-3">
+            <div class="col h-100 overflow-auto p-3" style="border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <div class="row g-0 justify-content-center">
+                    {% for course in courses %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-2">
+                        <a class="btn btn-lg d-flex flex-column w-100 h-100 btn-transparent-{{ course.color }} p-3" role="button" href="{% url 'notes_home_course' course.id %}" style="text-align: center;font-weight: bold;font-size: 25px;">
+                            <i class="fas fa-book mb-2" style="font-size: 2rem;"></i>
+                            {{ course.name }}
+                            <span style="font-weight: normal;font-size: 20px;">{% num_notes course.id %} Notes</span>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 p-2">
+                        <a class="btn btn-lg d-flex flex-column justify-content-center w-100 h-100 btn-transparent-ums p-3" role="button" href="{% url 'add_course' %}" style="text-align: center;font-weight: bold;font-size: 25px;">
+                            <i class="fas fa-plus mb-2" style="font-size: 3rem;"></i>
+                            <span>Add Course</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
