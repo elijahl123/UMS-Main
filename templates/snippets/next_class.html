@@ -17,7 +17,6 @@
                           style="font-weight: bold;border: 1px solid transparent; text-align: center">Password: {{ coursetime.zoom_password|default:'None' }}</span>
                 {% endif %}
                 <a class="btn btn-ums btn-sm" role="button" href="{% url 'notes_add_notes' coursetime.course.id %}"
-                   target="_blank"
                    style="font-weight: bold;">
                     Open Notes
                 </a>
