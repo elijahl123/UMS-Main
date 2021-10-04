@@ -4,17 +4,24 @@
         <h3 style="font-weight: bold;margin-bottom: 0">
             {{ coursetime.course.name }}
         </h3>
-        {% if coursetime.link %}
-            <div class="mt-2">
+        <div class="d-flex align-items-center">
+            {% if coursetime.link %}
                 <a class="btn btn-{{ coursetime.course.color }} btn-sm" role="button" href="{{ coursetime.link }}"
                    target="_blank"
                    style="font-weight: bold;">
                     Go to Class
                 </a>
-                <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm"
-                      style="font-weight: bold;border: 1px solid transparent">Password: {{ coursetime.zoom_password|default:'None' }}</span>
-            </div>
-        {% endif %}
+            {% endif %}
+                {% if coursetime.zoom_password %}
+                    <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm"
+                          style="font-weight: bold;border: 1px solid transparent; text-align: center">Password: {{ coursetime.zoom_password|default:'None' }}</span>
+                {% endif %}
+                <a class="btn btn-ums btn-sm" role="button" href="{% url 'notes_add_notes' coursetime.course.id %}"
+                   target="_blank"
+                   style="font-weight: bold;">
+                    Open Notes
+                </a>
+        </div>
 
         <button class="btn btn-transparent btn-sm position-absolute" role="button"
                 data-bs-toggle="dropdown" data-bs-target="#navbar-course-dropdown-menu"
@@ -24,12 +31,14 @@
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="navbar-course-dropdown-menu"
              style="border: none">
             <a class="dropdown-item"
-               style="font-weight: bold; border: none; color: slategray" href="{% url 'course_view' coursetime.course.id %}">
+               style="font-weight: bold; border: none; color: slategray"
+               href="{% url 'course_view' coursetime.course.id %}">
                 <i class="fas fa-info-circle me-2"></i>
                 View Course
             </a>
             <a class="dropdown-item"
-               style="font-weight: bold; border: none; color: slategray" href="{% url 'edit_course' coursetime.course.id %}">
+               style="font-weight: bold; border: none; color: slategray"
+               href="{% url 'edit_course' coursetime.course.id %}">
                 <i class="fas fa-edit me-2"></i>
                 Edit Course
             </a>
