@@ -38,7 +38,7 @@ def add_notes(request, course_id):
     if not course.user == request.user:
         return redirect('notes_home')
 
-    obj = Note.objects.create(course=course, user=request.user, title=f'Notes for {datetime.date.today().isoformat()}') if request.GET['daily-notes'] else Note.objects.create(course=course, user=request.user)
+    obj = Note.objects.create(course=course, user=request.user, title=f'Notes for {datetime.date.today().isoformat()}') if request.GET.get('daily-notes') else Note.objects.create(course=course, user=request.user)
 
     return redirect('notes_view_notes', course_id, obj.id)
 
