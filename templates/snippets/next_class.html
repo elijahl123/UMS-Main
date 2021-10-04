@@ -12,7 +12,7 @@
                     Go to Class
                 </a>
             {% endif %}
-                {% if coursetime.zoom_password %}
+                {% if coursetime.link %}
                     <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm"
                           style="font-weight: bold;border: 1px solid transparent; text-align: center">Password: {{ coursetime.zoom_password|default:'None' }}</span>
                 {% endif %}
