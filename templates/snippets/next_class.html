@@ -6,7 +6,7 @@
         </h3>
         <div class="d-flex align-items-center">
             {% if coursetime.link %}
-                <a class="btn btn-{{ coursetime.course.color }} btn-sm" role="button" href="{{ coursetime.link }}"
+                <a class="btn btn-{{ coursetime.course.color }} btn-sm my-2" role="button" href="{{ coursetime.link }}"
                    target="_blank"
                    style="font-weight: bold;">
                     Go to Class
@@ -16,7 +16,7 @@
                     <span class="text-white bg-secondary rounded m-2 py-1 px-2 btn-sm"
                           style="font-weight: bold;border: 1px solid transparent; text-align: center">Password: {{ coursetime.zoom_password|default:'None' }}</span>
                 {% endif %}
-                <a class="btn btn-ums btn-sm" role="button" href="{% url 'notes_add_notes' coursetime.course.id %}?daily-notes=true"
+                <a class="btn btn-ums btn-sm my-2" role="button" href="{% url 'notes_add_notes' coursetime.course.id %}?daily-notes=true"
                    style="font-weight: bold;">
                     Open Notes
                 </a>
