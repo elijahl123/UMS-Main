@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
+from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
 from homework.models import HomeworkAssignment, ReadingAssignment
 
@@ -47,96 +48,70 @@ def homework(request):
     return render(request, 'homework.html', context)
 
 
-@login_required
-def add_assignment(request, id=None):
-    context['account'] = request.user
+class AddAssignmentView(ModelCreationView):
+    form_class = HomeworkAssignmentForm
+    template_name = 'forms/add_assignment.html'
+    redirect_url = 'homework'
 
-    instance = None
-
-    context['form_title'] = 'Add Assignment'
-    context['form_description'] = 'Here you can add an assignment for a specific class'
-    context['excluded_fields'] = []
-
-    if id:
-        instance = get_object_or_404(HomeworkAssignment, id=id)
-        context['form_title'] = 'Edit Assignment'
-        context['form_description'] = 'Here you can edit an assignment for a specific class'
-        if not instance.course.user == request.user:
-            return redirect('homework')
-
-    if request.POST:
-        form = HomeworkAssignmentForm(request.POST, instance=instance if instance else None, user=request.user)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            if id:
-                messages.success(request, 'Assignment edited successfully')
-            else:
-                messages.success(request, 'Assignment added successfully')
-            return redirect('homework')
-    else:
-        form = HomeworkAssignmentForm(instance=instance if instance else None, user=request.user,
-                                      initial={'course': instance.course if instance else request.GET.get('course')})
-
-    context['form'] = form
-
-    return render(request, 'forms/add_assignment.html', context)
+    form_title = 'Add Assignment'
+    form_description = 'Here you can add an assignment for a specific class'
+    excluded_fields = []
+    success_message = 'Assignment added successfully'
+    require_user = True
 
 
-@login_required
-def delete_assignment(request, id):
-    context['account'] = request.user
-    assignment = get_object_or_404(HomeworkAssignment, id=id)
-    assignment.delete()
-    return redirect('homework')
+class EditAssignmentView(ModelEditView):
+    model = HomeworkAssignment
+    form_class = HomeworkAssignmentForm
+    template_name = 'forms/add_assignment.html'
+    redirect_url = 'homework'
+
+    form_title = 'Edit Assignment'
+    form_description = 'Here you can edit an assignment for a specific class'
+    excluded_fields = []
+    success_message = 'Assignment edited successfully'
+    require_user = True
 
 
-@login_required
-def add_reading_assignment(request, id=None):
-    context['account'] = request.user
-
-    instance = None
-
-    context['form_title'] = 'Add Reading Assignment'
-    context['form_description'] = 'Here you can add a reading assignment for your class. This is different from a ' \
-                                  'regular assignment because UMS will evenly distribute your reading automatically ' \
-                                  'for you'
-    context['excluded_fields'] = []
-
-    if id:
-        instance = get_object_or_404(ReadingAssignment, id=id)
-        context['form_title'] = 'Edit Assignment'
-        context['form_description'] = 'Here you can edit a reading assignment for your class. This is different from ' \
-                                      'a regular assignment because UMS will evenly distribute your reading ' \
-                                      'automatically for you '
-        if not instance.course.user == request.user:
-            return redirect('homework')
-
-    if request.POST:
-        form = ReadingAssignmentForm(request.POST, instance=instance if instance else None, user=request.user)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.save()
-            if id:
-                messages.success(request, 'Reading Assignment edited successfully')
-            else:
-                messages.success(request, 'Reading Assignment added successfully')
-            return redirect('homework')
-    else:
-        form = ReadingAssignmentForm(instance=instance if instance else None, user=request.user,
-                                     initial={'course': instance.course if instance else request.GET.get('course')})
-
-    context['form'] = form
-
-    return render(request, 'forms/add_assignment.html', context)
+class DeleteAssignmentView(ModelDeleteView):
+    model = HomeworkAssignment
+    redirect_url = 'homework'
+    success_message = 'Assignment deleted successfully'
 
 
-@login_required
-def delete_reading_assignment(request, id):
-    context['account'] = request.user
-    assignment = get_object_or_404(ReadingAssignment, id=id)
-    assignment.delete()
-    return redirect('homework')
+class AddReadingAssignment(ModelCreationView):
+    form_class = ReadingAssignmentForm
+    template_name = 'forms/add_assignment.html'
+    redirect_url = 'homework'
+
+    form_title = 'Add Reading Assignment'
+    form_description = 'Here you can add a reading assignment for your class. This is different from a ' \
+                       'regular assignment because UMS will evenly distribute your reading automatically ' \
+                       'for you'
+    excluded_fields = []
+    success_message = 'Reading Assignment added successfully'
+    require_user = True
+
+
+class EditReadingAssignment(ModelEditView):
+    model = ReadingAssignment
+    form_class = ReadingAssignmentForm
+    template_name = 'forms/add_assignment.html'
+    redirect_url = 'homework'
+
+    form_title = 'Edit Reading Assignment'
+    form_description = 'Here you can edit a reading assignment for your class. This is different from a ' \
+                       'regular assignment because UMS will evenly distribute your reading automatically ' \
+                       'for you'
+    excluded_fields = []
+    success_message = 'Reading Assignment edited successfully'
+    require_user = True
+
+
+class DeleteReadingAssignment(ModelDeleteView):
+    model = ReadingAssignment
+    redirect_url = 'homework'
+    success_message = 'Reading Assignment deleted successfully'
 
 
 @login_required
