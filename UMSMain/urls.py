@@ -73,7 +73,7 @@ urlpatterns = [
     path('homework/add-reading-assignment/', AddReadingAssignment.as_view(), name='add_reading_assignment'),
     path('homework/edit-reading-assignment/<id>/', EditReadingAssignment.as_view(), name='edit_reading_assignment'),
     path('homework/delete-reading-assignment/<id>/', DeleteReadingAssignment.as_view(), name='delete_reading_assignment'),
-    path('homework/complete-assignment/<id>/', complete_assignment, name='complete_assignment'),
+    path('homework/complete-assignment/<id>/', CompleteAssignment.as_view(), name='complete_assignment'),
     path('notes/', include('notes.urls'))
 ]
 

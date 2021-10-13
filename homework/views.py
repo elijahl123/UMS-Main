@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
-from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView
+from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView, ModelChangeAttrView
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
 from homework.models import HomeworkAssignment, ReadingAssignment
 
@@ -114,15 +114,8 @@ class DeleteReadingAssignment(ModelDeleteView):
     success_message = 'Reading Assignment deleted successfully'
 
 
-@login_required
-def complete_assignment(request, id):
-    context['account'] = request.user
-    assignment = get_object_or_404(HomeworkAssignment, id=id)
-    if assignment.completed:
-        assignment.completed = False
-        assignment.save()
-    else:
-        assignment.completed = True
-        messages.success(request, 'Congratulations! I\'m proud of you!')
-        assignment.save()
-    return redirect('homework')
+class CompleteAssignment(ModelChangeAttrView):
+    model = HomeworkAssignment
+    redirect_url = 'homework'
+    change_attr: str = 'completed'
+    alternate = True

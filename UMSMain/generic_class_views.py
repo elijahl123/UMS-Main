@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Model
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView
 
 
+# noinspection PyMissingConstructor
 class ModelCreationView(LoginRequiredMixin, TemplateView):
-
     form_class = None
     initial: dict = {}
     instance = None
@@ -128,3 +129,28 @@ class ModelDeleteView(LoginRequiredMixin, View):
         return HttpResponseRedirect(redirect_next) if redirect_next else redirect(self.redirect_url)
 
 
+class ModelChangeAttrView(LoginRequiredMixin, View):
+    model = None
+    redirect_url: str = 'index'
+    change_attr: str = ''
+    change_to = None
+    alternate: bool = True
+    identifier_name: str = 'id'
+
+    def get_instance_kwargs(self, **kwargs):
+        instance_kwargs = {
+            'id': kwargs[self.identifier_name]
+        }
+        return instance_kwargs
+
+    def get(self, request, **kwargs):
+        obj = get_object_or_404(self.model, **self.get_instance_kwargs(**kwargs))
+        if self.alternate:
+            setattr(obj, self.change_attr, not getattr(obj, self.change_attr))
+        else:
+            setattr(obj, self.change_attr, self.change_to)
+        obj.save()
+
+        redirect_next = request.GET.get('next')
+
+        return HttpResponseRedirect(redirect_next) if redirect_next else redirect(self.redirect_url)
