@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Model
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
@@ -137,14 +136,16 @@ class ModelChangeAttrView(LoginRequiredMixin, View):
     alternate: bool = True
     identifier_name: str = 'id'
 
-    def get_instance_kwargs(self, **kwargs):
+    def get_instance_kwargs(self, request, **kwargs):
         instance_kwargs = {
             'id': kwargs[self.identifier_name]
         }
+        if hasattr(self.model, 'course'):
+            instance_kwargs['course__user'] = request.user
         return instance_kwargs
 
     def get(self, request, **kwargs):
-        obj = get_object_or_404(self.model, **self.get_instance_kwargs(**kwargs))
+        obj = get_object_or_404(self.model, **self.get_instance_kwargs(request, **kwargs))
         if self.alternate:
             setattr(obj, self.change_attr, not getattr(obj, self.change_attr))
         else:
