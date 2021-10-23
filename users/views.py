@@ -85,6 +85,7 @@ def select_timezone(request):
         user = get_object_or_404(Account, id=request.user.id)
         user.timezone = request.POST['timezone']
         user.save()
+        messages.success(request, 'Timezone Selected Successfully')
         return redirect('index') if not request.GET.get('next') else HttpResponseRedirect(request.GET['next'])
 
     return render(request, 'set_up/add_timezone.html', context)
