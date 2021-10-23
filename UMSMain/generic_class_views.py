@@ -61,6 +61,7 @@ class PermissionsRequiredMixin(UserPassesTestMixin):
         if not self.request.user.timezone:
             self.login_url = 'select_timezone'
             return False
+        return True
 
 
 class ModelCreationView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
