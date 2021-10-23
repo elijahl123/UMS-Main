@@ -11,7 +11,10 @@ register = template.Library()
 
 
 @register.simple_tag(takes_context=True)
-def get_nav_links(context, title=None):
+def get_nav_links(context, request):
+
+    print(request.user)
+
     nav_links = [
         {
             "name": 'Account Info',
@@ -41,7 +44,7 @@ def get_nav_links(context, title=None):
     ]
 
     for link in nav_links:
-        link['selected'] = True if link['name'] == title else None
+        link['selected'] = True if request.path == link['url'] else False
 
     context['nav_links'] = nav_links
 

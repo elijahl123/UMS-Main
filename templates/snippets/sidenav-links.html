@@ -24,12 +24,12 @@
         <i class="fas fa-file-alt" style="margin-right: .75rem; width: 25px; text-align: center"></i>
         <span>Notes</span>
     </a>
-    <button class="list-group-item list-group-item-action btn-transparent-ums btn-lg btn dropdown-toggle"
-       style="border-style: none;padding: .75rem 1.5rem;margin-bottom: 1rem;" data-bs-toggle="collapse" data-bs-target="#courses-list">
+    <button class="list-group-item list-group-item-action btn-transparent-ums btn-lg btn dropdown-toggle mb-3"
+       style="border-style: none;padding: .75rem 1.5rem;" data-bs-toggle="collapse" data-bs-target="#courses-list">
         <i class="fas fa-graduation-cap" style="margin-right: .75rem; width: 25px; text-align: center"></i>
         <span>Courses</span>
     </button>
-    <ul class="list-group py-0 w-100 collapse" id="courses-list" style="background: transparent; border: none;">
+    <ul class="list-group py-0 w-100 collapse mb-3" id="courses-list" style="background: transparent; border: none;">
     <a class="list-group-item list-group-item-action btn-ums w-100" href="{% url 'add_course' %}" style="font-weight: bold; ">
         <i class="fas fa-plus me-2"></i> Add Course</a>
   </ul>
