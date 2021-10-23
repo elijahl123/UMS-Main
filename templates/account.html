@@ -22,7 +22,6 @@
                 <div class="col flex-grow-1 p-3 h-100">
                     <div class="h-100 overflow-auto"
                          style="padding: 1rem;border-radius: 8px;border-style: solid;border-color: var(--main-accent);">
-                        {% block account_content %}
                             <div class="dropdown mb-4 mb-xl-0">
                                 <button class="btn w-100 btn-transparent-secondary d-block d-xl-none"
                                         aria-expanded="false"
@@ -38,6 +37,7 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                        {% block account_content %}
                             <h1 style="text-align: left;font-weight: bold;color: var(--main-color);">Account Info</h1>
                             <hr/>
                             <h3 style="font-weight: bold;color: var(--main-color);">Personal Info</h3>
