@@ -5,7 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
-from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView, ModelChangeAttrView
+from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView, ModelChangeAttrView, \
+    school_required, timezone_required
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
 from homework.models import HomeworkAssignment, ReadingAssignment
 
@@ -13,6 +14,8 @@ context = {}
 
 
 @login_required
+@school_required
+@timezone_required
 def homework(request):
     context['account'] = request.user
 
@@ -119,3 +122,4 @@ class CompleteAssignment(ModelChangeAttrView):
     redirect_url = 'homework'
     change_attr: str = 'completed'
     alternate = True
+

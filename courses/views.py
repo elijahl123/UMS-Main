@@ -1,10 +1,11 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
 
+from UMSMain.generic_class_views import school_required, timezone_required
 from class_calendar.models import CalendarEvent
 from courses.forms import CourseForm, CourseTimeForm, CourseTimeEditForm, CourseFileForm, FeedbackForm, CourseLinkForm
 from courses.models import CourseTime, Course, CourseFile, CourseLink
@@ -16,6 +17,8 @@ context = {}
 
 
 @login_required
+@school_required
+@timezone_required
 def add_course(request):
     if not request.user.school:
         return redirect('index')
@@ -43,6 +46,8 @@ def add_course(request):
 
 
 @login_required
+@school_required
+@timezone_required
 def add_coursetime(request):
     context['account'] = request.user
 
@@ -60,6 +65,8 @@ def add_coursetime(request):
 
 
 @login_required
+@school_required
+@timezone_required
 def class_schedule(request):
     context['account'] = request.user
 
@@ -82,6 +89,8 @@ def class_schedule(request):
 
 
 @login_required
+@school_required
+@timezone_required
 def edit_course(request, id):
     context['account'] = request.user
 
@@ -114,6 +123,8 @@ def edit_course(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def edit_coursetime(request, id):
     context['account'] = request.user
 
@@ -146,10 +157,10 @@ def edit_coursetime(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def index(request):
     context['account'] = request.user
-    if not request.user.school:
-        return redirect('add_school')
 
     dt = datetime.datetime.today()
     dt_time = datetime.datetime.now().strftime('%H:%M:%S')
@@ -172,6 +183,8 @@ def index(request):
 
 
 @login_required
+@school_required
+@timezone_required
 def feedback(request):
     context['account'] = request.user
 
@@ -197,6 +210,8 @@ def feedback(request):
 
 
 @login_required
+@school_required
+@timezone_required
 def manage_schedule(request):
     context['account'] = request.user
 
@@ -207,6 +222,8 @@ def manage_schedule(request):
 
 
 @login_required
+@school_required
+@timezone_required
 def delete_course(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -215,6 +232,8 @@ def delete_course(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def delete_coursetime(request, id):
     context['account'] = request.user
     coursetime = get_object_or_404(CourseTime, id=id)
@@ -223,6 +242,8 @@ def delete_coursetime(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def course_view(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -233,6 +254,8 @@ def course_view(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def course_files(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -246,6 +269,8 @@ def course_files(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def add_course_file(request, id, file_id=None):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -282,6 +307,8 @@ def add_course_file(request, id, file_id=None):
 
 
 @login_required
+@school_required
+@timezone_required
 def delete_course_file(request, id, file_id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -294,6 +321,8 @@ def delete_course_file(request, id, file_id):
 
 
 @login_required
+@school_required
+@timezone_required
 def course_assignments(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -314,6 +343,8 @@ def course_assignments(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def course_links(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -327,6 +358,8 @@ def course_links(request, id):
 
 
 @login_required
+@school_required
+@timezone_required
 def add_course_link(request, id, link_id=None):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -363,6 +396,8 @@ def add_course_link(request, id, link_id=None):
 
 
 @login_required
+@school_required
+@timezone_required
 def delete_course_link(request, id, link_id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)
@@ -375,6 +410,8 @@ def delete_course_link(request, id, link_id):
 
 
 @login_required
+@school_required
+@timezone_required
 def course_coursetimes(request, id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=id)

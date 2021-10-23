@@ -1,13 +1,69 @@
+from urllib.parse import urlparse
+
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.views import redirect_to_login
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.views import View
 from django.views.generic import TemplateView
 
 
-# noinspection PyMissingConstructor
-class ModelCreationView(LoginRequiredMixin, TemplateView):
+def school_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
+    actual_decorator = user_passes_test(
+        lambda u: u.school,
+        login_url='add_school',
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+def timezone_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
+    actual_decorator = user_passes_test(
+        lambda u: u.timezone,
+        login_url='select_timezone',
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator
+
+
+class PermissionsRequiredMixin(UserPassesTestMixin):
+    login_url = 'add_school'
+
+    def handle_no_permission(self):
+        path = self.request.build_absolute_uri()
+        resolved_login_url = resolve_url(self.get_login_url())
+        # If the login url is the same scheme and net location then use the
+        # path as the "next" url.
+        login_scheme, login_netloc = urlparse(resolved_login_url)[:2]
+        current_scheme, current_netloc = urlparse(path)[:2]
+        if (
+                (not login_scheme or login_scheme == current_scheme) and
+                (not login_netloc or login_netloc == current_netloc)
+        ):
+            path = self.request.get_full_path()
+        return redirect_to_login(
+            path,
+            resolved_login_url,
+            self.get_redirect_field_name(),
+        )
+
+    def test_func(self):
+        if not self.request.user.school:
+            self.login_url = 'add_school'
+            return False
+        if not self.request.user.timezone:
+            self.login_url = 'select_timezone'
+            return False
+
+
+class ModelCreationView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateView):
     form_class = None
     initial: dict = {}
     instance = None
@@ -105,7 +161,7 @@ class ModelEditView(ModelCreationView):
         return super().post(request, **kwargs)
 
 
-class ModelDeleteView(LoginRequiredMixin, View):
+class ModelDeleteView(LoginRequiredMixin, PermissionsRequiredMixin, View):
     model = None
     redirect_url = 'index'
     identifier_name = 'id'
@@ -128,7 +184,7 @@ class ModelDeleteView(LoginRequiredMixin, View):
         return HttpResponseRedirect(redirect_next) if redirect_next else redirect(self.redirect_url)
 
 
-class ModelChangeAttrView(LoginRequiredMixin, View):
+class ModelChangeAttrView(LoginRequiredMixin, PermissionsRequiredMixin, View):
     model = None
     redirect_url: str = 'index'
     change_attr: str = ''

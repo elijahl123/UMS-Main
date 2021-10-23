@@ -1,3 +1,4 @@
+import pytz
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
@@ -69,6 +70,7 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     school = models.CharField(null=True, blank=False, max_length=200)
+    timezone = models.CharField(null=True, choices=[(tz, tz.replace('_', ' ')) for tz in pytz.all_timezones], max_length=120)
     show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
     send_scheduled_emails = models.BooleanField(default=True, verbose_name='Send Daily Summaries')
 

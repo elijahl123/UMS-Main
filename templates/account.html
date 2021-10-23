@@ -1,84 +1,128 @@
 {% extends 'base.html' %}
+{% load get_nav_links %}
 
 {% block header %}
-    <title>Account</title>
+    <title>Account Info</title>
 {% endblock %}
 
 {% block content %}
+    {% get_nav_links %}
     <main>
-        <div class="container-fluid d-flex flex-column" style="padding: 1rem;">
-            <div class="row g-0"
-                 style="border-radius: 8px;border-style: solid;border-color: var(--main-accent);padding: 1rem;margin-bottom: 1rem;">
-                <div class="col">
-                    <h1 style="color: var(--main-color);font-weight: bold;">Account</h1>
-                    <p style="color: slategray;margin: 0;">Manage your personal info and make changes to you UMS
-                        Account</p>
+        <div class="container-fluid p-0">
+            <div class="row g-0 d-flex h-100 overflow-auto">
+                <div class="col-12 col-xl-5 col-xxl-3 p-3 d-none d-xl-block">
+                    {% for item in nav_links %}
+                        <a class="btn btn-lg d-flex justify-content-start align-items-center w-100 {% if item.selected %}btn-ums{% else %}btn-transparent-ums{% endif %} ps-5 position-relative mb-3 "
+                           role="button" href="{{ item.url }}" style="text-align: start">
+                            {{ item.name }}
+                            <i class="{{ item.icon }} position-absolute" style="left: 1rem;"></i>
+                        </a>
+                    {% endfor %}
                 </div>
-            </div>
-            <div class="row g-0 d-flex flex-row flex-grow-1" style="height: 100%;">
-                <div class="col-12 col-lg-4" style="padding: 1rem;">
-                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
-                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;" href="{% url 'account' %}">
-                        <i class="fas fa-user" style="margin-right: 1rem;"></i>Account Info
-                    </a>
-                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
-                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;" href="{% url 'account_settings' %}">
-                        <i class="fas fa-cog" style="margin-right: 1rem;"></i>Account Settings
-                    </a>
-                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
-                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;" href="{% url 'account_email' %}">
-                        <i class="fas fa-envelope" style="margin-right: 1rem;"></i>Change Email
-                    </a>
-                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
-                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;"
-                       href="{% url 'account_change_password' %}">
-                        <i class="fas fa-lock" style="margin-right: 1rem;"></i>Change Password
-                    </a>
-                    <a class="btn btn-lg btn-transparent-ums text-center text-lg-start" role="button"
-                       style="width: 100%;margin-bottom: 1rem;border-radius: 8px;"
-                       href="{% url 'socialaccount_connections' %}">
-                        <i class="fas fa-link" style="margin-right: 1rem;"></i>Linked Accounts
-                    </a>
-                </div>
-                <div class="col-12 col-lg-8 flex-grow-1" style="padding: 1rem;">
-                    <div class="row g-0"
-                         style="height: 100%;border-radius: 8px;border-style: solid;border-color: var(--main-accent);padding: 1rem;">
-                        <div class="col">
-                            {% block account_content %}
-                                <form method="post" enctype="multipart/form-data" class="flex-column d-flex h-100">
-                                    {% csrf_token %}
-                                    <h1 style="text-align: center;font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
-                                        Account Info</h1>
-                                    <div class="flex-grow-1">
-                                        {% for field in form %}
-                                            {% if field.name != 'school' and field.name != 'show_schedule_on_calendar' %}
-                                                <div class="form-floating" style="margin-bottom: 1rem;">
-                                                    <input type="text" id="{{ field.id_for_label }}"
-                                                           class="form-control" name="{{ field.html_name }}"
-                                                           placeholder=" "
-                                                           style="border-width: 3px;font-weight: bold;"
-                                                           value="{% if field.value %}{{ field.value }}{% endif %}"/>
-                                                    <label class="form-label"
-                                                           for="{{ field.id_for_label }}">{{ field.label }}</label>
-                                                </div>
-                                                {% if field.errors %}
-                                                    {% for error in field.errors %}
-                                                        <div class="alert alert-danger">{{ error }}</div>
-                                                    {% endfor %}
-                                                {% endif %}
-                                            {% endif %}
+                <div class="col flex-grow-1 p-3 h-100">
+                    <div class="h-100 overflow-auto"
+                         style="padding: 1rem;border-radius: 8px;border-style: solid;border-color: var(--main-accent);">
+                        {% block account_content %}
+                            <div class="dropdown mb-4 mb-xl-0">
+                                <button class="btn w-100 btn-transparent-secondary d-block d-xl-none"
+                                        aria-expanded="false"
+                                        data-bs-toggle="dropdown" type="button">
+                                    <i class="fas fa-bars"></i></button>
+                                <div class="dropdown-menu w-100 my-2" style="border-width: 3px;">
+                                    {% for item in nav_links %}
+                                        <a class="dropdown-item d-flex align-items-center" href="{{ item.url }}"
+                                           style="color: rgba(0,0,0,0.5);font-weight: bold;padding-left: 2.5rem;">
+                                            <i class="{{ item.icon }} position-absolute" style="left: 1rem;"></i>
+                                            {{ item.name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <h1 style="text-align: left;font-weight: bold;color: var(--main-color);">Account Info</h1>
+                            <hr/>
+                            <h3 style="font-weight: bold;color: var(--main-color);">Personal Info</h3>
+                            <p class="mb-4" style="color: slategray;">Here, you can edit your name and other info.</p>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row row-cols-1 row-cols-md-2 mb-4">
+                                    <div class="col mb-4 mb-md-0">
+                                        <label class="form-label mb-1 {% if form.first_name.errors %}is-invalid{% endif %}"
+                                               style="font-weight: bold;color: rgba(0,0,0,0.5);">First
+                                            Name</label>
+                                        {{ form.first_name }}
+                                        {% for error in form.first_name.errors %}
+                                            <span class="invalid-feedback help-text">{{ error }}</span>
                                         {% endfor %}
-                                        <hr>
-                                        <h5 class="mb-3" style="color: slategray">Currently Attending: <strong>{{ account.school }}</strong></h5>
-                                        <a href="{% url 'add_school' %}" class="btn btn-transparent-success" style="font-weight: bold">Change School</a>
                                     </div>
-
-                                    <button class="btn btn-success btn-lg" type="submit" style="width: 100%;">Save
-                                        Changes
-                                    </button>
-                                </form>
-                            {% endblock %}
-                        </div>
+                                    <div class="col">
+                                        <label class="form-label mb-1 {% if form.last_name.errors %}is-invalid{% endif %}"
+                                               style="font-weight: bold;color: rgba(0,0,0,0.5);">Last
+                                            Name</label>
+                                        {{ form.last_name }}
+                                        {% for error in form.last_name.errors %}
+                                            <span class="invalid-feedback help-text">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <label class="form-label mb-1 {% if form.username.errors %}is-invalid{% endif %}"
+                                               style="font-weight: bold;color: rgba(0,0,0,0.5);">Username</label>
+                                        {{ form.username }}
+                                        {% for error in form.username.errors %}
+                                            <span class="invalid-feedback help-text">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <label class="form-label mb-1"
+                                               style="font-weight: bold;color: rgba(0,0,0,0.5);">School</label>
+                                        <div class="d-flex flex-column justify-content-between flex-md-row align-items-md-center">
+                                            <p class="lead text-center text-md-start m-0 px-2 py-1 btn-light rounded mb-3 mb-md-0"
+                                               style="color: rgba(0,0,0,.5);font-weight: bold;">{{ request.user.school }}</p>
+                                            <a class="btn btn-secondary" role="button" href="{% url 'add_school' %}"
+                                               style="font-weight: bold;">Change School</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <label class="form-label mb-1"
+                                               style="font-weight: bold;color: rgba(0,0,0,0.5);">Timezone</label>
+                                        <div class="d-flex flex-column justify-content-between flex-md-row align-items-md-center">
+                                            <p class="lead text-center text-md-start m-0 px-2 py-1 btn-light rounded mb-3 mb-md-0"
+                                               style="color: rgba(0,0,0,.5);font-weight: bold;">{{ request.user.timezone|default:'None' }}</p>
+                                            <a class="btn btn-secondary" role="button"
+                                               href="{% url 'select_timezone' %}"
+                                               style="font-weight: bold;">Change Timezone</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success w-100" type="submit" style="font-weight: bold;">Save
+                                    Changes
+                                </button>
+                                <hr class="my-5"/>
+                                <h3 style="font-weight: bold;color: var(--main-color);">Notifications</h3>
+                                <p class="mb-4" style="color: slategray;">Here, you can edit your your notification
+                                    settings.</p>
+                                <div class="row mb-4">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    {{ form.send_scheduled_emails }}
+                                                    <label class="form-check-label" for="formCheck-1">Daily
+                                                        Reminders</label></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-success w-100" type="submit" style="font-weight: bold;">Save
+                                    Changes
+                                </button>
+                            </form>
+                        {% endblock %}
                     </div>
                 </div>
             </div>

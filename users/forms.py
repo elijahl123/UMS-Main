@@ -15,13 +15,13 @@ color_choices = [
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        exclude = ['password', 'is_active', 'is_admin', 'is_staff', 'is_superuser', 'show_schedule_on_calendar', 'send_scheduled_emails', 'email']
-
-    def __init__(self, *args, **kwargs):
-        super(AccountForm, self).__init__(*args, **kwargs)
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control form-control-lg'
-            visible.field.widget.attrs['style'] = 'border-width: 3px'
+        fields = ['first_name', 'last_name', 'username', 'send_scheduled_emails']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'style': 'border-width: 3px'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'style': 'border-width: 3px'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'style': 'border-width: 3px'}),
+            'send_scheduled_emails': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
 
 
 class AccountSettings(forms.ModelForm):

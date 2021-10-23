@@ -1,6 +1,10 @@
+import datetime
+
+import pytz
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from users.forms import AccountForm, AccountSettings
@@ -59,3 +63,28 @@ def change_account_calendar_view(request):
     if request.GET.get('next'):
         return redirect(request.GET.get('next'))
     return redirect('index')
+
+
+
+@login_required
+def select_timezone(request):
+    context['account'] = request.user
+    today = datetime.datetime.today()
+
+    def get_tz_str(tz):
+        tz_obj = pytz.timezone(tz)
+        obj = [*tz.replace('_', ' ').split('/')]
+        obj[-1] = f'{tz_obj.localize(today).strftime("(UTC%z)")} {obj[-1]}'
+        return obj
+
+    timezones = [(tz, *get_tz_str(tz)) for tz in pytz.common_timezones]
+
+    context['timezones'] = timezones
+
+    if request.POST:
+        user = get_object_or_404(Account, id=request.user.id)
+        user.timezone = request.POST['timezone']
+        user.save()
+        return redirect('index') if not request.GET.get('next') else HttpResponseRedirect(request.GET['next'])
+
+    return render(request, 'set_up/add_timezone.html', context)

@@ -1,0 +1,48 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block head_title %}
+Select Timezone
+{% endblock %}
+
+{% block extra_head %}
+    <script src="{% static 'js/timezones.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center main-container">
+        <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+            <div class="col-12 col-md-6"
+                 style="padding: 2rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <i class="fas fa-globe-americas"
+                   style="text-align: center;width: 100%;font-size: 3rem;margin-bottom: 1rem;color: var(--main-color);"></i>
+                <h1 class="mb-3" style="font-weight: bold;color: var(--main-color);text-align: center;">Add
+                    Timezone<br/>
+                </h1>
+                    <div class="d-flex align-items-center position-relative mb-3" id="search-for-schools-container">
+                        <input type="text" class="form-control form-control-lg" id="search-for-timezones"
+                               name="timezone_search" placeholder="Search for Timezones" onkeyup="searchForTimezones()"
+                               style="border-radius: 8px;padding-left: 3rem;background: whitesmoke;border: 3px none var(--main-accent);" autocomplete="off"/>
+                        <i class="fas fa-search position-absolute"
+                           style="font-size: 20px;left: 1rem;color: slategray;"></i>
+                    </div>
+                <form method="post" enctype="multipart/form-data" id="tz-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="timezone" id="tz-input">
+                    <div class="list-group list-group-flush overflow-auto" id="search-for-timezones"
+                         style="border-radius: 8px;max-height: 248px;border: 1px solid rgba(0,0,0,.125) ;">
+                        {% for tup in timezones %}
+                        <button type="button" class="list-group-item list-group-item-action d-flex align-items-center timezone-option" onclick="submitForm(this)" data-tz="{{ tup.0 }}">
+                            <span class="badge bg-light me-2" style="color: slategray;">{{ tup.1 }}</span>
+                            {% if tup.2 != tup|last %}
+                            <span class="badge bg-light me-2" style="color: slategray;">{{ tup.2 }}</span>
+                            {% endif %}
+                            <span>{{ tup|last }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

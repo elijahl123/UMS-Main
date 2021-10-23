@@ -58,6 +58,7 @@ urlpatterns = [
     path('edit-course/<id>/', edit_course, name='edit_course'),
     path('courses/', include('courses.course_urls')),
     path('add-school/', add_school, name='add_school'),
+    path('add-timezone/', select_timezone, name='select_timezone'),
     path('calendar/', calendar_events, name='calendar'),
     path('calendar/view/<year>/<current_month>/', calendar_events, name='calendar_custom'),
     path('calendar/add-event/', add_calendar_event, name='add_calendar_event'),
