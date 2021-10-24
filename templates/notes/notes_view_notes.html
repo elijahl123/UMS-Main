@@ -10,27 +10,37 @@
 
 {% block body_content %}
     <main>
-        <form class="d-flex flex-column p-0 container-fluid" method="post" enctype="multipart/form-data" id="view_notes_form"
+        <form class="d-flex flex-column p-0 container-fluid" method="post" enctype="multipart/form-data"
+              id="view_notes_form"
               style="background: whitesmoke;" action="{{ request.path }}">
             {% csrf_token %}
-            <div class="container-fluid p-3" style="background: white;">
-                <div class="row g-0 d-flex flex-column justify-content-center flex-md-row">
-                    <div class="col-auto d-flex justify-content-center align-items-center justify-content-md-start p-3">
-                        <a class="btn btn-secondary align-items-center" role="button" style="font-weight: bold;"
+            <div class="container-fluid p-2 p-md-3" style="background: white;">
+                <div class="row g-0 d-flex flex-row justify-content-center">
+                    <div class="col-auto d-flex justify-content-center justify-content-md-start p-3">
+                        <a class="btn btn-secondary align-items-center d-flex" role="button" style="font-weight: bold;"
                            href="{% url 'notes_home_course' course.id %}">
-                            <i class="fas fa-arrow-left me-2">
-                            </i>Save and Go Back</a>
+                            <i class="fas fa-arrow-left me-0 me-md-3">
+                            </i>
+                            <span class="d-none d-md-block">Save and Go Back</span>
+                        </a>
                     </div>
                     <div class="col d-flex justify-content-center justify-content-md-end p-3">
-                        <input type="text" class="form-control form-control-lg align-items-center"
-                               style="border-style: none;background: whitesmoke;font-weight: bold;color: slategray;text-align: center;" onchange="saveNotes()"
+                        <input type="text" class="form-control align-items-center"
+                               style="border-style: none;background: whitesmoke;font-weight: bold;color: slategray;text-align: center;"
+                               onchange="saveNotes()"
                                name="title" value="{{ note.title }}" autocomplete="off"/>
                     </div>
-                    <div class="col-auto d-flex justify-content-center align-items-center justify-content-md-end p-3">
-                        <a class="btn me-2 btn-ums" role="button" style="font-weight: bold;"
-                           href="{% url 'course_view' course.id %}">View Class</a>
+                    <div class="col-auto d-flex justify-content-center justify-content-md-end p-3">
+                        <a class="btn me-2 btn-ums d-flex justify-content-center align-items-center" role="button"
+                           style="font-weight: bold;"
+                           href="{% url 'course_view' course.id %}">
+                            <i class="fas fa-info-circle d-md-none"></i>
+                            <span class="d-none d-md-block">View Class</span>
+                        </a>
                         <button class="btn btn-danger" type="button" data-bs-toggle="modal"
-                                data-bs-target="#delete-note-{{ note.id }}" style="font-weight: bold;">Delete
+                                data-bs-target="#delete-note-{{ note.id }}" style="font-weight: bold;">
+                            <i class="fas fa-trash d-md-none"></i>
+                            <span class="d-none d-md-block">Delete</span>
                         </button>
                         <div role="dialog" tabindex="-1" class="modal fade" id="delete-note-{{ note.id }}">
                             <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -60,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container flex-fill p-0 overflow-auto" style="background: white;">
+            <div class="container-fluid flex-fill p-0 overflow-auto" style="background: white;">
                 <div class="row g-0 h-100">
                     <div class="col" style="height: 100%;">
                         <textarea class="form-control h-100" id="notes-content" name="content"
