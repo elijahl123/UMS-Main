@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load replace %}
 {% load get_nav_links %}
 
 {% block header %}
@@ -92,7 +93,7 @@
                                                style="font-weight: bold;color: rgba(0,0,0,0.5);">Timezone</label>
                                         <div class="d-flex flex-column justify-content-between flex-md-row align-items-md-center">
                                             <p class="lead text-center text-md-start m-0 px-2 py-1 btn-light rounded mb-3 mb-md-0"
-                                               style="color: rgba(0,0,0,.5);font-weight: bold;">{{ request.user.timezone|default:'None' }}</p>
+                                               style="color: rgba(0,0,0,.5);font-weight: bold;">{{ request.user.timezone|default:'None'|replace:'_, '|replace:'/, - ' }}</p>
                                             <a class="btn btn-secondary" role="button"
                                                href="{% url 'select_timezone' %}"
                                                style="font-weight: bold;">Change Timezone</a>
