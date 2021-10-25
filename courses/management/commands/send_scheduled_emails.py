@@ -3,6 +3,7 @@ import datetime
 from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.management import BaseCommand, CommandError
 from django.template.loader import render_to_string
+from pytz import timezone
 
 from courses.models import CourseTime
 from homework.models import HomeworkAssignment
@@ -33,7 +34,7 @@ def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None
 
 
 def get_daily_summary_tuple(user):
-    tomorrow_weekday = (datetime.date.today() + datetime.timedelta(days=1)).strftime("%A")
+    tomorrow_weekday = (datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=1)).strftime("%A")
     coursetimes = CourseTime.objects.filter(
         course__user=user,
         weekday__contains=tomorrow_weekday
@@ -42,7 +43,7 @@ def get_daily_summary_tuple(user):
 
     html_message = render_to_string('email/daily_summary.html', context={'account': user, 'coursetimes': coursetimes, 'upcoming_assignments': upcoming_assignments})
     return (
-        'Daily Summary for {}'.format(datetime.date.today()),
+        'Daily Summary for {}'.format(datetime.datetime.now(timezone(user.timezone)).strftime('%D')),
         html_message,
         html_message,
         'UMS Reminders <untitledmanagementsoftware@gmail.com>',
@@ -55,6 +56,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         data_tuple = []
-        for user in Account.objects.filter(send_scheduled_emails=True):
+        for user in Account.objects.filter(send_scheduled_emails=True, timezone__isnull=False):
             data_tuple.append(get_daily_summary_tuple(user))
         send_mass_html_mail(tuple(data_tuple))

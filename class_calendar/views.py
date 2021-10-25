@@ -13,6 +13,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 # Create your views here.
 from googleapiclient.discovery import build
+from pytz import timezone
 
 from UMSMain.generic_class_views import school_required, timezone_required
 from UMSMain.settings import GOOGLE_API_CREDENTIALS, GOOGLE_API_SCOPES
@@ -63,7 +64,9 @@ def add_calendar_event(request, id=0):
 def calendar_events(request, year=None, current_month=None):
     context['account'] = request.user
     c = calendar.Calendar(6)
-    todays_date = date.today()
+    dt = datetime.datetime.now(timezone(request.user.timezone))
+
+    todays_date = date(dt.year, dt.month, dt.day)
 
     context['today'] = todays_date
 

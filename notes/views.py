@@ -3,8 +3,9 @@ import datetime
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
+from pytz import timezone
 
-from UMSMain.generic_class_views import ModelDeleteView, school_required, timezone_required
+from UMSMain.generic_class_views import school_required, timezone_required
 from courses.models import Course
 from notes.forms import NotesForm
 from notes.models import Note
@@ -45,7 +46,8 @@ def add_notes(request, course_id):
     if not course.user == request.user:
         return redirect('notes_home')
 
-    obj = Note.objects.create(course=course, user=request.user, title=f'Notes for {datetime.date.today().isoformat()}') if request.GET.get('daily-notes') else Note.objects.create(course=course, user=request.user)
+    obj = Note.objects.create(course=course, user=request.user,
+                              title=f'Notes for {datetime.datetime.now(timezone(request.user.timezone)).strftime("%Y-%M-%d")}') if request.GET.get('daily-notes') else Note.objects.create(course=course, user=request.user)
 
     return redirect('notes_view_notes', course_id, obj.id)
 
@@ -89,6 +91,3 @@ def delete_notes(request, course_id, notes_id):
     note = get_object_or_404(Note, id=notes_id)
     note.delete()
     return redirect('notes_home_course', course_id)
-
-
-

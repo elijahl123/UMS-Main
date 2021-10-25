@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
+from pytz import timezone
 
 from UMSMain.generic_class_views import school_required, timezone_required
 from class_calendar.models import CalendarEvent
@@ -162,17 +163,13 @@ def edit_coursetime(request, id):
 def index(request):
     context['account'] = request.user
 
-    dt = datetime.datetime.today()
-    dt_time = datetime.datetime.now().strftime('%H:%M:%S')
+    dt = datetime.datetime.now(timezone(request.user.timezone))
     week_dates = [dt + datetime.timedelta(days=i) for i in range(2)]
-    today_weekday = datetime.datetime.now().strftime("%A")
+    today_weekday = datetime.datetime.now(timezone(request.user.timezone)).strftime("%A")
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.filter(due_date__in=week_dates, completed=False,
-                                                                        course__user=request.user, due_date__gte=dt,
-                                                                        due_time__gte=dt_time)
+    context['upcoming_assignments'] = HomeworkAssignment.objects.upcoming_assignments(request.user)
 
-    context['late_assignments'] = HomeworkAssignment.objects.filter(completed=False, course__user=request.user,
-                                                                    due_date__lte=dt, due_time__lt=dt_time)
+    context['late_assignments'] = HomeworkAssignment.objects.late_assignments(request.user)
 
     context['today_and_tomorrow'] = CalendarEvent.objects.filter(user=request.user, date__in=week_dates)
 
@@ -330,12 +327,9 @@ def course_assignments(request, id):
         return redirect('class_schedule')
     context['course'] = course
 
-    dt = datetime.datetime.today()
+    context['class_assignments'] = HomeworkAssignment.objects.all_assignments(request.user, course=course)
 
-    context['class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False, due_date__gte=dt)
-
-    context['late_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=False,
-                                                                          due_date__lt=dt)
+    context['late_class_assignments'] = HomeworkAssignment.objects.late_assignments(request.user, course=course)
 
     context['completed_class_assignments'] = HomeworkAssignment.objects.filter(course=course, completed=True)
 

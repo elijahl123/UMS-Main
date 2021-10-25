@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
+from pytz import timezone
+
 from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView, ModelChangeAttrView, \
     school_required, timezone_required
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
@@ -19,18 +21,11 @@ context = {}
 def homework(request):
     context['account'] = request.user
 
-    dt = datetime.datetime.today()
-
-    def get_datetime_object(date_obj):
-        try:
-            date_args = [date_obj.year, date_obj.month, date_obj.day]
-            return datetime.date(*date_args)
-        except AttributeError:
-            return None
+    dt = datetime.datetime.now(timezone(request.user.timezone))
 
     last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
 
-    all_delta = last_assignment.due_datetime - dt if last_assignment else None
+    all_delta = timezone(request.user.timezone).localize(last_assignment.due_datetime) - dt if last_assignment else None
 
     all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)] if all_delta else []
 

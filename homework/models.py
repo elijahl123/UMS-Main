@@ -2,6 +2,7 @@ import datetime
 import math
 
 from django.db import models
+from pytz import timezone
 
 from courses.models import Course
 
@@ -9,32 +10,32 @@ from courses.models import Course
 # Create your models here.
 
 class HomeworkManager(models.Manager):
-    def late_assignments(self, user):
+    def late_assignments(self, user, **kwargs):
         late_assignments = []
-        for assignment in self.filter(course__user=user, completed=False):
-            if assignment.due_datetime < datetime.datetime.now():
+        for assignment in self.filter(course__user=user, completed=False, **kwargs):
+            if timezone(user.timezone).localize(assignment.due_datetime) < datetime.datetime.now(timezone(user.timezone)):
                 late_assignments.append(assignment)
         return late_assignments
 
-    def all_assignments(self, user):
+    def all_assignments(self, user, **kwargs):
         all_assignments = []
-        for assignment in self.filter(course__user=user, completed=False):
-            if assignment.due_datetime >= datetime.datetime.now():
+        for assignment in self.filter(course__user=user, completed=False, **kwargs):
+            if timezone(user.timezone).localize(assignment.due_datetime) >= datetime.datetime.now(timezone(user.timezone)):
                 all_assignments.append(assignment)
         return all_assignments
 
-    def upcoming_assignments(self, user):
+    def upcoming_assignments(self, user, **kwargs):
         upcoming_assignments = []
-        tomorrow = datetime.datetime.today() + datetime.timedelta(days=2)
-        for assignment in self.all_assignments(user):
-            if assignment.due_datetime <= tomorrow:
+        tomorrow = datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=2)
+        for assignment in self.all_assignments(user, **kwargs):
+            if timezone(user.timezone).localize(assignment.due_datetime) <= tomorrow:
                 upcoming_assignments.append(assignment)
         return upcoming_assignments
 
-    def date_range(self, user):
+    def date_range(self, user, **kwargs):
         used_dates = []
 
-        for assignment in self.all_assignments(user):
+        for assignment in self.all_assignments(user, **kwargs):
             used_dates.append(assignment.due_date)
         for reading, reading_date, start_page, end_page in ReadingAssignment.get_recommended_readings(user):
             if start_page and end_page:
