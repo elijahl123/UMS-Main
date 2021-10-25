@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 {% load static %}
 
 {% block header %}
@@ -37,7 +38,7 @@
                                      style="padding: 1rem;border-radius: 8px;background: var(--secondary-color);">
                                     <h3 class="text-center text-lg-start mb-3"
                                         style="font-weight: bold;color: var(--main-color);">
-                                        {{ date|date:'l, F j' }}</h3>
+                                        {{ date|naturalday:'l, F j'|title }}</h3>
                                     {% for assignment in all_assignments %}
                                         {% if assignment.due_date == date.date and not assignment.is_reading %}
                                             {% include 'snippets/homework_button.html' %}
