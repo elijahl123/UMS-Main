@@ -13,8 +13,6 @@ register = template.Library()
 @register.simple_tag(takes_context=True)
 def get_nav_links(context, request):
 
-    print(request.user)
-
     nav_links = [
         {
             "name": 'Account Info',
