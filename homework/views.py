@@ -30,7 +30,7 @@ def homework(request):
 
     last_assignment = HomeworkAssignment.objects.filter(course__user=request.user).order_by('due_date').last()
 
-    all_delta = get_datetime_object(last_assignment.due_date) - get_datetime_object(dt) if last_assignment else None
+    all_delta = last_assignment.due_datetime - dt if last_assignment else None
 
     all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)] if all_delta else []
 
