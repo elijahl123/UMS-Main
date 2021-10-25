@@ -47,7 +47,7 @@ def add_notes(request, course_id):
         return redirect('notes_home')
 
     obj = Note.objects.create(course=course, user=request.user,
-                              title=f'Notes for {datetime.datetime.now(timezone(request.user.timezone)).strftime("%Y-%M-%d")}') if request.GET.get('daily-notes') else Note.objects.create(course=course, user=request.user)
+                              title=f'Notes for {datetime.datetime.now(timezone(request.user.timezone)).strftime("%Y-%m-%d")}') if request.GET.get('daily-notes') else Note.objects.create(course=course, user=request.user)
 
     return redirect('notes_view_notes', course_id, obj.id)
 
