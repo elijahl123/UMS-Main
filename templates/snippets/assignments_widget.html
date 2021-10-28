@@ -11,7 +11,7 @@
         </div>
     </a>
     {% for assignment in assignments_query %}
-        <a class="list-group-item list-group-item-action list-group-item-success px-4 py-3"
+        <a class="list-group-item list-group-item-action list-group-item-{{ assignment.course.color }} px-4 py-3"
            href="{% url 'homework' %}?assignment=#homework-{{ assignment.id }}">
             <div class="row d-flex flex-column flex-lg-row">
                 <div class="col-lg-8 d-flex align-items-center mb-3 mb-lg-0">
