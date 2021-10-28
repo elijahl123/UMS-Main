@@ -164,7 +164,7 @@ def index(request):
     context['account'] = request.user
 
     dt = datetime.datetime.now(timezone(request.user.timezone))
-    week_dates = [dt + datetime.timedelta(days=i) for i in range(2)]
+    week_dates = [dt + datetime.timedelta(days=i) for i in range(4)]
     today_weekday = datetime.datetime.now(timezone(request.user.timezone)).strftime("%A")
 
     context['upcoming_assignments'] = HomeworkAssignment.objects.upcoming_assignments(request.user)

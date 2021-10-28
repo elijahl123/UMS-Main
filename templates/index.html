@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load next_class %}
 
 {% block header %}
     <title>Untitled Management Software</title>
@@ -8,23 +11,147 @@
     <main>
         <div class="container-fluid d-flex" style="padding: 0;">
             <div class="row g-0 flex-grow-1">
-                <div class="col d-flex flex-column" style="padding: 1rem;height: 100vh;">
-                    <h1 style="font-weight: bold;color: var(--main-color);margin-bottom: 1rem;">
-                        Hello, {{ account.first_name|default:account.username }}!</h1>
-                    <div class="row g-0 flex-grow-1" style="height: 100%;">
-                        <div class="col" style="height: 100%;border-radius: .3rem;">
-                            <div class="row g-0">
-                                <div class="col-12 col-md-6 col-lg-4 px-3">
-                                    {% include 'snippets/dashboard_widget.html' with widget_title='Today and Tomorrow' widget_link='calendar' widget_query=today_and_tomorrow widget_none_message='There is Nothing Today or Tomorrow' %}
-                                    {% include 'snippets/dashboard_widget.html' with widget_title='Late Assignments' widget_link='homework' widget_query=late_assignments widget_none_message='There are No Late Assignments' %}
+                <div class="col-12 col-xl-6 col-xxl-7 d-flex flex-column" style="max-height: 100vh;">
+                    {% next_class True %}
+                    <div class="row g-0 flex-fill p-3 h-100 overflow-auto">
+                        <div class="col d-flex flex-column p-3 h-100 overflow-auto"
+                             style="background: var(--secondary-color);border-radius: 8px;border: 3px solid var(--main-accent) ;">
+                            <div class="row mb-3">
+                                <div class="col d-flex align-items-center">
+                                    <h3 class="m-0" style="font-weight: bold;color: var(--main-color);">Upcoming
+                                        Assignments</h3>
                                 </div>
-                                <div class="col-12 col-md-6 col-lg-4 px-3">
-                                    {% include 'snippets/dashboard_widget.html' with widget_title='Upcoming Assignments' widget_link='homework' widget_query=upcoming_assignments widget_none_message='There are No Upcoming Assignments' %}
-                                </div>
-                                <div class="col-12 col-md-6 col-lg-4 px-3">
-                                    {% include 'snippets/dashboard_widget.html' with widget_title='Courses Today' widget_link='class_schedule' widget_query=coursetimes_for_today widget_none_message='There are No Courses Today' %}
+                                <div class="col-auto d-flex align-items-center">
+                                    <a class="btn d-block d-lg-flex align-items-center btn-transparent-ums"
+                                       role="button" href="{% url 'add_assignment' %}">
+                                        <i class="fas fa-plus me-0 me-xxl-2"></i>
+                                        <span class="d-none d-xxl-block">Add Assignment</span>
+                                    </a>
                                 </div>
                             </div>
+                            {% if upcoming_assignments %}
+                                {% include 'snippets/assignments_widget.html' with assignments_query=upcoming_assignments %}
+                            {% else %}
+                                <div class="row d-flex flex-grow-1">
+                                    <div class="col p-3 d-flex flex-column align-items-center justify-content-center">
+                                        <img class="mb-3 d-none d-xxl-block" src="{% static 'img/NoAssignments.svg' %}"
+                                             style="max-height: 100px" alt="No Assignments">
+                                        <h4 class="text-center" style="color: var(--main-color); font-weight: bold">
+                                            No Assignments
+                                        </h4>
+                                        <p class="text-center mb-0">You have no upcoming assignments!</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if late_assignments %}
+                        <div class="row g-0 flex-shrink-1 p-3 h-100 overflow-auto">
+                            <div class="col d-flex flex-column p-3 h-100 overflow-auto"
+                                 style="background: var(--secondary-color);border-radius: 8px;border: 3px solid var(--main-accent) ;">
+                                <div class="row mb-3">
+                                    <div class="col d-flex align-items-center">
+                                        <h3 class="m-0" style="font-weight: bold;color: var(--main-color);">Late
+                                            Assignments</h3>
+                                    </div>
+                                </div>
+                                {% include 'snippets/assignments_widget.html' with assignments_query=late_assignments %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-12 col-xl-6 col-xxl-5 d-flex flex-column" style="max-height: 100vh;">
+                    <div class="row g-0 p-3 overflow-auto flex-fill h-100" style="">
+                        <div class="col d-flex flex-column p-3 h-100 overflow-auto"
+                             style="border-radius: 8px;background: var(--secondary-color);border-style: solid;border-color: var(--main-accent);">
+                            <h3 class="mb-3" style="font-weight: bold;color: var(--main-color);">Classes Today</h3>
+                            <ul class="list-group flex-fill list-group-flush overflow-auto" style="border-radius: 8px;">
+                                {% for coursetime in coursetimes_for_today %}
+                                    <li class="list-group-item list-group-item-{{ coursetime.course.color }} p-3">
+                                        <a class="h3 text-center text-lg-start"
+                                           href="{% url 'course_view' coursetime.course.id %}"
+                                           style="font-weight: bold;">{{ coursetime.course.name }}</a>
+                                        <p class="lead text-center text-lg-start my-2"
+                                           style="font-weight: bold;">{{ coursetime.start_time|time:'h:i a' }}
+                                            - {{ coursetime.end_time|time:'h:i a' }}</p>
+                                        <div class="d-flex flex-column flex-sm-row">
+                                            {% if coursetime.link %}
+                                                <a class="btn btn-{{ coursetime.course.color }} btn-sm me-0 me-sm-3 mb-3 mb-sm-0"
+                                                   role="button"
+                                                   style="border-width: 0;font-weight: bold;"
+                                                   href="{{ coursetime.link }}">Go to Class</a>
+                                                <span class="text-center px-2 py-1 me-0 me-sm-3 mb-3 mb-sm-0 btn-transparent-{{ coursetime.course.color }} rounded"
+                                                      style="font-size: 14px;font-weight: bold;border-radius: .2rem;">Password: {{ coursetime.zoom_password|default:'None' }}</span>
+                                            {% endif %}
+                                            <a class="btn btn-{% if coursetime.link %}outline-{% endif %}{{ coursetime.course.color }} btn-sm me-0 me-sm-3 mb-3 mb-sm-0"
+                                               role="button" style="border-width: 0;font-weight: bold;"
+                                               href="{% url 'notes_add_notes' coursetime.course.id %}?daily-notes=true">Open
+                                                Notes</a>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row g-0 flex-fill p-3 h-100 overflow-auto">
+                        <div class="col d-flex flex-column p-3 h-100 overflow-auto"
+                             style="background: var(--secondary-color);border-radius: 8px;border-style: solid;border-color: var(--main-accent);">
+                            <div class="row mb-3">
+                                <div class="col d-flex align-items-center">
+                                    <h3 class="m-0" style="font-weight: bold;color: var(--main-color);">Upcoming
+                                        Events</h3>
+                                </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <a class="btn d-xl-flex align-items-center btn-transparent-ums" role="button"
+                                       href="{% url 'add_calendar_event' %}">
+                                        <i class="fas fa-plus me-0 me-xxl-2"></i>
+                                        <span class="d-none d-xxl-block">Add Event</span>
+                                    </a>
+                                </div>
+                            </div>
+                            {% if today_and_tomorrow %}
+                                <div class="list-group flex-fill list-group-flush h-100 overflow-auto"
+                                     style="border-radius: 8px;">
+                                    <a class="list-group-item list-group-item-action disabled px-4 py-2">
+                                        <div class="row d-flex flex-column align-items-center flex-lg-row">
+                                            <div class="col-8 d-flex align-items-center mb-3 mb-lg-0 h-100">
+                                                <span class="text-center text-lg-start w-100"
+                                                      style="font-weight: bold;">Name</span>
+                                            </div>
+                                            <div class="col d-flex align-items-center">
+                                                <span class="text-center text-lg-start w-100"
+                                                      style="font-weight: bold;">Date</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    {% for day in today_and_tomorrow %}
+                                        <a class="list-group-item list-group-item-action px-4 py-3 btn-transparent-ums"
+                                           href="{% url 'calendar' %}">
+                                            <div class="row d-flex flex-column flex-lg-row">
+                                                <div class="col-lg-8 d-flex align-items-center mb-3 mb-lg-0">
+                                            <span class="text-break text-center text-lg-start w-100"
+                                                  style="font-weight: bold;">{{ day.title }}</span>
+                                                </div>
+                                                <div class="col d-flex align-items-center">
+                                                <span class="text-center text-lg-start w-100"
+                                                      style="font-weight: bold;">{{ day.date }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="row d-flex flex-grow-1">
+                                    <div class="col p-3 d-flex flex-column align-items-center justify-content-center">
+                                        <img class="mb-3 d-none d-xxl-block" src="{% static 'img/NoEvents.svg' %}"
+                                             style="max-height: 100px" alt="No Assignments">
+                                        <h4 class="text-center" style="color: var(--main-color); font-weight: bold">
+                                            No Events
+                                        </h4>
+                                        <p class="text-center mb-0">You have no upcoming events!</p>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

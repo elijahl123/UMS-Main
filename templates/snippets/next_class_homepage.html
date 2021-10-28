@@ -1,0 +1,19 @@
+{% if coursetime %}
+    <div class="row g-0 p-3">
+        <div class="col d-flex flex-column p-3"
+             style="background: var(--secondary-color);border-radius: 8px;border-style: solid;border-color: var(--main-accent);">
+            <h4 style="font-weight: bold;color: var(--main-color);">Next Class at {{ coursetime.start_time|time:'h:i a' }}</h4>
+            <h1 style="font-weight: bold;color: var(--main-color);">{{ coursetime.course.name }}</h1>
+            <div class="d-flex flex-column flex-sm-row">
+            {% if coursetime.link %}
+                <a class="btn btn-sm me-0 me-sm-3 mb-3 mb-sm-0 btn-ums" role="button"
+                   style="border-width: 0;font-weight: bold;" href="{{ coursetime.link }}" target="_blank">Go to Class</a>
+                <span class="text-center px-2 py-1 me-0 me-sm-3 mb-3 mb-sm-0"
+                      style="font-size: 14px;font-weight: bold;background: rgba(248,173,157,0.14);color: var(--main-color);border-radius: .2rem;">Password: {{ coursetime.zoom_password|default:'None' }}</span>
+                {% endif %}
+                <a class="btn btn-{% if coursetime.link %}light{% else %}ums text-white{% endif %} btn-sm me-0 me-sm-3 mb-3 mb-sm-0" role="button"
+                   style="border-width: 0;font-weight: bold;color: var(--main-color);" href="{% url 'notes_add_notes' coursetime.course.id %}?daily-notes=true">Open Notes</a>
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,30 @@
+<div class="list-group flex-fill list-group-flush h-100 overflow-auto"
+     style="border-radius: 8px;">
+    <a class="list-group-item list-group-item-action disabled px-4 py-2">
+        <div class="row d-flex flex-column align-items-center flex-lg-row">
+            <div class="col-8 d-flex align-items-center mb-3 mb-lg-0">
+                <span class="text-center text-lg-start w-100" style="font-weight: bold;">Name</span>
+            </div>
+            <div class="col d-flex align-items-center">
+                <span class="text-center text-lg-start w-100" style="font-weight: bold;">Due Date</span>
+            </div>
+        </div>
+    </a>
+    {% for assignment in assignments_query %}
+        <a class="list-group-item list-group-item-action list-group-item-success px-4 py-3"
+           href="{% url 'homework' %}?assignment=#homework-{{ assignment.id }}">
+            <div class="row d-flex flex-column flex-lg-row">
+                <div class="col-lg-8 d-flex align-items-center mb-3 mb-lg-0">
+                        <span class="text-break text-center text-lg-start w-100" style="font-weight: bold;">
+                            {{ assignment.course }}: {{ assignment.name }}
+                        </span>
+                </div>
+                <div class="col d-flex align-items-center">
+                        <span class="text-center text-lg-start w-100" style="font-weight: bold;">
+                            {{ assignment.due_date }}
+                        </span>
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
