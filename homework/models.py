@@ -2,37 +2,39 @@ import datetime
 import math
 
 from django.db import models
+from django.db.models import QuerySet
 from pytz import timezone
 
 from courses.models import Course
+from users.models import Account
 
-
-# Create your models here.
 
 class HomeworkManager(models.Manager):
-    def late_assignments(self, user, **kwargs):
+    def late_assignments(self, user: Account, **kwargs: dict) -> QuerySet:
         late_assignments = []
         for assignment in self.filter(course__user=user, completed=False, **kwargs):
-            if timezone(user.timezone).localize(assignment.due_datetime) < datetime.datetime.now(timezone(user.timezone)):
+            if timezone(user.timezone).localize(assignment.due_datetime) < datetime.datetime.now(
+                    timezone(user.timezone)):
                 late_assignments.append(assignment)
-        return late_assignments
+        return HomeworkAssignment.objects.filter(id__in=list(map(lambda x: x.id, late_assignments)))
 
-    def all_assignments(self, user, **kwargs):
+    def all_assignments(self, user: Account, **kwargs: dict) -> QuerySet:
         all_assignments = []
         for assignment in self.filter(course__user=user, completed=False, **kwargs):
-            if timezone(user.timezone).localize(assignment.due_datetime) >= datetime.datetime.now(timezone(user.timezone)):
+            if timezone(user.timezone).localize(assignment.due_datetime) >= datetime.datetime.now(
+                    timezone(user.timezone)):
                 all_assignments.append(assignment)
-        return all_assignments
+        return HomeworkAssignment.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
 
-    def upcoming_assignments(self, user, **kwargs):
+    def upcoming_assignments(self, user: Account, **kwargs: dict) -> QuerySet:
         upcoming_assignments = []
-        tomorrow = datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=2)
+        date_delta = datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=2)
         for assignment in self.all_assignments(user, **kwargs):
-            if timezone(user.timezone).localize(assignment.due_datetime) <= tomorrow:
+            if timezone(user.timezone).localize(assignment.due_datetime) <= date_delta:
                 upcoming_assignments.append(assignment)
-        return upcoming_assignments
+        return HomeworkAssignment.objects.filter(id__in=list(map(lambda x: x.id, upcoming_assignments)))
 
-    def date_range(self, user, **kwargs):
+    def date_range(self, user: Account, **kwargs: dict) -> set:
         used_dates = []
 
         for assignment in self.all_assignments(user, **kwargs):
@@ -82,7 +84,7 @@ class ReadingAssignment(HomeworkAssignment):
         ordering = ['course']
 
     @classmethod
-    def get_recommended_readings(cls, user):
+    def get_recommended_readings(cls, user: Account) -> list:
 
         out_list = []
 
@@ -108,6 +110,6 @@ class ReadingAssignment(HomeworkAssignment):
 
             for i in range(delta):
                 out_list.append(
-                        (reading, uploaded + datetime.timedelta(days=i), get_pages('start', i), get_pages('end', i)))
+                    (reading, uploaded + datetime.timedelta(days=i), get_pages('start', i), get_pages('end', i)))
 
         return out_list
