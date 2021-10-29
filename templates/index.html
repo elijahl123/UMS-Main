@@ -61,6 +61,7 @@
                     {% endif %}
                 </div>
                 <div class="col-12 col-xl-6 col-xxl-5 d-flex flex-column" style="max-height: 100vh;">
+                {% if coursetimes_for_today %}
                     <div class="row g-0 p-3 overflow-auto flex-fill h-100" style="">
                         <div class="col d-flex flex-column p-3 h-100 overflow-auto"
                              style="border-radius: 8px;background: var(--secondary-color);border-style: solid;border-color: var(--main-accent);">
@@ -93,6 +94,7 @@
                             </ul>
                         </div>
                     </div>
+                {% endif %}
                     <div class="row g-0 flex-fill p-3 h-100 overflow-auto">
                         <div class="col d-flex flex-column p-3 h-100 overflow-auto"
                              style="background: var(--secondary-color);border-radius: 8px;border-style: solid;border-color: var(--main-accent);">
