@@ -1,4 +1,5 @@
 import datetime
+from typing import Union
 
 import numpy as np
 from django.db import models
@@ -24,8 +25,8 @@ class HomeworkManager(models.Manager):
             if timezone(user.timezone).localize(assignment.due_datetime) >= datetime.datetime.now(
                     timezone(user.timezone)):
                 all_assignments.append(assignment)
-        model = ReadingAssignment if reading else HomeworkAssignment
-        return ReadingAssignment.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
+        model: Union[HomeworkAssignment, ReadingAssignment] = ReadingAssignment if reading else HomeworkAssignment
+        return model.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
 
     def upcoming_assignments(self, user: Account, days: int = 2, **kwargs: dict) -> QuerySet:
         upcoming_assignments = []
@@ -96,8 +97,12 @@ class ReadingAssignment(HomeworkAssignment):
             due: datetime.date = datetime.date(reading.due_date.year, reading.due_date.month, reading.due_date.day)
             delta: int = (due - uploaded).days + 1
 
-            if delta >= reading.end_page - reading.start_page:
+            print(delta)
+
+            if delta > reading.end_page - (reading.start_page - 1):
                 delta = reading.end_page - reading.start_page + 2
+
+            print(reading.start_page, reading.end_page, delta)
 
             daily_pages = list(map(lambda x: round(x), np.linspace(reading.start_page - 1, reading.end_page, delta)))
 
