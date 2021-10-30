@@ -1,6 +1,6 @@
 import datetime
-import math
 
+import numpy as np
 from django.db import models
 from django.db.models import QuerySet
 from pytz import timezone
@@ -18,13 +18,14 @@ class HomeworkManager(models.Manager):
                 late_assignments.append(assignment)
         return HomeworkAssignment.objects.filter(id__in=list(map(lambda x: x.id, late_assignments)))
 
-    def all_assignments(self, user: Account, **kwargs: dict) -> QuerySet:
+    def all_assignments(self, user: Account, reading: bool = False, **kwargs: dict) -> QuerySet:
         all_assignments = []
         for assignment in self.filter(course__user=user, completed=False, **kwargs):
             if timezone(user.timezone).localize(assignment.due_datetime) >= datetime.datetime.now(
                     timezone(user.timezone)):
                 all_assignments.append(assignment)
-        return HomeworkAssignment.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
+        model = ReadingAssignment if reading else HomeworkAssignment
+        return ReadingAssignment.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
 
     def upcoming_assignments(self, user: Account, days: int = 2, **kwargs: dict) -> QuerySet:
         upcoming_assignments = []
@@ -83,33 +84,25 @@ class ReadingAssignment(HomeworkAssignment):
     class Meta:
         ordering = ['course']
 
-    @classmethod
-    def get_recommended_readings(cls, user: Account) -> list:
+    @staticmethod
+    def get_recommended_readings(user: Account) -> tuple:
 
         out_list = []
 
-        for reading in cls.objects.filter(course__user=user, completed=False):
+        reading: ReadingAssignment
+        for reading in ReadingAssignment.objects.filter(course__user=user, completed=False):
 
-            uploaded = datetime.date(reading.modified.year, reading.modified.month, reading.modified.day)
-            due = datetime.date(reading.due_date.year, reading.due_date.month, reading.due_date.day)
-            delta = (due - uploaded).days
+            uploaded: datetime.date = datetime.date(reading.modified.year, reading.modified.month, reading.modified.day)
+            due: datetime.date = datetime.date(reading.due_date.year, reading.due_date.month, reading.due_date.day)
+            delta: int = (due - uploaded).days + 1
 
-            def get_pages(scope, index):
-                daily_pages = math.ceil((reading.end_page - reading.start_page) / delta)
+            if delta >= reading.end_page - reading.start_page:
+                delta = reading.end_page - reading.start_page + 2
 
-                start_page = reading.start_page + (daily_pages * index)
-                end_page = reading.start_page + (daily_pages * (index + 1))
+            daily_pages = list(map(lambda x: round(x), np.linspace(reading.start_page - 1, reading.end_page, delta)))
 
-                if start_page > reading.end_page:
-                    return 0
-
-                if end_page > reading.end_page:
-                    return start_page if scope == 'start' else reading.end_page
-
-                return start_page if scope == 'start' else end_page
-
-            for i in range(delta):
+            for val in range(delta - 1):
                 out_list.append(
-                    (reading, uploaded + datetime.timedelta(days=i), get_pages('start', i), get_pages('end', i)))
+                    (reading, uploaded + datetime.timedelta(days=val), daily_pages[val] + 1, daily_pages[val + 1]))
 
         return out_list

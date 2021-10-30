@@ -54,7 +54,11 @@
                                             <div class="d-flex align-items-center mb-3 list-group-item-{{ reading.course.color }} flex-column flex-md-row"
                                                  style="padding: 1rem;border-radius: 8px;">
                                                 <h5 class="flex-grow-1 mb-3 mb-md-0" style="font-weight: bold;">Read
-                                                    pgs. {{ start_page }} - {{ end_page }}
+                                                    {% if start_page == end_page %}
+                                                        pg. {{ start_page }}
+                                                    {% else %}
+                                                        pgs. {{ start_page }} - {{ end_page }}
+                                                    {% endif %}
                                                     of {{ reading.name }}</h5>
                                                 <div class="d-flex flex-column flex-md-row">
                                                     <button role="button"
