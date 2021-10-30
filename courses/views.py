@@ -167,7 +167,7 @@ def index(request):
     week_dates = [dt + datetime.timedelta(days=i) for i in range(4)]
     today_weekday = datetime.datetime.now(timezone(request.user.timezone)).strftime("%A")
 
-    context['upcoming_assignments'] = HomeworkAssignment.objects.upcoming_assignments(request.user, days=7).order_by('-due_date', 'course', 'due_time')
+    context['upcoming_assignments'] = HomeworkAssignment.objects.upcoming_assignments(request.user, days=7).order_by('due_date', 'course', 'due_time')
 
     context['late_assignments'] = HomeworkAssignment.objects.late_assignments(request.user)
 
