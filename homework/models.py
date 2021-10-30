@@ -26,9 +26,9 @@ class HomeworkManager(models.Manager):
                 all_assignments.append(assignment)
         return HomeworkAssignment.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
 
-    def upcoming_assignments(self, user: Account, **kwargs: dict) -> QuerySet:
+    def upcoming_assignments(self, user: Account, days: int = 2, **kwargs: dict) -> QuerySet:
         upcoming_assignments = []
-        date_delta = datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=2)
+        date_delta = datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=days)
         for assignment in self.all_assignments(user, **kwargs):
             if timezone(user.timezone).localize(assignment.due_datetime) <= date_delta:
                 upcoming_assignments.append(assignment)
