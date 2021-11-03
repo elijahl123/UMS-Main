@@ -143,3 +143,4 @@ school/migrations/
 users/migrations/
 
 notes/migrations/
+/payments/migrations/
