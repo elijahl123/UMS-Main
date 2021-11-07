@@ -79,14 +79,14 @@ class DeleteAssignmentView(ModelDeleteView):
 
 class AddReadingAssignment(ModelCreationView):
     form_class = ReadingAssignmentForm
-    template_name = 'forms/add_assignment.html'
+    template_name = 'forms/add_reading_assignment.html'
     redirect_url = 'homework'
 
     form_title = 'Add Reading Assignment'
     form_description = 'Here you can add a reading assignment for your class. This is different from a ' \
                        'regular assignment because UMS will evenly distribute your reading automatically ' \
                        'for you'
-    excluded_fields = []
+    excluded_fields = ['include_due_date']
     success_message = 'Reading Assignment added successfully'
     require_user = True
 
@@ -94,14 +94,14 @@ class AddReadingAssignment(ModelCreationView):
 class EditReadingAssignment(ModelEditView):
     model = ReadingAssignment
     form_class = ReadingAssignmentForm
-    template_name = 'forms/add_assignment.html'
+    template_name = 'forms/add_reading_assignment.html'
     redirect_url = 'homework'
 
     form_title = 'Edit Reading Assignment'
     form_description = 'Here you can edit a reading assignment for your class. This is different from a ' \
                        'regular assignment because UMS will evenly distribute your reading automatically ' \
                        'for you'
-    excluded_fields = []
+    excluded_fields = ['include_due_date']
     success_message = 'Reading Assignment edited successfully'
     require_user = True
 

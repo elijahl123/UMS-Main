@@ -5,6 +5,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
+from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.views import View
@@ -114,7 +115,7 @@ class ModelCreationView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateVi
 
         self.initial.update(temp_init)
 
-        form = self.form_class(**self.get_form_kwargs(request))
+        form: ModelForm = self.form_class(**self.get_form_kwargs(request))
 
         additional_context['form'] = form
 
@@ -123,7 +124,7 @@ class ModelCreationView(LoginRequiredMixin, PermissionsRequiredMixin, TemplateVi
     def post(self, request, **kwargs):
         additional_context = {'account': request.user}
 
-        form = self.form_class(request.POST, request.FILES or None, **self.get_form_kwargs(request))
+        form: ModelForm = self.form_class(request.POST, request.FILES or None, **self.get_form_kwargs(request))
 
         if form.is_valid():
             obj = form.save(commit=False)

@@ -78,6 +78,11 @@ class ReadingAssignment(HomeworkAssignment):
     modified = models.DateField(auto_now=True)
     start_page = models.IntegerField(null=True)
     end_page = models.IntegerField(null=True)
+    include_due_date = models.BooleanField(
+        default=False,
+        verbose_name='Include Due Date in Reading Plan',
+        help_text='Check this if you want the daily readings to end on the due date or on the day before.'
+    )
 
     def __str__(self):
         return self.name
@@ -96,13 +101,11 @@ class ReadingAssignment(HomeworkAssignment):
             uploaded: datetime.date = datetime.date(reading.modified.year, reading.modified.month, reading.modified.day)
             due: datetime.date = datetime.date(reading.due_date.year, reading.due_date.month, reading.due_date.day)
             delta: int = (due - uploaded).days + 1
-
-            print(delta)
+            if reading.include_due_date:
+                delta += 1
 
             if delta > reading.end_page - (reading.start_page - 1):
                 delta = reading.end_page - reading.start_page + 2
-
-            print(reading.start_page, reading.end_page, delta)
 
             daily_pages = list(map(lambda x: round(x), np.linspace(reading.start_page - 1, reading.end_page, delta)))
 

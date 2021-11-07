@@ -53,6 +53,8 @@
                                     <div class="alert alert-danger mt-3">{{ error }}</div>
                                 {% endfor %}
                             {% endif %}
+                            {% block extra_form_fields %}
+                            {% endblock %}
                         {% endblock %}
                         <div class="row" style="background: white;height: 100%;">
                             <div class="col-12 col-lg-6 d-flex flex-column justify-content-end"

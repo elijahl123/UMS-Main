@@ -1,0 +1,20 @@
+{% extends 'form_template.html' %}
+
+{% block extra_form_fields %}
+    <div class="ps-2 my-3">
+        <div class="form-check form-switch">
+            {{ form.include_due_date }}
+            <label class="form-check-label" for="flexCheckDefault">
+                {{ form.include_due_date.label }}
+            </label>
+        </div>
+        {% if form.include_due_date.help_text %}
+            <small class="form-text">{{ form.include_due_date.help_text }}</small>
+        {% endif %}
+        {% if form.include_due_date.errors %}
+            {% for error in form.include_due_date.errors %}
+                <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

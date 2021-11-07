@@ -47,7 +47,8 @@ class ReadingAssignmentForm(forms.ModelForm):
             'due_time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time'}),
             'link': forms.URLInput(attrs={'class': 'form-control form-control-lg'}),
             'start_page': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
-            'end_page': forms.TextInput(attrs={'class': 'form-control form-control-lg'})
+            'end_page': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
+            'include_due_date': forms.CheckboxInput(attrs={'class': 'form-check-input', 'style': '-webkit-appearance: initial !important'})
         }
 
     def __init__(self, *args, **kwargs):
