@@ -68,7 +68,7 @@ class HomeworkAssignment(models.Model):
         return ReadingAssignment.objects.filter(homeworkassignment_ptr_id=self.id).exists()
 
     class Meta:
-        ordering = ['due_date', 'due_time']
+        ordering = ['due_date', 'due_time', 'course']
 
     def __str__(self):
         return self.name
@@ -88,7 +88,7 @@ class ReadingAssignment(HomeworkAssignment):
         return self.name
 
     class Meta:
-        ordering = ['course']
+        ordering = ['due_date', 'due_time', 'course']
 
     @staticmethod
     def get_recommended_readings(user: Account) -> tuple:
