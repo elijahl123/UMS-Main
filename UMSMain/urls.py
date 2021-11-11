@@ -14,15 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from django.views.decorators.cache import cache_control
-from django.views.generic import TemplateView
 
-from class_calendar.views import calendar_events, add_calendar_event, delete_calendar_event, connect_google_calendar, \
-    save_google_credentials, get_google_events
 from courses.views import *
 from homework.views import *
 from school.views import add_school
@@ -34,20 +29,9 @@ urlpatterns = [
     path('privacy-policy/', privacy_policy, name='privacy_policy'),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include('api.urls')),
-    url(r'^sw.js', cache_control(max_age=2592000)(TemplateView.as_view(
-        template_name="sw.js",
-        content_type='application/javascript',
-    )), name='sw.js'),
-    url(r'^manifest.json', cache_control(max_age=2592000)(TemplateView.as_view(
-        template_name="manifest.json",
-        content_type='application/json',
-    )), name='manifest.json'),
     path('', index, name='index'),
     path('feedback/', feedback, name='feedback'),
-    path('account/', account, name='account'),
-    path('account/settings/', account_settings, name='account_settings'),
-    path('account/settings/change-account-calendar-view/', change_account_calendar_view,
-         name='change_account_calendar_view'),
+    path('account/', include('users.urls')),
     path('class-schedule/', class_schedule, name='class_schedule'),
     path('manage-schedule/', manage_schedule, name='manage_schedule'),
     path('add-coursetime/', add_coursetime, name='add_coursetime'),
@@ -59,23 +43,10 @@ urlpatterns = [
     path('courses/', include('courses.course_urls')),
     path('add-school/', add_school, name='add_school'),
     path('add-timezone/', select_timezone, name='select_timezone'),
-    path('calendar/', calendar_events, name='calendar'),
-    path('calendar/view/<year>/<current_month>/', calendar_events, name='calendar_custom'),
-    path('calendar/add-event/', add_calendar_event, name='add_calendar_event'),
-    path('calendar/delete-event/<id>/', delete_calendar_event, name='delete_calendar_event'),
-    path('calendar/edit-event/<int:id>/', add_calendar_event, name='edit_calendar_event'),
-    path('calendar/connect-google/', connect_google_calendar, name='connect_google_calendar'),
-    path('calendar/save-google-credentials/', save_google_credentials, name='save_google_credentials'),
-    path('calendar/get-google-events/', get_google_events, name='get_google_events'),
-    path('homework/', homework, name='homework'),
-    path('homework/add-assignment/', AddAssignmentView.as_view(), name='add_assignment'),
-    path('homework/edit-assignment/<id>/', EditAssignmentView.as_view(), name='edit_assignment'),
-    path('homework/delete-assignment/<id>/', DeleteAssignmentView.as_view(), name='delete_assignment'),
-    path('homework/add-reading-assignment/', AddReadingAssignment.as_view(), name='add_reading_assignment'),
-    path('homework/edit-reading-assignment/<id>/', EditReadingAssignment.as_view(), name='edit_reading_assignment'),
-    path('homework/delete-reading-assignment/<id>/', DeleteReadingAssignment.as_view(), name='delete_reading_assignment'),
-    path('homework/complete-assignment/<id>/', CompleteAssignment.as_view(), name='complete_assignment'),
-    path('notes/', include('notes.urls'))
+    path('calendar/', include('class_calendar.urls')),
+    path('homework/', include('homework.urls')),
+    path('notes/', include('notes.urls')),
+    path('payments/', include('payments.urls'))
 ]
 
 if settings.DEBUG:

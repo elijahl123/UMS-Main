@@ -15,7 +15,7 @@ from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from pytz import timezone
 
-from UMSMain.generic_class_views import school_required, timezone_required
+from UMSMain.generic_class_views import school_required, timezone_required, all_permissions_required
 from UMSMain.settings import GOOGLE_API_CREDENTIALS, GOOGLE_API_SCOPES
 from class_calendar.forms import AddEvent
 from class_calendar.models import CalendarEvent, CalendarToken
@@ -26,8 +26,7 @@ context = {}
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def add_calendar_event(request, id=0):
     context['account'] = request.user
 
@@ -59,8 +58,7 @@ def add_calendar_event(request, id=0):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def calendar_events(request, year=None, current_month=None):
     context['account'] = request.user
     c = calendar.Calendar(6)
@@ -102,8 +100,7 @@ def calendar_events(request, year=None, current_month=None):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def delete_calendar_event(request, id):
     context['account'] = request.user
     event = get_object_or_404(CalendarEvent, id=id)
@@ -112,8 +109,7 @@ def delete_calendar_event(request, id):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def connect_google_calendar(request):
     context['account'] = request.user
 
@@ -141,8 +137,7 @@ def connect_google_calendar(request):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def save_google_credentials(request):
     flow = Flow.from_client_config(
         GOOGLE_API_CREDENTIALS, scopes=None, state=request.GET.get('state'))
@@ -167,8 +162,7 @@ def save_google_credentials(request):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def get_google_events(request):
     context['account'] = request.user
 

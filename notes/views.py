@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from pytz import timezone
 
-from UMSMain.generic_class_views import school_required, timezone_required
+from UMSMain.generic_class_views import school_required, timezone_required, all_permissions_required
 from courses.models import Course
 from notes.forms import NotesForm
 from notes.models import Note
@@ -14,8 +14,7 @@ context = {}
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def notes_home(request):
     context['account'] = request.user
     context['courses'] = Course.objects.filter(user=request.user)
@@ -23,8 +22,7 @@ def notes_home(request):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def notes_home_course(request, course_id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=course_id)
@@ -38,8 +36,7 @@ def notes_home_course(request, course_id):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def add_notes(request, course_id):
     course = get_object_or_404(Course, id=course_id)
 
@@ -53,8 +50,7 @@ def add_notes(request, course_id):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def view_notes(request, course_id, notes_id):
     context['account'] = request.user
     course = get_object_or_404(Course, id=course_id)
@@ -80,8 +76,7 @@ def view_notes(request, course_id, notes_id):
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def delete_notes(request, course_id, notes_id):
     course = get_object_or_404(Course, id=course_id)
 

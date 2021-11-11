@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from pytz import timezone
 
 from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView, ModelChangeAttrView, \
-    school_required, timezone_required
+    school_required, timezone_required, all_permissions_required
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
 from homework.models import HomeworkAssignment, ReadingAssignment
 
@@ -16,8 +16,7 @@ context = {}
 
 
 @login_required
-@school_required
-@timezone_required
+@all_permissions_required
 def homework(request):
     context['account'] = request.user
 
