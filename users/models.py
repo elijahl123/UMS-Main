@@ -78,6 +78,7 @@ class Account(AbstractBaseUser):
     school = models.CharField(null=True, blank=False, max_length=200)
     timezone = models.CharField(null=True, choices=[(tz, tz.replace('_', ' ')) for tz in pytz.all_timezones],
                                 max_length=120)
+    exempt_from_payment = models.BooleanField(default=False)
     show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
     send_scheduled_emails = models.BooleanField(default=True, verbose_name='Send Daily Summaries')
 
@@ -96,7 +97,8 @@ class Account(AbstractBaseUser):
 
         # For checking permissions. to keep it simple all admin have ALL permissions
 
-    def subscription_info(self):
+    @property
+    def subscription_info(self) -> stripe.api_resources.subscription.Subscription:
         from payments.models import CustomerProfile
         if CustomerProfile.objects.filter(user=self, subscription_id__isnull=False).exists():
             customer = CustomerProfile.objects.get(user=self)

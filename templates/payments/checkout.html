@@ -10,6 +10,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"
             integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+        const type = '{{ type }}'
+
+    </script>
     <script src="{% static 'js/payments.js' %}"></script>
 {% endblock %}
 
@@ -19,8 +24,34 @@
             <div class="col-12 col-md-6"
                  style="padding: 1rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
                 <form class="d-flex flex-column" style="padding: 1rem;" id="payment-form">
-                    <h1 class="display-5 text-center" style="color: var(--main-color);font-weight: bold;">UMS
-                        Subscription Checkout</h1>
+                    <h1 class="display-5 text-center mb-3" style="color: var(--main-color);font-weight: bold;">
+                        UMS {{ type|title }} Subscription</h1>
+                    <ul class="list-group mb-3" style="border-radius: 8px;">
+                        <li class="list-group-item {% if type == 'yearly' %}border-primary{% endif %}" style="border-width: 3px;border-style: solid;{% if type != 'yearly' %}border-bottom: none{% endif %}">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <input class="form-check-input" type="radio" {% if type == 'yearly' %}checked{% endif %}
+                                    onclick="window.location = '/payments/checkout/yearly/'"/></div>
+                                <div class="col">
+                                    <h5 style="font-weight: bold;color: slategray;">Yearly Subscription</h5>
+                                    <h2 class="mb-0" style="font-weight: bold;color: var(--main-color);">$60.00 /
+                                        year</h2>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item {% if type == 'monthly' %}border-primary{% endif %}" style="border-width: 3px;{% if type != 'monthly' %}border-top: none{% endif %}">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <input class="form-check-input" type="radio" {% if type == 'monthly' %}checked{% endif %}
+                                    onclick="window.location = '/payments/checkout/monthly/'"/></div>
+                                <div class="col">
+                                    <h5 style="font-weight: bold;color: slategray;">Monthly Subscription</h5>
+                                    <h2 class="mb-0" style="font-weight: bold;color: var(--main-color);">$6.00 /
+                                        month</h2>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                     <div id="payment-element">
                         <div class="d-flex justify-content-center py-5 h1 m-0">
                             <div class="spinner-border" style="width: 5rem; height: 5rem; color: var(--main-color)"

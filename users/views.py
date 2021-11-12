@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from UMSMain.generic_class_views import all_permissions_required
 from users.forms import AccountForm, AccountSettings
 from users.models import Account
 
@@ -14,6 +15,7 @@ context = {}
 
 
 @login_required
+@all_permissions_required
 def account(request):
     context['account'] = request.user
 
@@ -34,6 +36,7 @@ def account(request):
 
 
 @login_required
+@all_permissions_required
 def account_settings(request):
     context['account'] = request.user
 
@@ -54,6 +57,7 @@ def account_settings(request):
 
 
 @login_required
+@all_permissions_required
 def change_account_calendar_view(request):
     if request.user.show_schedule_on_calendar:
         Account.objects.filter(id=request.user.id).update(show_schedule_on_calendar=False)
@@ -63,7 +67,6 @@ def change_account_calendar_view(request):
     if request.GET.get('next'):
         return redirect(request.GET.get('next'))
     return redirect('index')
-
 
 
 @login_required

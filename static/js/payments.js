@@ -4,7 +4,7 @@ window.addEventListener('load', function () {
     let clientSecret;
     let formData = new FormData()
     formData.append('csrfmiddlewaretoken', Cookies.get('csrftoken'))
-    fetch('/payments/create-subscription/', {
+    fetch('/payments/create-subscription/' + type + '/', {
         method: 'POST',
         body: formData,
     })
