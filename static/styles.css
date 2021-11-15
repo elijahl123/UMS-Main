@@ -28,6 +28,10 @@ input[type='checkbox'] {
     -webkit-appearance: checkbox !important;
 }
 
+.form-switch > input[type='checkbox'] {
+    -webkit-appearance: initial !important;
+}
+
 body {
     font-family: Poppins, sans-serif;
 }
