@@ -1,4 +1,6 @@
 {% extends 'account.html' %}
+{% load to_readable_date %}
+{% load divide %}
 {% load static %}
 
 {% block header %}
@@ -73,11 +75,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                {% for payment in payment_intents %}
                     <tr>
-                        <td>$6.00 USD</td>
-                        <td>UMS Subscription</td>
-                        <td>November 15, 2021</td>
+                        <td>${{ payment.amount|divide:100|stringformat:'.2f' }} {{ payment.currency|upper }}</td>
+                        <td>{{ payment.description }}</td>
+                        <td>{{ payment.created|to_readable_date }}</td>
                     </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
