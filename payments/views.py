@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from UMSMain import settings
-from UMSMain.generic_class_views import all_permissions_required
 from payments.models import CustomerProfile
 
 context = {}
@@ -23,14 +22,16 @@ def create_subscription(request, payment_type):
     # latest invoice and that invoice's payment_intent
     # so we can pass it to the front end to confirm the payment
     customer = get_object_or_404(CustomerProfile, user=request.user)
+
     subscription = stripe.Subscription.create(
         customer=customer.stripe_customer_id,
         items=[{
             'price': settings.STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY if payment_type == 'yearly' else settings.STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY
         }],
         payment_behavior='default_incomplete',
-        expand=['latest_invoice.payment_intent'],
+        expand=['latest_invoice.payment_intent']
     )
+
     customer.subscription_id = subscription.id
     customer.save()
 

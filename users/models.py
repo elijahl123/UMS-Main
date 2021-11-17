@@ -97,12 +97,14 @@ class Account(AbstractBaseUser):
 
         # For checking permissions. to keep it simple all admin have ALL permissions
 
-    @property
-    def subscription_info(self) -> stripe.api_resources.subscription.Subscription:
+    def subscription_info(self, expand: list = None) -> stripe.api_resources.subscription.Subscription:
         from payments.models import CustomerProfile
         if CustomerProfile.objects.filter(user=self, subscription_id__isnull=False).exists():
             customer = CustomerProfile.objects.get(user=self)
-            subscription = stripe.Subscription.retrieve(customer.subscription_id)
+            if expand:
+                subscription = stripe.Subscription.retrieve(customer.subscription_id, expand=expand)
+            else:
+                subscription = stripe.Subscription.retrieve(customer.subscription_id)
             return subscription
         return None
 

@@ -1,17 +1,22 @@
 import datetime
 
 import pytz
+import stripe
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
+from UMSMain import settings
 from UMSMain.generic_class_views import all_permissions_required
+from payments.models import CustomerProfile
 from users.forms import AccountForm, AccountSettings
 from users.models import Account
 
 context = {}
+
+stripe.api_key = settings.STRIPE_API_KEY
 
 
 @login_required
@@ -92,3 +97,26 @@ def select_timezone(request):
         return redirect('index') if not request.GET.get('next') else HttpResponseRedirect(request.GET['next'])
 
     return render(request, 'set_up/add_timezone.html', context)
+
+
+@login_required
+@all_permissions_required
+def account_subscription(request):
+    context['account'] = request.user
+
+    customer_info = CustomerProfile.objects.get(user=request.user)
+
+    subscription = request.user.subscription_info(['latest_invoice.payment_intent']).to_dict_recursive()
+
+    context['subscription'] = subscription
+
+    amount = f"{subscription['items']['data'][0]['plan']['amount'] / 100:.2f}"
+
+    current_period_end = datetime.datetime.fromtimestamp(subscription['current_period_end'])
+
+    context['sub_info'] = {
+        'amount': amount,
+        'current_period_end': current_period_end
+    }
+
+    return render(request, 'account_subscription.html', context)

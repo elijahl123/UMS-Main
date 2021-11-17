@@ -44,7 +44,7 @@ def all_permissions_required(function=None, redirect_field_name=REDIRECT_FIELD_N
         if u.exempt_from_payment:
             return True
         if u.subscription_info:
-            if u.subscription_info.status == 'active':
+            if u.subscription_info().status == 'active':
                 return True
         return False
 
