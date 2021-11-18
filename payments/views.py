@@ -3,11 +3,12 @@
 import stripe
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from UMSMain import settings
+from UMSMain.generic_class_views import all_permissions_required
 from payments.models import CustomerProfile
 
 context = {}
@@ -18,6 +19,8 @@ stripe.api_key = settings.STRIPE_API_KEY
 @login_required
 @require_http_methods(['POST'])
 def create_subscription(request, payment_type):
+    if request.user.subscription_info().status == 'active':
+        return redirect('index')
     # Create the subscription. Note we're expanding the Subscription's
     # latest invoice and that invoice's payment_intent
     # so we can pass it to the front end to confirm the payment
@@ -26,7 +29,7 @@ def create_subscription(request, payment_type):
     subscription = stripe.Subscription.create(
         customer=customer.stripe_customer_id,
         items=[{
-            'price': settings.STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY if payment_type == 'yearly' else settings.STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY
+            'price': settings.STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY if payment_type == 'yearly' else settings.STRIPE_SUBSCRIPTION_PRICE_ID_MONTHLY
         }],
         payment_behavior='default_incomplete',
         expand=['latest_invoice.payment_intent']
@@ -46,6 +49,8 @@ def create_subscription(request, payment_type):
 def checkout(request, payment_type: str):
     context['account'] = request.user
     context['type'] = payment_type
+    if request.user.subscription_info().status == 'active':
+        return redirect('index')
     return render(request, 'payments/checkout.html', context)
 
 
@@ -118,4 +123,51 @@ def stripe_webhooks(request):
 @login_required
 def choose_plan(request):
     context['account'] = request.user
+    context['interval'] = None
     return render(request, 'payments/choose_plan.html', context)
+
+
+@login_required
+@all_permissions_required
+def edit_plan(request):
+    context['account'] = request.user
+
+    subscription = request.user.subscription_info(['latest_invoice.payment_intent']).to_dict_recursive()
+
+    context['interval'] = subscription['items']['data'][0]['plan']['interval']
+
+    return render(request, 'payments/edit_subscription.html', context)
+
+
+@login_required
+@all_permissions_required
+def change_plan_to(request, payment_type: str):
+    context['account'] = request.user
+
+    subscription = request.user.subscription_info()
+
+    stripe.Subscription.modify(
+        subscription.id,
+        items=[{
+            'id': subscription['items']['data'][0].id,
+            'price': settings.STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY if payment_type == 'yearly' else settings.STRIPE_SUBSCRIPTION_PRICE_ID_MONTHLY
+        }],
+        cancel_at_period_end=False
+    )
+
+    return redirect('account_subscription')
+
+
+@login_required
+@all_permissions_required
+def cancel_subscription(request):
+    context['account'] = request.user
+
+    subscription = request.user.subscription_info()
+
+    stripe.Subscription.modify(
+        subscription.id,
+        cancel_at_period_end=True
+        )
+
+    return redirect('account_subscription')

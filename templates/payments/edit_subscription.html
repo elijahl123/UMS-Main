@@ -1,0 +1,17 @@
+{% extends 'payments/choose_plan.html' %}
+
+{% block head_title %}
+Edit Your Plan
+{% endblock %}
+
+{% block choose_title %}
+Edit Your Plan
+{% endblock %}
+
+{% block monthly_url %}
+{% url 'payment_change_plan_to' 'monthly' %}
+{% endblock %}
+
+{% block yearly_url %}
+{% url 'payment_change_plan_to' 'yearly' %}
+{% endblock %}

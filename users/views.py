@@ -121,6 +121,4 @@ def account_subscription(request):
 
     context['payment_intents'] = stripe.PaymentIntent.list(customer=customer_info.stripe_customer_id)
 
-    print(context['payment_intents'])
-
     return render(request, 'account_subscription.html', context)

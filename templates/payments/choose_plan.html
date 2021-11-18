@@ -9,29 +9,50 @@
     <div class="container d-flex flex-column main-container p-5 overflow-auto justify-content-center">
         <div class="row">
             <div class="col">
-                <h1 class="mb-5" style="text-align: center;font-weight: bold;color: var(--main-color);">Choose Your
-                    Plan</h1>
+                <h1 class="mb-5" style="text-align: center;font-weight: bold;color: var(--main-color);">
+                    {% block choose_title %}Choose Your Plan{% endblock %}</h1>
             </div>
         </div>
         <div class="row row-cols-1 row-cols-lg-2 g-5">
             <div class="col d-flex flex-column justify-content-center">
-                <div class="p-3" style="border-radius: 8px;border: 3px solid lightgray ;">
+                <div class="p-3 {% if interval and interval == 'year' %}border-primary{% endif %}" style="border-radius: 8px;border: 3px solid lightgray ;">
                     <h4 style="font-weight: bold;color: slategray;">Yearly Subscription</h4>
                     <h2 style="font-weight: bold;color: var(--main-color);">$60.00 / year</h2>
                     <p class="lead" style="color: slategray;">This subscription will give you full access to the
                         software and all of its features.<br/>
                     </p>
-                    <a class="btn btn-ums" role="button" href="{% url 'payment_checkout' 'yearly' %}">Choose Plan</a>
+                {% if interval and interval == 'year' %}
+                    <a class="btn btn-danger" role="button" style="font-weight: bold"
+                       href="#">
+                        Cancel Subscription
+                    </a>
+                    {% else %}
+                    <a class="btn btn-ums" role="button"
+                       href="{% block yearly_url %}{% url 'payment_checkout' 'yearly' %}{% endblock %}">
+                        Choose Plan
+                    </a>
+                {% endif %}
                 </div>
             </div>
             <div class="col d-flex flex-column justify-content-center">
-                <div class="p-3" style="border-radius: 8px;border: 3px solid lightgray ;">
+                <div class="p-3 {% if interval and interval == 'month' %}border-primary{% endif %}"
+                     style="border-radius: 8px;border: 3px solid lightgray ;">
                     <h4 style="font-weight: bold;color: slategray;">Monthly Subscription</h4>
                     <h2 style="font-weight: bold;color: var(--main-color);">$6.00 / month</h2>
                     <p class="lead" style="color: slategray;">This subscription will give you full access to the
                         software and all of its features.<br/>
                     </p>
-                    <a class="btn btn-ums" role="button" href="{% url 'payment_checkout' 'monthly' %}">Choose Plan</a>
+                {% if interval and interval == 'month' %}
+                    <a class="btn btn-danger" role="button" style="font-weight: bold"
+                       href="#">
+                        Cancel Subscription
+                    </a>
+                    {% else %}
+                    <a class="btn btn-ums" role="button"
+                       href="{% block monthly_url %}{% url 'payment_checkout' 'monthly' %}{% endblock %}">
+                        Choose Plan
+                    </a>
+                {% endif %}
                 </div>
             </div>
         </div>
