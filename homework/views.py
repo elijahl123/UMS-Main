@@ -26,7 +26,9 @@ def homework(request):
 
     all_delta = timezone(request.user.timezone).localize(last_assignment.due_datetime) - dt if last_assignment else None
 
-    all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 1)] if all_delta else []
+    print(timezone(request.user.timezone).localize(last_assignment.due_datetime) - dt)
+
+    all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 2)] if all_delta else []
 
     context['all_dates'] = all_dates
 
@@ -38,7 +40,7 @@ def homework(request):
 
     context['reading_assignments'] = ReadingAssignment.get_recommended_readings(request.user)
 
-    context['used_dates'] = HomeworkAssignment.objects.date_range(request.user)
+    context['used_dates'] = HomeworkAssignment.objects.date_range(request.user)\
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
