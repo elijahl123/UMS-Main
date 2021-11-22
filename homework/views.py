@@ -26,8 +26,6 @@ def homework(request):
 
     all_delta = timezone(request.user.timezone).localize(last_assignment.due_datetime) - dt if last_assignment else None
 
-    print(timezone(request.user.timezone).localize(last_assignment.due_datetime) - dt)
-
     all_dates = [dt + datetime.timedelta(days=i) for i in range(all_delta.days + 2)] if all_delta else []
 
     context['all_dates'] = all_dates
