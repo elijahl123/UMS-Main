@@ -124,6 +124,14 @@ class Account(AbstractBaseUser):
                 return True
         return False
 
+    def check_payment_status(self):
+        if self.exempt_from_payment:
+            return True
+        if self.subscription():
+            if self.subscription().default_payment_method:
+                return True
+        return False
+
     def has_perm(self, perm, obj=None):
         return self.is_admin
 
