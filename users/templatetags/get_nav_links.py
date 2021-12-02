@@ -42,11 +42,11 @@ def get_nav_links(context, request):
     ]
 
     if not request.user.exempt_from_payment:
-        nav_links[2] = {
+        nav_links.insert(2, {
             "name": 'Subscription',
             "icon": "fas fa-wallet",
             "url": reverse('account_subscription')
-        }
+        })
 
     for link in nav_links:
         link['selected'] = True if request.path == link['url'] else False
