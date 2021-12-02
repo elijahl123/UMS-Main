@@ -106,7 +106,7 @@ def account_subscription(request):
 
     customer_info = CustomerProfile.objects.get(user=request.user)
 
-    subscription = request.user.subscription_info(['latest_invoice.payment_intent']).to_dict_recursive()
+    subscription = request.user.subscription(['latest_invoice.payment_intent']).to_dict_recursive()
 
     context['subscription'] = subscription
 
@@ -118,6 +118,8 @@ def account_subscription(request):
         'amount': amount,
         'current_period_end': current_period_end
     }
+
+    context['payment_method'] = stripe.PaymentMethod.retrieve(subscription['default_payment_method'])
 
     context['payment_intents'] = stripe.PaymentIntent.list(customer=customer_info.stripe_customer_id)
 

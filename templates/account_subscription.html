@@ -30,15 +30,23 @@
                         ${{ sub_info.amount }} {{ subscription.latest_invoice.currency|upper }}{% endif %}</p>
                 </div>
                 <div class="col-12 col-lg-auto d-flex flex-column justify-content-center">
-                    <a class="btn btn-sm btn-transparent-success mb-3" role="button"
-                       href="{% url 'payment_edit_plan' %}">
-                        <i class="fas fa-pen me-2 me-lg-0"></i>
-                        <span class="d-lg-none">Change Subscription</span>
-                    </a>
-                    <a class="btn btn-sm btn-transparent-danger" role="button"
+                    {% if subscription.cancel_at_period_end %}
+                        <a class="btn btn-sm btn-transparent-warning" role="button" title="Resume Subscription"
+                           href="{% url 'payment_resume_subscription' %}">
+                            <i class="fas fa-sync-alt me-2 me-lg-0"></i>
+                            <span class="d-lg-none">Resume Subscription</span>
+                        </a>
+                    {% else %}
+                        <a class="btn btn-sm btn-transparent-success mb-3" role="button" title="Change Subscription"
+                           href="{% url 'payment_edit_plan' %}">
+                            <i class="fas fa-pen me-2 me-lg-0"></i>
+                            <span class="d-lg-none">Change Subscription</span>
+                        </a>
+                    <a class="btn btn-sm btn-transparent-danger" role="button" title="Cancel Subscription"
                        href="{% url 'payment_cancel_subscription' %}">
                         <i class="fas fa-trash me-2 me-lg-0"></i>
                         <span class="d-lg-none">Cancel Subscription</span>
+                    {% endif %}
                     </a>
                 </div>
             </div>
@@ -55,19 +63,19 @@
                 </div>
                 <div class="col d-flex flex-column justify-content-center mb-3 mb-lg-0">
                     <h3 class="text-center text-lg-start"
-                        style="color: var(--main-color);font-weight: bold;">{{ subscription.latest_invoice.payment_intent.charges.data.0.payment_method_details.card.network|title }} 
+                        style="color: var(--main-color);font-weight: bold;">{{ payment_method.card.brand|title }} 
                         •••• 
-                        {{ subscription.latest_invoice.payment_intent.charges.data.0.payment_method_details.card.last4 }}
+                        {{ payment_method.card.last4 }}
                     </h3>
                     <p class="text-center text-lg-start m-0" style="color: slategray;">
-                        Expires {{ subscription.latest_invoice.payment_intent.charges.data.0.payment_method_details.card.exp_year }}</p>
+                        Expires {{ payment_method.card.exp_year }}</p>
                 </div>
                 <div class="col-12 col-lg-auto d-flex flex-column justify-content-center">
-                    <a class="btn btn-sm btn-transparent-success mb-3" role="button" href="#">
+                    <a class="btn btn-sm btn-transparent-success mb-3" role="button" href="{% url 'payment_edit_payment_method' %}">
                         <i class="fas fa-pen me-2 me-lg-0"></i>
                         <span class="d-lg-none">Change Payment Method</span>
                     </a>
-                    <a class="btn btn-sm btn-transparent-danger" role="button" href="#">
+                    <a class="btn btn-sm btn-transparent-danger" role="button" href="{% url 'payment_delete_payment_method' %}">
                         <i class="fas fa-trash me-2 me-lg-0"></i>
                         <span class="d-lg-none">Delete Payment Method</span>
                     </a>

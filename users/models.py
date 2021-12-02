@@ -1,12 +1,13 @@
+from typing import Union
+
 import pytz
 import stripe
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
-# Create your models here.
-from django.shortcuts import get_object_or_404
-
 from UMSMain import settings
+
+# Create your models here.
 
 stripe.api_key = settings.STRIPE_API_KEY
 
@@ -97,7 +98,7 @@ class Account(AbstractBaseUser):
 
         # For checking permissions. to keep it simple all admin have ALL permissions
 
-    def subscription_info(self, expand: list = None) -> stripe.api_resources.subscription.Subscription:
+    def subscription(self, expand: list = None) -> stripe.Subscription:
         from payments.models import CustomerProfile
         if CustomerProfile.objects.filter(user=self, subscription_id__isnull=False).exists():
             customer = CustomerProfile.objects.get(user=self)
@@ -107,6 +108,21 @@ class Account(AbstractBaseUser):
                 subscription = stripe.Subscription.retrieve(customer.subscription_id)
             return subscription
         return None
+
+    def customer_id(self) -> str:
+        from payments.models import CustomerProfile
+        if CustomerProfile.objects.filter(user=self, subscription_id__isnull=False).exists():
+            customer = CustomerProfile.objects.get(user=self)
+            return customer.stripe_customer_id
+        return None
+
+    def check_sub_status(self):
+        if self.exempt_from_payment:
+            return True
+        if self.subscription():
+            if self.subscription().status == 'active':
+                return True
+        return False
 
     def has_perm(self, perm, obj=None):
         return self.is_admin

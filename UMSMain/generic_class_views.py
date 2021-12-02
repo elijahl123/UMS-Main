@@ -13,8 +13,6 @@ from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.views import View
 from django.views.generic import TemplateView
 
-from users.models import Account
-
 
 def school_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
     actual_decorator = user_passes_test(
@@ -40,18 +38,11 @@ def timezone_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
 
 
 def all_permissions_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
-    def check_sub_status(u: Account):
-        if u.exempt_from_payment:
-            return True
-        if u.subscription_info:
-            if u.subscription_info().status == 'active':
-                return True
-        return False
-
     perms = [
         (lambda u: u.school, 'add_school'),
         (lambda u: u.timezone, 'select_timezone'),
-        (check_sub_status, 'choose_plan')
+        (lambda u: u.check_sub_status(), 'choose_plan'),
+        (lambda u: u.subscription().default_payment_method, 'payment_edit_payment_method')
     ]
 
     actual_decorator = user_passes_multiple_tests(
@@ -126,6 +117,9 @@ class PermissionsRequiredMixin(UserPassesTestMixin):
             return False
         if not self.request.user.timezone:
             self.login_url = 'select_timezone'
+            return False
+        if not self.request.user.check_sub_status():
+            self.login_url = 'choose_plan'
             return False
         return True
 

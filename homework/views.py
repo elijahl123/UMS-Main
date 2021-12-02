@@ -1,14 +1,12 @@
 import datetime
 
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-
+from django.shortcuts import render
 # Create your views here.
 from pytz import timezone
 
 from UMSMain.generic_class_views import ModelCreationView, ModelEditView, ModelDeleteView, ModelChangeAttrView, \
-    school_required, timezone_required, all_permissions_required
+    all_permissions_required
 from homework.forms import HomeworkAssignmentForm, ReadingAssignmentForm
 from homework.models import HomeworkAssignment, ReadingAssignment
 
@@ -38,7 +36,7 @@ def homework(request):
 
     context['reading_assignments'] = ReadingAssignment.get_recommended_readings(request.user)
 
-    context['used_dates'] = HomeworkAssignment.objects.date_range(request.user)\
+    context['used_dates'] = HomeworkAssignment.objects.date_range(request.user)
 
     context['completed_assignments'] = HomeworkAssignment.objects.filter(completed=True, course__user=request.user)
 
@@ -116,4 +114,3 @@ class CompleteAssignment(ModelChangeAttrView):
     redirect_url = 'homework'
     change_attr: str = 'completed'
     alternate = True
-

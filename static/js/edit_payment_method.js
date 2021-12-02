@@ -4,7 +4,6 @@ window.addEventListener('load', function () {
     let clientSecret;
     let formData = new FormData()
     formData.append('csrfmiddlewaretoken', Cookies.get('csrftoken'))
-    formData.append('pre-checkout', '')
     fetch(window.location, {
         method: 'POST',
         body: formData,
@@ -42,10 +41,10 @@ window.addEventListener('load', function () {
             form.addEventListener('submit', async (event) => {
                 event.preventDefault();
 
-                const {error} = await stripe.confirmPayment({
+                const {error} = await stripe.confirmSetup({
                     elements,
                     confirmParams: {
-                        return_url: window.location.origin + "/payments/status/",
+                        return_url: window.location.href,
                     }
                 });
 

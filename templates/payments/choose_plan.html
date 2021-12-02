@@ -15,23 +15,36 @@
         </div>
         <div class="row row-cols-1 row-cols-lg-2 g-5">
             <div class="col d-flex flex-column justify-content-center">
-                <div class="p-3 {% if interval and interval == 'year' %}border-primary{% endif %}" style="border-radius: 8px;border: 3px solid lightgray ;">
+                <div class="p-3 {% if interval and interval == 'year' %}border-primary{% endif %}"
+                     style="border-radius: 8px;border: 3px solid lightgray ;">
                     <h4 style="font-weight: bold;color: slategray;">Yearly Subscription</h4>
                     <h2 style="font-weight: bold;color: var(--main-color);">$60.00 / year</h2>
                     <p class="lead" style="color: slategray;">This subscription will give you full access to the
                         software and all of its features.<br/>
                     </p>
-                {% if interval and interval == 'year' %}
-                    <a class="btn btn-danger" role="button" style="font-weight: bold"
-                       href="#">
-                        Cancel Subscription
-                    </a>
+                    {% if interval %}
+                        {% if interval and interval != 'year' %}
+                            <div class="alert alert-danger"><strong>Note:</strong> You will be charged immediately if
+                                you
+                                change subscription
+                            </div>
+                        {% else %}
+                            <div class="alert alert-success"><strong>Note:</strong> If you decide to cancel your
+                                subscription, it will do so at the end of your current billing cycle.
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {% if interval and interval == 'year' %}
+                        <a class="btn btn-danger" role="button" style="font-weight: bold"
+                           href="{% url 'payment_cancel_subscription' %}">
+                            Cancel Subscription
+                        </a>
                     {% else %}
-                    <a class="btn btn-ums" role="button"
-                       href="{% block yearly_url %}{% url 'payment_checkout' 'yearly' %}{% endblock %}">
-                        Choose Plan
-                    </a>
-                {% endif %}
+                        <a class="btn btn-ums" role="button"
+                           href="{% block yearly_url %}{% url 'payment_checkout' 'yearly' %}{% endblock %}">
+                            Choose Plan
+                        </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="col d-flex flex-column justify-content-center">
@@ -42,17 +55,29 @@
                     <p class="lead" style="color: slategray;">This subscription will give you full access to the
                         software and all of its features.<br/>
                     </p>
-                {% if interval and interval == 'month' %}
-                    <a class="btn btn-danger" role="button" style="font-weight: bold"
-                       href="#">
-                        Cancel Subscription
-                    </a>
+                    {% if interval %}
+                        {% if interval != 'month' %}
+                            <div class="alert alert-danger"><strong>Note:</strong> You will be charged immediately if
+                                you
+                                change subscription
+                            </div>
+                        {% else %}
+                            <div class="alert alert-success"><strong>Note:</strong> If you decide to cancel your
+                                subscription, it will do so at the end of your current billing cycle.
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {% if interval and interval == 'month' %}
+                        <a class="btn btn-danger" role="button" style="font-weight: bold"
+                           href="{% url 'payment_cancel_subscription' %}">
+                            Cancel Subscription
+                        </a>
                     {% else %}
-                    <a class="btn btn-ums" role="button"
-                       href="{% block monthly_url %}{% url 'payment_checkout' 'monthly' %}{% endblock %}">
-                        Choose Plan
-                    </a>
-                {% endif %}
+                        <a class="btn btn-ums" role="button"
+                           href="{% block monthly_url %}{% url 'payment_checkout' 'monthly' %}{% endblock %}">
+                            Choose Plan
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

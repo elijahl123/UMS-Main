@@ -1,0 +1,39 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block head_title %}
+    Checkout
+{% endblock %}
+
+{% block extra_head %}
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"
+            integrity="sha512-Meww2sXqNHxI1+5Dyh/9KAtvI9RZSA4c1K2k5iL02oiPO/RH3Q30L3M1albtqMg50u4gRTYdV4EXOQqXEI336A=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/edit_payment_method.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center main-container">
+        <div class="row g-0 d-flex justify-content-center" style="width: 100%;">
+            <div class="col-12 col-md-6"
+                 style="padding: 1rem;border-style: solid;border-color: var(--main-accent);border-radius: 8px;">
+                <form class="d-flex flex-column" style="padding: 1rem;" id="payment-form">
+                    <h1 class="display-5 text-center mb-3" style="color: var(--main-color);font-weight: bold;">
+                        Edit Payment Method</h1>
+                    <div id="payment-element">
+                        <div class="d-flex justify-content-center py-5 h1 m-0">
+                            <div class="spinner-border" style="width: 5rem; height: 5rem; color: var(--main-color)"
+                                 role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-lg mt-3" type="submit" style="width: 100%;margin-bottom: 10px;">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
