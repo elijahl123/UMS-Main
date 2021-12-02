@@ -27,8 +27,9 @@ def checkout(request, payment_type: str):
     context['account'] = request.user
     context['type'] = payment_type
 
-    if request.user.subscription().status == 'active':
-        return redirect('index')
+    if request.user.subscription():
+        if request.user.subscription().status == 'active':
+            return redirect('index')
 
     if request.POST:
         customer = get_object_or_404(CustomerProfile, user=request.user)
