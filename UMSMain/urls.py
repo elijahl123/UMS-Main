@@ -13,10 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from django.views.decorators.cache import cache_control
+from django.views.generic import TemplateView
 
 from courses.views import *
 from homework.views import *
@@ -46,7 +48,11 @@ urlpatterns = [
     path('calendar/', include('class_calendar.urls')),
     path('homework/', include('homework.urls')),
     path('notes/', include('notes.urls')),
-    path('payments/', include('payments.urls'))
+    path('payments/', include('payments.urls')),
+    url(r'^.well-known/apple-developer-merchantid-domain-association', cache_control(max_age=2592000)(TemplateView.as_view(
+        template_name="apple-developer-merchantid-domain-association",
+        content_type='application/txt',
+    )), name='apple-developer-merchantid-domain-association'),
 ]
 
 if settings.DEBUG:
