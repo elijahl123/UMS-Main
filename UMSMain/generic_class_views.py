@@ -42,7 +42,7 @@ def all_permissions_required(function=None, redirect_field_name=REDIRECT_FIELD_N
         (lambda u: u.school, 'add_school'),
         (lambda u: u.timezone, 'select_timezone'),
         (lambda u: u.check_sub_status(), 'choose_plan'),
-        (lambda u: u.subscription().default_payment_method, 'payment_edit_payment_method')
+        (lambda u: u.subscription().default_payment_method or u.exempt_from_payment, 'payment_edit_payment_method')
     ]
 
     actual_decorator = user_passes_multiple_tests(
@@ -120,6 +120,8 @@ class PermissionsRequiredMixin(UserPassesTestMixin):
             return False
         if not self.request.user.check_sub_status():
             self.login_url = 'choose_plan'
+            return False
+        if not (self.request.user.subscription().default_payment_method or self.request.user.exempt_from_payment):
             return False
         return True
 
