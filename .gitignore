@@ -146,3 +146,5 @@ users/migrations/
 notes/migrations/
 /payments/migrations/
 /payments/test_requests.http
+
+manage.py
