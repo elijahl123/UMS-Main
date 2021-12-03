@@ -51,12 +51,12 @@ jobs:
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
-      - name: Stop the server
-        run: ssh staging 'sudo systemctl stop my-application'
+      - name: Git Pull
+        run: ssh staging "cd /home/ums/UMS-Main && source venv/bin/activate && git pull"
 
-      - name: Check out the source
-        run: ssh staging 'cd my-application && git fetch && git reset --hard origin/master'
+      - name: Django Actions
+        run: ssh staging "cd /home/ums/UMS-Main && source venv/bin/activate && pip install -r requirements.txt && python manage.py makemigrations --no-input && python manage.py migrate --no-input && python manage.py collectstatic --no-input"
 
-      - name: Start the server
+      - name: Restart the server
         if: ${{ always() }}
-        run: ssh staging 'sudo systemctl start my-application'
+        run: ssh staging 'sudo shutdown -r now'
