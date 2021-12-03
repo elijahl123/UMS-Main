@@ -40,6 +40,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/staging.key
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/staging.key
           cat >>~/.ssh/config <<END
           Host staging
