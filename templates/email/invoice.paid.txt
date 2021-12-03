@@ -1,0 +1,11 @@
+{% extends 'email/base_message.txt' %}
+{% load i18n %}
+
+{% block content %}
+{% blocktrans %}You successfully submitted a payment of ${{ amount }} to UMS!{% endblocktrans %}
+
+{% blocktrans %}If you did not authorize this action, contact us at untitledmanagementsoftware@gmail.com{% endblocktrans %}
+
+{% blocktrans %}Thank you so much for subscribing to Untitled Management Software!{% endblocktrans %}
+
+{% endblock %}

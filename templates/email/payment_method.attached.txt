@@ -1,0 +1,11 @@
+{% extends 'email/base_message.txt' %}
+{% load i18n %}
+
+{% block content %}
+{% blocktrans %}You recently changed your payment method for your account.{% endblocktrans %}
+
+{% blocktrans %}If you did not authorize this action, contact us at untitledmanagementsoftware@gmail.com{% endblocktrans %}
+
+{% blocktrans with site_domain=current_site.domain %}If you would like to change your payment method again, go to {{ site_domain }}/payments/edit-payment-method/{% endblocktrans %}
+
+{% endblock %}

@@ -37,17 +37,20 @@ def timezone_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
     return actual_decorator
 
 
-def all_permissions_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME):
+def all_permissions_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, exclude=None):
+    if exclude is None:
+        exclude = []
     perms = [
-        (lambda u: u.school, 'add_school'),
-        (lambda u: u.timezone, 'select_timezone'),
-        (lambda u: u.check_sub_status(), 'choose_plan'),
-        (lambda u: u.check_payment_status(), 'payment_edit_payment_method')
+        ('school', lambda u: u.school, 'add_school'),
+        ('timezone', lambda u: u.timezone, 'select_timezone'),
+        ('choose_plan', lambda u: u.check_sub_status(), 'choose_plan'),
+        ('payment_method', lambda u: u.check_payment_status(), 'payment_edit_payment_method')
     ]
 
     actual_decorator = user_passes_multiple_tests(
         perms,
-        redirect_field_name=redirect_field_name
+        redirect_field_name=redirect_field_name,
+        exclude=exclude
     )
 
     if function:
@@ -55,20 +58,25 @@ def all_permissions_required(function=None, redirect_field_name=REDIRECT_FIELD_N
     return actual_decorator
 
 
-def user_passes_multiple_tests(perms, redirect_field_name=REDIRECT_FIELD_NAME):
+def user_passes_multiple_tests(perms, redirect_field_name=REDIRECT_FIELD_NAME, exclude=None):
     """
     Decorator for views that checks that the user passes the given test,
     redirecting to the log-in page if necessary. The test should be a callable
     that takes the user object and returns True if the user passes.
     """
 
+    if exclude is None:
+        exclude = []
+
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
 
-            for test_func, login_url in perms:
+            for title, test_func, login_url in perms:
 
                 if test_func(request.user):
+                    continue
+                if title in exclude:
                     continue
                 path = request.build_absolute_uri()
                 resolved_login_url = resolve_url(login_url or settings.LOGIN_URL)

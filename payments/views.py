@@ -2,8 +2,11 @@
 
 import stripe
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 
 from UMSMain import settings
@@ -67,58 +70,6 @@ def status(request):
     return render(request, 'payments/status.html', context)
 
 
-@csrf_exempt
-def stripe_webhooks(request):
-    webhook_secret = settings.STRIPE_WEBHOOK_SECRET
-
-    if webhook_secret:
-        try:
-            signature = request.headers.get('Stripe-Signature')
-            event = stripe.Webhook.construct_event(payload=request.body, sig_header=signature, secret=webhook_secret)
-            data = event['data']
-            event_type = event['type']
-        except Exception as e:
-            return JsonResponse({'error': e.user_message})
-    else:
-        data = None
-        event_type = None
-
-    data_object = data['object']
-
-    if event_type == 'invoice.paid':
-        # Used to provision services after the trial has ended.
-        # The status of the invoice will show up as paid. Store the status in your
-        # database to reference when a user accesses your service to avoid hitting rate
-        # limits.
-        print(data)
-
-    if event_type == 'invoice.payment_failed':
-        # If the payment fails or the customer does not have a valid payment method,
-        # an invoice.payment_failed event is sent, the subscription becomes past_due.
-        # Use this webhook to notify your user that their payment has
-        # failed and to retrieve new card details.
-        print(data)
-
-    if event_type == 'customer.subscription.deleted':
-        # handle subscription cancelled automatically based
-        # upon your subscription settings. Or if the user cancels it.
-        print(data)
-
-    if event_type == 'invoice.payment_succeeded':
-        if data_object['billing_reason'] == 'subscription_create':
-            subscription_id = data_object['subscription']
-            payment_intent_id = data_object['payment_intent']
-
-            # Retrieve the payment intent used to pay the subscription
-            payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-
-            # Set the default payment method
-            stripe.Subscription.modify(
-                subscription_id,
-                default_payment_method=payment_intent.payment_method
-            )
-
-
 @login_required
 @all_permissions_required
 def edit_plan(request):
@@ -152,7 +103,6 @@ def change_plan_to(request, payment_type: str):
         default_payment_method=payment_method_id,
         expand=['latest_invoice.payment_intent']
     )
-
     return redirect('account_subscription')
 
 
@@ -187,6 +137,7 @@ def resume_subscription(request):
 
 
 @login_required
+@all_permissions_required(exclude=['payment_method'])
 def edit_payment_method(request):
     context['account'] = request.user
 
@@ -228,3 +179,55 @@ def delete_payment_method(request):
     return redirect('account_subscription')
 
 
+@csrf_exempt
+def stripe_webhooks(request):
+    webhook_secret = settings.STRIPE_WEBHOOK_SECRET
+
+    if webhook_secret:
+        try:
+            signature = request.headers.get('Stripe-Signature')
+            event = stripe.Webhook.construct_event(payload=request.body, sig_header=signature, secret=webhook_secret)
+            data = event['data']
+            event_type = event['type']
+        except Exception as e:
+            return JsonResponse({'error': e.user_message})
+    else:
+        data = None
+        event_type = None
+
+    data_object = data['object']
+
+    if event_type == 'payment_method.attached':
+        customer = stripe.Customer.retrieve(data_object['customer'])
+        if customer.email:
+            email_context = {
+                'current_site': get_current_site(request)
+            }
+            message = EmailMessage(
+                subject='New Payment Method Attatched to Account',
+                body=render_to_string('email/payment_method.attached.txt', context=email_context),
+                from_email=settings.ADMIN_EMAIL,
+                to=[customer.email]
+            )
+            message.send()
+
+    if event_type == 'invoice.paid':
+        if data_object['billing_reason'] == 'subscription_create':
+            customer = stripe.Customer.retrieve(data_object['customer'])
+            if customer.email:
+                email_context = {
+                    'current_site': get_current_site(request),
+                    'amount': f"{int(data_object['lines']['data'][0]['amount']) / 100:.2f}"
+                }
+                message = EmailMessage(
+                    subject='Successfully Subscribed to UMS',
+                    body=render_to_string('email/invoice.paid.txt', context=email_context),
+                    from_email=settings.ADMIN_EMAIL,
+                    to=[customer.email]
+                )
+                message.send()
+
+    if event_type == 'customer.subscription.updated':
+        print(data_object)
+
+    return JsonResponse({'status': 'succeeded'})
