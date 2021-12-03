@@ -16,4 +16,4 @@ class UserTestCase(TestCase):
 
     def test_account_subscription(self):
         account = Account.objects.get(email='elijah.kane.1972@gmail.com')
-        self.assertTrue(account.subscription())
+        self.assertFalse(account.subscription())
