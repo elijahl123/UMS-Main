@@ -2,7 +2,7 @@ import stripe
 from django.db import models
 from django.dispatch import receiver
 
-from UMSMain import settings
+from UMSMain.get_settings import settings
 from users.models import Account
 
 stripe.api_key = settings.STRIPE_API_KEY

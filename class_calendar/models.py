@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from google.oauth2.credentials import Credentials
 
-from UMSMain.settings import GOOGLE_API_CREDENTIALS
+from UMSMain.get_settings import settings
 from users.models import Account
 
 
@@ -26,7 +26,7 @@ class CalendarTokenManager(models.Manager):
         if self.filter(user=user, token__isnull=False).exists():
             creds = Credentials.from_authorized_user_info(
                 json.loads(CalendarToken.objects.get(user=user).token),
-                GOOGLE_API_CREDENTIALS)
+                settings.GOOGLE_API_CREDENTIALS)
             return creds
         return None
 

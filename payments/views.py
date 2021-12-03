@@ -9,8 +9,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_exempt
 
-from UMSMain import settings
 from UMSMain.generic_class_views import all_permissions_required
+from UMSMain.get_settings import settings
 from payments.models import CustomerProfile
 
 context = {}

@@ -8,8 +8,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
-from UMSMain import settings
 from UMSMain.generic_class_views import all_permissions_required
+from UMSMain.get_settings import settings
 from payments.models import CustomerProfile
 from users.forms import AccountForm, AccountSettings
 from users.models import Account

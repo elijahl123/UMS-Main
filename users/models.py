@@ -5,9 +5,8 @@ import stripe
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
-from UMSMain import settings
-
 # Create your models here.
+from UMSMain.get_settings import settings
 
 stripe.api_key = settings.STRIPE_API_KEY
 

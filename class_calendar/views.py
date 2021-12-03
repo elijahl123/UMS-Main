@@ -16,7 +16,7 @@ from googleapiclient.discovery import build
 from pytz import timezone
 
 from UMSMain.generic_class_views import school_required, timezone_required, all_permissions_required
-from UMSMain.settings import GOOGLE_API_CREDENTIALS, GOOGLE_API_SCOPES
+from UMSMain.get_settings import settings
 from class_calendar.forms import AddEvent
 from class_calendar.models import CalendarEvent, CalendarToken
 from courses.models import CourseTime
@@ -121,7 +121,7 @@ def connect_google_calendar(request):
             creds.refresh(Request())
         else:
             flow = Flow.from_client_config(
-                GOOGLE_API_CREDENTIALS, GOOGLE_API_SCOPES)
+                settings.GOOGLE_API_CREDENTIALS, settings.GOOGLE_API_SCOPES)
             flow.redirect_uri = request.build_absolute_uri(reverse('save_google_credentials'))
             authorization_url, state = flow.authorization_url(
                 # Enable offline access so that you can refresh an access token without
@@ -140,7 +140,7 @@ def connect_google_calendar(request):
 @all_permissions_required
 def save_google_credentials(request):
     flow = Flow.from_client_config(
-        GOOGLE_API_CREDENTIALS, scopes=None, state=request.GET.get('state'))
+        settings.GOOGLE_API_CREDENTIALS, scopes=None, state=request.GET.get('state'))
 
     flow.redirect_uri = request.build_absolute_uri(reverse('save_google_credentials'))
 
