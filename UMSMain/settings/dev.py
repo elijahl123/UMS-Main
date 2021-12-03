@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zan^-=q)&l#lm%^wgsc+jss4lgk6!2!l=wtf4jg=qhjafd6=c-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['client.untitledmanagementsoftware.com']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.humanize',
-    'storages',
     'rest_framework',
 
     'allauth',
@@ -118,15 +117,8 @@ WSGI_APPLICATION = 'UMSMain.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'umsdb',
-        'USER': 'umsmain',
-        'PASSWORD': '%%55JUde',
-        'HOST': 'ums-database-do-user-7877358-0.b.db.ondigitalocean.com',
-        'PORT': '25060',
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -167,39 +159,24 @@ USE_TZ = False
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 ADMINS = [
     ('Elijah Lopez', 'elijah.kane.1972@gmail.com')
 ]
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AWS_ACCESS_KEY_ID = 'JN732ZR5XW57CYVFKORZ'
-AWS_SECRET_ACCESS_KEY = 'BM8s92CyspOg7kCW1gOH4uYFuOIM4ip3dMeczKzXDVc'
-AWS_STORAGE_BUCKET_NAME = 'umstatic'
-AWS_S3_ENDPOINT_URL = 'https://sfo3.digitaloceanspaces.com/'
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
-AWS_LOCATION = 'static'
-AWS_DEFAULT_ACL = 'public-read'
-
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'media')
+    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "media"),
 ]
-
-STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-
-# Use AWS_S3_ENDPOINT_URL here if you haven't enabled the CDN and got a custom domain.
-STATIC_URL = '{}/{}/'.format(AWS_S3_ENDPOINT_URL, 'static')
-# STATIC_ROOT = 'static/'
-
-MEDIA_URL = '{}/{}/'.format(AWS_S3_ENDPOINT_URL, 'media')
-# MEDIA_ROOT = 'media/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn')
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST_USER = 'untitledmanagementsoftware@gmail.com'
@@ -238,8 +215,8 @@ GOOGLE_API_CREDENTIALS = {
 RECAPTCHA_SITE_KEY = '6Le2Y4UcAAAAAOMRr_KcOWTH77zZ_915Z4LA4zPn'
 RECAPTCHA_SECRET_KEY = '6Le2Y4UcAAAAAI-Zz6P9_OziS1WSWXdn3TRqOXRg'
 
-STRIPE_API_KEY = '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'
-STRIPE_PUBLIC_KEY = 'pk_live_51Ja9LKHqoFWABg3Gc6XbaoIjXFGzhHOSU9wtqra5QqMtG8KtrL05kzoWl2ttizSJRKS8FNZtkOzWzP2hw4DDRUiU00tQ7CsGKG'
-STRIPE_SUBSCRIPTION_PRICE_ID_MONTHLY = 'price_1JuwRaHqoFWABg3GZ5CLu0xE'
-STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY = 'price_1JuwQeHqoFWABg3GKWYDaboy'
-STRIPE_WEBHOOK_SECRET = 'we_1JuTWFHqoFWABg3G7BbREyuG'
+STRIPE_API_KEY = 'sk_test_51Ja9LKHqoFWABg3Gh7eMg2glnzZHCSFT7GEQ9XOt9P03jIvAOLoxep7EMXvaI1vtwuRqATXAJDD9esrEygZi53Jv006kxeByvi'
+STRIPE_PUBLIC_KEY = 'pk_test_51Ja9LKHqoFWABg3G5JNfwAlQIrmWAAQqrKBCqYNrM7kPZsbg3BnQQLzK0mlYSDwZjjgSb9in8v10l91H4VavRj1K000PDTnNY7'
+STRIPE_SUBSCRIPTION_PRICE_ID_MONTHLY = 'price_1JuwOOHqoFWABg3Gwy2cENja'
+STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY = 'price_1JuwNzHqoFWABg3GsgyXivZF'
+STRIPE_WEBHOOK_SECRET = 'whsec_XxUo6aR54hGZQ7ckdvH0Lfe4vQR34zkc'
