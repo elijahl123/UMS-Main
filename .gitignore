@@ -130,9 +130,6 @@ dmypy.json
 
 .idea/
 
-UMSMain/wsgi.py
-UMSMain/asgi.py
-
 class_calendar/migrations/
 
 courses/migrations/
@@ -147,4 +144,4 @@ notes/migrations/
 /payments/migrations/
 /payments/test_requests.http
 
-manage.py
+os_info.py
