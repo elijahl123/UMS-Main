@@ -145,3 +145,4 @@ notes/migrations/
 /payments/test_requests.http
 
 os_info.py
+.vscode/
