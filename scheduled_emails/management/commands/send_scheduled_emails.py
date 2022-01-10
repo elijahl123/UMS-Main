@@ -78,8 +78,7 @@ class Command(BaseCommand):
                             [email.recipient_list.email]
                         )
                     )
-
-            if not email.recurring:
-                email.delete()
+                    if not email.recurring:
+                        email.delete()
 
         send_mass_html_mail(tuple(data_tuple))
