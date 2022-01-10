@@ -140,6 +140,8 @@ school/migrations/
 
 users/migrations/
 
+scheduled_emails/migrations/
+
 notes/migrations/
 /payments/migrations/
 /payments/test_requests.http

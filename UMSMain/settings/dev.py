@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'courses',
     'class_calendar',
     'homework',
-    'notes'
+    'notes',
+    'scheduled_emails'
 ]
 
 MIDDLEWARE = [

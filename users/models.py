@@ -1,11 +1,14 @@
-from typing import Union
+import datetime
 
 import pytz
 import stripe
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
-
 # Create your models here.
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+
 from UMSMain.get_settings import settings
 
 stripe.api_key = settings.STRIPE_API_KEY
@@ -139,3 +142,39 @@ class Account(AbstractBaseUser):
     @staticmethod
     def has_module_perms(app_label):
         return True
+
+
+@receiver(post_save, sender=Account)
+def post_save_account(sender, instance, created, raw, using, update_fields, *args, **kwargs):
+    from scheduled_emails.models import ScheduledEmail
+    from courses.models import CourseTime
+    from homework.models import HomeworkAssignment
+
+    scheduled_email = ScheduledEmail.objects.filter(recipient_list=instance, subject='Daily Summary')
+    if not scheduled_email.exists() and instance.send_scheduled_emails:
+        if instance.timezone:
+            tomorrow_weekday = (
+                    datetime.datetime.now(pytz.timezone(instance.timezone)) + datetime.timedelta(days=1)
+            ).strftime("%A")
+        else:
+            tomorrow_weekday = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%A")
+        coursetimes = CourseTime.objects.filter(
+            course__user=instance,
+            weekday__contains=tomorrow_weekday
+        )
+        upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(instance)
+
+        html_message = render_to_string(
+            'email/daily_summary.html',
+            context={'account': instance, 'coursetimes': coursetimes, 'upcoming_assignments': upcoming_assignments}
+        )
+        daily_reminder = ScheduledEmail.objects.create(
+            time='22:00:00',
+            subject='Daily Summary',
+            message=html_message,
+            recipient_list=instance,
+            recurring=True
+        )
+        daily_reminder.save()
+    if scheduled_email.exists() and not instance.send_scheduled_emails:
+        scheduled_email.delete()
