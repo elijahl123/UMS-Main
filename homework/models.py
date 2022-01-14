@@ -2,6 +2,7 @@ import datetime
 from typing import Union
 
 import numpy as np
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import QuerySet
 from django.db.models.signals import post_save, post_delete
@@ -160,6 +161,9 @@ def post_save_homework(sender, instance: HomeworkAssignment, created, raw, using
 
 
 @receiver(post_delete, sender=HomeworkAssignment)
-def post_save_homework(sender, instance: HomeworkAssignment, using, *args, **kwargs):
-    if instance.course.user.homework_notifications:
-        HomeworkAssignment.objects.update_notifications(instance.course.user)
+def post_delete_homework(sender, instance: HomeworkAssignment, using, *args, **kwargs):
+    try:
+        if instance.course.user.homework_notifications:
+            HomeworkAssignment.objects.update_notifications(instance.course.user)
+    except ObjectDoesNotExist:
+        pass

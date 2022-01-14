@@ -148,41 +148,42 @@ class Account(AbstractBaseUser):
 
 @receiver(post_save, sender=Account)
 def post_save_account(sender, instance, created, raw, using, update_fields, *args, **kwargs):
-    from scheduled_emails.models import ScheduledEmail
-    from courses.models import CourseTime
-    from homework.models import HomeworkAssignment
+    if instance.timezone:
+        from scheduled_emails.models import ScheduledEmail
+        from courses.models import CourseTime
+        from homework.models import HomeworkAssignment
 
-    scheduled_email = ScheduledEmail.objects.filter(recipient_list=instance, subject='Daily Summary')
-    if not scheduled_email.exists() and instance.send_scheduled_emails and instance.timezone:
-        if instance.timezone:
-            tomorrow_weekday = (
-                    datetime.datetime.now(pytz.timezone(instance.timezone)) + datetime.timedelta(days=1)
-            ).strftime("%A")
+        scheduled_email = ScheduledEmail.objects.filter(recipient_list=instance, subject='Daily Summary')
+        if not scheduled_email.exists() and instance.send_scheduled_emails:
+            if instance.timezone:
+                tomorrow_weekday = (
+                        datetime.datetime.now(pytz.timezone(instance.timezone)) + datetime.timedelta(days=1)
+                ).strftime("%A")
+            else:
+                tomorrow_weekday = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%A")
+            coursetimes = CourseTime.objects.filter(
+                course__user=instance,
+                weekday__contains=tomorrow_weekday
+            )
+            upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(instance)
+
+            html_message = render_to_string(
+                'email/daily_summary.html',
+                context={'account': instance, 'coursetimes': coursetimes, 'upcoming_assignments': upcoming_assignments}
+            )
+            daily_reminder = ScheduledEmail.objects.create(
+                time='22:00:00',
+                subject='Daily Summary',
+                message=html_message,
+                recipient_list=instance,
+                recurring=True,
+                html=True
+            )
+            daily_reminder.save()
+        if scheduled_email.exists() and not instance.send_scheduled_emails:
+            scheduled_email.delete()
+        if not instance.homework_notifications:
+            ScheduledEmail.objects.filter(subject='Homework Assignment(s) Due In 6 Hours', recipient_list=instance).delete()
         else:
-            tomorrow_weekday = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%A")
-        coursetimes = CourseTime.objects.filter(
-            course__user=instance,
-            weekday__contains=tomorrow_weekday
-        )
-        upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(instance)
-
-        html_message = render_to_string(
-            'email/daily_summary.html',
-            context={'account': instance, 'coursetimes': coursetimes, 'upcoming_assignments': upcoming_assignments}
-        )
-        daily_reminder = ScheduledEmail.objects.create(
-            time='22:00:00',
-            subject='Daily Summary',
-            message=html_message,
-            recipient_list=instance,
-            recurring=True,
-            html=True
-        )
-        daily_reminder.save()
-    if scheduled_email.exists() and not instance.send_scheduled_emails:
-        scheduled_email.delete()
-    if not instance.homework_notifications:
-        ScheduledEmail.objects.filter(subject='Homework Assignment(s) Due In 6 Hours', recipient_list=instance).delete()
-    else:
-        HomeworkAssignment.objects.update_notifications(instance)
+            HomeworkAssignment.objects.update_notifications(instance)
 
