@@ -153,7 +153,7 @@ def post_save_account(sender, instance, created, raw, using, update_fields, *arg
     from homework.models import HomeworkAssignment
 
     scheduled_email = ScheduledEmail.objects.filter(recipient_list=instance, subject='Daily Summary')
-    if not scheduled_email.exists() and instance.send_scheduled_emails:
+    if not scheduled_email.exists() and instance.send_scheduled_emails and instance.timezone:
         if instance.timezone:
             tomorrow_weekday = (
                     datetime.datetime.now(pytz.timezone(instance.timezone)) + datetime.timedelta(days=1)
