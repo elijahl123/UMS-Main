@@ -109,12 +109,25 @@
                                     settings.</p>
                                 <div class="row mb-4">
                                     <div class="col">
-                                        <div class="row">
+                                        <div class="row flex-column flex-lg-row">
                                             <div class="col">
                                                 <div class="form-check">
                                                     {{ form.send_scheduled_emails }}
-                                                    <label class="form-check-label" for="formCheck-1">Daily
-                                                        Reminders</label></div>
+                                                    <label class="form-check-label" for="{{ form.send_scheduled_emails.id_for_label }}">Daily
+                                                        Reminders</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    {{ form.homework_notifications }}
+                                                    <label class="form-check-label" for="{{ form.homework_notifications.id_for_label }}">Homework</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="form-check">
+                                                    {{ form.class_notifications }}
+                                                    <label class="form-check-label" for="{{ form.class_notifications.id_for_label }}">Classes</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

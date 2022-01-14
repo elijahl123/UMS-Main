@@ -1,7 +1,7 @@
 import datetime
 
 import pytz
-from django.core.mail import EmailMultiAlternatives, get_connection
+from django.core.mail import EmailMultiAlternatives, get_connection, send_mass_mail
 from django.core.management import BaseCommand
 from django.template.loader import render_to_string
 from pytz import timezone
@@ -57,6 +57,7 @@ class Command(BaseCommand):
     help = 'Send Scheduled Emails to Users'
 
     def handle(self, *args, **options):
+        data_tuple_html = []
         data_tuple = []
         for email in ScheduledEmail.objects.all():
 
@@ -69,16 +70,27 @@ class Command(BaseCommand):
 
             if (email.date and email.date == today) or email.recurring:
                 if email.time == time:
-                    data_tuple.append(
-                        (
-                            email.subject,
-                            email.message,
-                            email.message,
-                            'UMS Reminders <untitledmanagementsoftware@gmail.com>',
-                            [email.recipient_list.email]
+                    if email.html:
+                        data_tuple_html.append(
+                            (
+                                email.subject,
+                                email.message,
+                                email.message,
+                                'UMS Reminders <untitledmanagementsoftware@gmail.com>',
+                                [email.recipient_list.email]
+                            )
                         )
-                    )
+                    else:
+                        data_tuple.append(
+                            (
+                                email.subject,
+                                email.message,
+                                'UMS Reminders <untitledmanagementsoftware@gmail.com>',
+                                [email.recipient_list.email]
+                            )
+                        )
                     if not email.recurring:
                         email.delete()
 
-        send_mass_html_mail(tuple(data_tuple))
+        send_mass_html_mail(tuple(data_tuple_html))
+        send_mass_mail(tuple(data_tuple))

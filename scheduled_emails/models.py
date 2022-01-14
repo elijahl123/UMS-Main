@@ -11,3 +11,4 @@ class ScheduledEmail(models.Model):
     message = models.TextField()
     recipient_list = models.ForeignKey(Account, on_delete=models.CASCADE)
     recurring = models.BooleanField(default=False)
+    html = models.BooleanField(default=False)

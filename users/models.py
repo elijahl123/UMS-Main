@@ -84,6 +84,8 @@ class Account(AbstractBaseUser):
     exempt_from_payment = models.BooleanField(default=False)
     show_schedule_on_calendar = models.BooleanField(default=False, verbose_name='Show Schedule on Calendar')
     send_scheduled_emails = models.BooleanField(default=False, verbose_name='Send Daily Summaries')
+    homework_notifications = models.BooleanField(default=True, verbose_name='Homework Notifications')
+    class_notifications = models.BooleanField(default=True, verbose_name='Course Notifications')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
@@ -173,8 +175,14 @@ def post_save_account(sender, instance, created, raw, using, update_fields, *arg
             subject='Daily Summary',
             message=html_message,
             recipient_list=instance,
-            recurring=True
+            recurring=True,
+            html=True
         )
         daily_reminder.save()
     if scheduled_email.exists() and not instance.send_scheduled_emails:
         scheduled_email.delete()
+    if not instance.homework_notifications:
+        ScheduledEmail.objects.filter(subject='Homework Assignment(s) Due In 6 Hours', recipient_list=instance).delete()
+    else:
+        HomeworkAssignment.objects.update_notifications(instance)
+
