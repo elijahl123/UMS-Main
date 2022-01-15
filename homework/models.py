@@ -97,6 +97,11 @@ class HomeworkAssignment(models.Model):
     link = models.URLField(null=True, blank=True)
     completed = models.BooleanField(default=False)
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super().save(force_insert, force_update, using, update_fields)
+        if self.course.user.homework_notifications:
+            HomeworkAssignment.objects.update_notifications(self.course.user)
+
     @property
     def due_datetime(self):
         return datetime.datetime(self.due_date.year, self.due_date.month, self.due_date.day, self.due_time.hour,
@@ -152,12 +157,6 @@ class ReadingAssignment(HomeworkAssignment):
                     (reading, uploaded + datetime.timedelta(days=val), daily_pages[val] + 1, daily_pages[val + 1]))
 
         return out_list
-
-
-@receiver(post_save, sender=HomeworkAssignment)
-def post_save_homework(sender, instance: HomeworkAssignment, created, raw, using, update_fields, *args, **kwargs):
-    if instance.course.user.homework_notifications:
-        HomeworkAssignment.objects.update_notifications(instance.course.user)
 
 
 @receiver(post_delete, sender=HomeworkAssignment)
