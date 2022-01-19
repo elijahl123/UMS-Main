@@ -1,9 +1,11 @@
 import datetime
 
+import pytz
 from django.test import TestCase
 
-from courses.models import Course, CourseTime
-from homework.models import HomeworkAssignment
+from class_calendar.models import CalendarEvent
+from courses.models import *
+from homework.models import *
 from users.models import Account
 
 
@@ -40,3 +42,13 @@ class BaseTestCase(TestCase):
             due_date=datetime.date.today() + datetime.timedelta(days=3),
             due_time='23:59:00'
         )
+        self.event = CalendarEvent.objects.create(
+            date=datetime.date.today() + datetime.timedelta(days=2),
+            user=self.user,
+            time='20:00:00',
+            title='Test Event'
+        )
+        self.now = datetime.datetime.now(tz=pytz.timezone(self.user.timezone))
+        self.today = self.now.date()
+        self.today_time = datetime.time(self.now.hour, self.now.minute, self.now.second)
+

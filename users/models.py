@@ -1,13 +1,13 @@
 import datetime
+import json
 
 import pytz
 import stripe
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 # Create your models here.
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.template.loader import render_to_string
+from django.forms import model_to_dict
 
 from UMSMain.get_settings import settings
 
@@ -66,6 +66,10 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def update_daily_reminders(self):
+        for account in self.filter(send_scheduled_emails=True):
+            account.update_daily_reminders()
+
 
 class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=20, null=True)
@@ -100,7 +104,53 @@ class Account(AbstractBaseUser):
     def __str__(self):
         return self.email if not self.first_name and not self.last_name else f'{self.first_name} {self.last_name}'
 
-        # For checking permissions. to keep it simple all admin have ALL permissions
+    def update_daily_reminders(self):
+        from scheduled_emails.models import ScheduledEmail, Attachment
+        from courses.models import CourseTime
+        from homework.models import HomeworkAssignment
+
+        daily_reminder, created = ScheduledEmail.objects.get_or_create(
+            time='22:00:00',
+            subject='Daily Summary',
+            template='email/daily_summary.html',
+            recipient_list=self,
+            recurring=True,
+            html=True
+        )
+
+        tomorrow_weekday = (
+                datetime.datetime.now(pytz.timezone(self.timezone)) + datetime.timedelta(days=1)
+        ).strftime("%A")
+
+        coursetimes = CourseTime.objects.filter(
+            course__user=self,
+            weekday__contains=tomorrow_weekday
+        )
+
+        upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(self)
+
+        attachments = [
+            *[Attachment.objects.get_or_create(
+                content_type=ContentType.objects.get_for_model(CourseTime),
+                object_id=coursetime.id
+            )[0] for coursetime in coursetimes],
+            *[Attachment.objects.get_or_create(
+                content_type=ContentType.objects.get_for_model(HomeworkAssignment),
+                object_id=assignment.id
+            )[0] for assignment in upcoming_assignments],
+            Attachment.objects.get_or_create(
+                content_type=ContentType.objects.get_for_model(Account),
+                object_id=self.id
+            )[0]
+        ]
+        daily_reminder.save()
+        daily_reminder.attachments.add(*attachments)
+        daily_reminder.context = json.dumps({
+            'account': model_to_dict(ContentType.objects.get_for_model(Account)),
+            'coursetimes': model_to_dict(ContentType.objects.get_for_model(CourseTime)),
+            'upcoming_assignments': model_to_dict(ContentType.objects.get_for_model(HomeworkAssignment))
+        })
+        daily_reminder.save()
 
     def subscription(self, expand: list = None) -> stripe.Subscription:
         from payments.models import CustomerProfile
@@ -144,46 +194,3 @@ class Account(AbstractBaseUser):
     @staticmethod
     def has_module_perms(app_label):
         return True
-
-
-@receiver(post_save, sender=Account)
-def post_save_account(sender, instance, created, raw, using, update_fields, *args, **kwargs):
-    if instance.timezone:
-        from scheduled_emails.models import ScheduledEmail
-        from courses.models import CourseTime
-        from homework.models import HomeworkAssignment
-
-        scheduled_email = ScheduledEmail.objects.filter(recipient_list=instance, subject='Daily Summary')
-        if not scheduled_email.exists() and instance.send_scheduled_emails:
-            if instance.timezone:
-                tomorrow_weekday = (
-                        datetime.datetime.now(pytz.timezone(instance.timezone)) + datetime.timedelta(days=1)
-                ).strftime("%A")
-            else:
-                tomorrow_weekday = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime("%A")
-            coursetimes = CourseTime.objects.filter(
-                course__user=instance,
-                weekday__contains=tomorrow_weekday
-            )
-            upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(instance)
-
-            html_message = render_to_string(
-                'email/daily_summary.html',
-                context={'account': instance, 'coursetimes': coursetimes, 'upcoming_assignments': upcoming_assignments}
-            )
-            daily_reminder = ScheduledEmail.objects.create(
-                time='22:00:00',
-                subject='Daily Summary',
-                message=html_message,
-                recipient_list=instance,
-                recurring=True,
-                html=True
-            )
-            daily_reminder.save()
-        if scheduled_email.exists() and not instance.send_scheduled_emails:
-            scheduled_email.delete()
-        if not instance.homework_notifications:
-            ScheduledEmail.objects.filter(subject='Homework Assignment(s) Due In 6 Hours', recipient_list=instance).delete()
-        else:
-            HomeworkAssignment.objects.update_notifications(instance)
-

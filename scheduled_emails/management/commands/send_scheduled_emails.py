@@ -1,14 +1,15 @@
 import datetime
+import json
 
 import pytz
+from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMultiAlternatives, get_connection, send_mass_mail
 from django.core.management import BaseCommand
 from django.template.loader import render_to_string
-from pytz import timezone
 
-from courses.models import CourseTime
-from homework.models import HomeworkAssignment
+from base.notifications import Notifications, notifications_framework
 from scheduled_emails.models import ScheduledEmail
+from users.models import Account
 
 
 def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None,
@@ -34,63 +35,22 @@ def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None
     return connection.send_messages(messages)
 
 
-def get_daily_summary_tuple(user):
-    tomorrow_weekday = (datetime.datetime.now(timezone(user.timezone)) + datetime.timedelta(days=1)).strftime("%A")
-    coursetimes = CourseTime.objects.filter(
-        course__user=user,
-        weekday__contains=tomorrow_weekday
-    )
-    upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(user)
-
-    html_message = render_to_string('email/daily_summary.html', context={'account': user, 'coursetimes': coursetimes,
-                                                                         'upcoming_assignments': upcoming_assignments})
-    return (
-        'Daily Summary',
-        html_message,
-        html_message,
-        'UMS Reminders <untitledmanagementsoftware@gmail.com>',
-        [user.email]
-    )
-
-
 class Command(BaseCommand):
     help = 'Send Scheduled Emails to Users'
 
     def handle(self, *args, **options):
+        n = notifications_framework
+        n.collect()
         data_tuple_html = []
         data_tuple = []
-        for email in ScheduledEmail.objects.all():
 
-            now = datetime.datetime.now()
-            if email.recipient_list.timezone:
-                now = datetime.datetime.now(pytz.timezone(email.recipient_list.timezone))
 
-            today = datetime.date(now.year, now.month, now.day)
-            time = datetime.time(now.hour, now.minute, 0)
-
-            if (email.date and email.date == today) or email.recurring:
-                if email.time == time:
-                    if email.html:
-                        data_tuple_html.append(
-                            (
-                                email.subject,
-                                email.message,
-                                email.message,
-                                'UMS Reminders <untitledmanagementsoftware@gmail.com>',
-                                [email.recipient_list.email]
-                            )
-                        )
-                    else:
-                        data_tuple.append(
-                            (
-                                email.subject,
-                                email.message,
-                                'UMS Reminders <untitledmanagementsoftware@gmail.com>',
-                                [email.recipient_list.email]
-                            )
-                        )
-                    if not email.recurring:
-                        email.delete()
-
-        send_mass_html_mail(tuple(data_tuple_html))
-        send_mass_mail(tuple(data_tuple))
+# data_tuple_html.append(
+#     (
+#         email.subject,
+#         message,
+#         message,
+#         'UMS Reminders <untitledmanagementsoftware@gmail.com>',
+#         [email.recipient_list.email]
+#     )
+# )

@@ -2,16 +2,13 @@ import datetime
 from typing import Union
 
 import numpy as np
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import QuerySet
-from django.db.models.signals import post_save, post_delete
-from django.dispatch import receiver
-from django.template.loader import render_to_string
 from pytz import timezone
 
 from courses.models import Course
-from scheduled_emails.models import ScheduledEmail
+from scheduled_emails.models import ScheduledEmail, Attachment
 from users.models import Account
 
 
@@ -52,39 +49,6 @@ class HomeworkManager(models.Manager):
 
         return set(used_dates)
 
-    def update_notifications(self, user: Account):
-        assignments = self.all_assignments(user).order_by('due_date', 'due_time')
-        due_date_dict = {}
-
-        for assignment in assignments:
-            if due_date_dict.get(assignment.due_datetime, None):
-                due_date_dict[assignment.due_datetime].append(assignment)
-            else:
-                due_date_dict[assignment.due_datetime] = [assignment]
-
-        for date, assignment_list in due_date_dict.items():
-            date = date - datetime.timedelta(hours=6)
-            scheduled_email, initialized = ScheduledEmail.objects.update_or_create(
-                date=date.date(),
-                time=date.time(),
-                subject='Homework Assignment(s) Due In 6 Hours',
-                recipient_list=user
-            )
-            scheduled_email.message = render_to_string(
-                'email/homework_assignments.txt',
-                context={
-                    'count': len(assignment_list),
-                    'assignments': assignment_list
-                }
-            )
-            scheduled_email.save()
-            ScheduledEmail.objects.filter(
-                recipient_list=user,
-                subject='Homework Assignment(s) Due In 6 Hours'
-            ).exclude(
-                date__in=[dt.date() for dt in due_date_dict.keys()]
-            ).delete()
-
 
 class HomeworkAssignment(models.Model):
     objects = HomeworkManager()
@@ -99,8 +63,6 @@ class HomeworkAssignment(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         super().save(force_insert, force_update, using, update_fields)
-        if self.course.user.homework_notifications:
-            HomeworkAssignment.objects.update_notifications(self.course.user)
 
     @property
     def due_datetime(self):
@@ -157,12 +119,3 @@ class ReadingAssignment(HomeworkAssignment):
                     (reading, uploaded + datetime.timedelta(days=val), daily_pages[val] + 1, daily_pages[val + 1]))
 
         return out_list
-
-
-@receiver(post_delete, sender=HomeworkAssignment)
-def post_delete_homework(sender, instance: HomeworkAssignment, using, *args, **kwargs):
-    try:
-        if instance.course.user.homework_notifications:
-            HomeworkAssignment.objects.update_notifications(instance.course.user)
-    except ObjectDoesNotExist:
-        pass

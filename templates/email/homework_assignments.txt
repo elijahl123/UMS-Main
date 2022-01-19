@@ -2,7 +2,8 @@
 {% load i18n %}
 
 {% block content %}
-You have {{ count }} assignment(s) due in 6 hours:
+
+You have {{ assignments|length }} assignment(s) due in 6 hours:
 {% for assignment in assignments %}
 {{ assignment.name }} -- {{ assignment.course.name }} -- {{ assignment.due_datetime }}
 
