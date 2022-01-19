@@ -1,15 +1,7 @@
-import datetime
-import json
-
-import pytz
-from django.contrib.contenttypes.models import ContentType
-from django.core.mail import EmailMultiAlternatives, get_connection, send_mass_mail
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.core.management import BaseCommand
-from django.template.loader import render_to_string
 
-from base.notifications import Notifications, notifications_framework
-from scheduled_emails.models import ScheduledEmail
-from users.models import Account
+from base.notifications import notifications_framework
 
 
 def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None,
@@ -43,7 +35,6 @@ class Command(BaseCommand):
         n.collect()
         data_tuple_html = []
         data_tuple = []
-
 
 # data_tuple_html.append(
 #     (

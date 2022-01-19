@@ -105,52 +105,53 @@ class Account(AbstractBaseUser):
         return self.email if not self.first_name and not self.last_name else f'{self.first_name} {self.last_name}'
 
     def update_daily_reminders(self):
-        from scheduled_emails.models import ScheduledEmail, Attachment
-        from courses.models import CourseTime
-        from homework.models import HomeworkAssignment
-
-        daily_reminder, created = ScheduledEmail.objects.get_or_create(
-            time='22:00:00',
-            subject='Daily Summary',
-            template='email/daily_summary.html',
-            recipient_list=self,
-            recurring=True,
-            html=True
-        )
-
-        tomorrow_weekday = (
-                datetime.datetime.now(pytz.timezone(self.timezone)) + datetime.timedelta(days=1)
-        ).strftime("%A")
-
-        coursetimes = CourseTime.objects.filter(
-            course__user=self,
-            weekday__contains=tomorrow_weekday
-        )
-
-        upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(self)
-
-        attachments = [
-            *[Attachment.objects.get_or_create(
-                content_type=ContentType.objects.get_for_model(CourseTime),
-                object_id=coursetime.id
-            )[0] for coursetime in coursetimes],
-            *[Attachment.objects.get_or_create(
-                content_type=ContentType.objects.get_for_model(HomeworkAssignment),
-                object_id=assignment.id
-            )[0] for assignment in upcoming_assignments],
-            Attachment.objects.get_or_create(
-                content_type=ContentType.objects.get_for_model(Account),
-                object_id=self.id
-            )[0]
-        ]
-        daily_reminder.save()
-        daily_reminder.attachments.add(*attachments)
-        daily_reminder.context = json.dumps({
-            'account': model_to_dict(ContentType.objects.get_for_model(Account)),
-            'coursetimes': model_to_dict(ContentType.objects.get_for_model(CourseTime)),
-            'upcoming_assignments': model_to_dict(ContentType.objects.get_for_model(HomeworkAssignment))
-        })
-        daily_reminder.save()
+        pass
+        # from scheduled_emails.models import ScheduledEmail, Attachment
+        # from courses.models import CourseTime
+        # from homework.models import HomeworkAssignment
+        #
+        # daily_reminder, created = ScheduledEmail.objects.get_or_create(
+        #     time='22:00:00',
+        #     subject='Daily Summary',
+        #     template='email/daily_summary.html',
+        #     recipient_list=self,
+        #     recurring=True,
+        #     html=True
+        # )
+        #
+        # tomorrow_weekday = (
+        #         datetime.datetime.now(pytz.timezone(self.timezone)) + datetime.timedelta(days=1)
+        # ).strftime("%A")
+        #
+        # coursetimes = CourseTime.objects.filter(
+        #     course__user=self,
+        #     weekday__contains=tomorrow_weekday
+        # )
+        #
+        # upcoming_assignments = HomeworkAssignment.objects.upcoming_assignments(self)
+        #
+        # attachments = [
+        #     *[Attachment.objects.get_or_create(
+        #         content_type=ContentType.objects.get_for_model(CourseTime),
+        #         object_id=coursetime.id
+        #     )[0] for coursetime in coursetimes],
+        #     *[Attachment.objects.get_or_create(
+        #         content_type=ContentType.objects.get_for_model(HomeworkAssignment),
+        #         object_id=assignment.id
+        #     )[0] for assignment in upcoming_assignments],
+        #     Attachment.objects.get_or_create(
+        #         content_type=ContentType.objects.get_for_model(Account),
+        #         object_id=self.id
+        #     )[0]
+        # ]
+        # daily_reminder.save()
+        # daily_reminder.attachments.add(*attachments)
+        # daily_reminder.context = json.dumps({
+        #     'account': model_to_dict(ContentType.objects.get_for_model(Account)),
+        #     'coursetimes': model_to_dict(ContentType.objects.get_for_model(CourseTime)),
+        #     'upcoming_assignments': model_to_dict(ContentType.objects.get_for_model(HomeworkAssignment))
+        # })
+        # daily_reminder.save()
 
     def subscription(self, expand: list = None) -> stripe.Subscription:
         from payments.models import CustomerProfile

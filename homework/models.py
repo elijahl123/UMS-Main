@@ -8,7 +8,6 @@ from django.db.models import QuerySet
 from pytz import timezone
 
 from courses.models import Course
-from scheduled_emails.models import ScheduledEmail, Attachment
 from users.models import Account
 
 
