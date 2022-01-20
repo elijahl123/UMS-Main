@@ -3,7 +3,7 @@
 
 {% block content %}
 
-You have {{ assignments|length }} assignment(s) due in 6 hours:
+You Have {{ subject }}:
 {% for assignment in assignments %}
 {{ assignment.name }} -- {{ assignment.course.name }} -- {{ assignment.due_datetime }}
 
