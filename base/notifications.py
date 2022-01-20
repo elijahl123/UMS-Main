@@ -63,18 +63,21 @@ class NotificationsFramework:
             push_to.extend(config.generate_tuple())
         send_mass_mail(data_tuple)
         self.send_mass_html_mail(data_tuple_html)
+        print(data_tuple, data_tuple_html)
 
 
 class NotificationsConfig:
     html: bool = False
+    user_constraints: dict = {}
 
     current_notifications: List[Notification] = []
 
-    def get_notifications(self):
+    def get_notifications(self, user):
         pass
 
     def generate_tuple(self):
-        self.get_notifications()
+        for user in Account.objects.filter(**self.user_constraints):
+            self.get_notifications(user)
         return [
             (
                 n.subject,
