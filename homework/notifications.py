@@ -24,6 +24,7 @@ class HomeworkDueInSixHoursNotifications(NotificationsConfig):
             account = Account.objects.get(id=user['course__user'])
             now = datetime.datetime.now(tz=pytz.timezone(account.timezone)) + datetime.timedelta(hours=self._in_hours)
             assignments = HomeworkAssignment.objects.filter(
+                course__user=account,
                 due_date=now.date(),
                 due_time__hour=now.hour,
                 due_time__minute=now.minute
