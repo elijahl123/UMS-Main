@@ -24,8 +24,8 @@
 * {
     -webkit-appearance: none !important;
 }
-input[type='checkbox'] {
-    -webkit-appearance: checkbox !important;
+input {
+    -webkit-appearance: initial !important;
 }
 
 .form-switch > input[type='checkbox'] {
