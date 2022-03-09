@@ -30,6 +30,7 @@ class NotificationsConfig:
         pass
 
     def generate_tuple(self):
+        self.current_notifications = set()
         self.get_notifications()
         return [
             (

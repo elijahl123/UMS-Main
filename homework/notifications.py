@@ -9,7 +9,6 @@ from users.models import Account
 
 
 class HomeworkDueInSixHoursNotifications(NotificationsConfig):
-    current_notifications = set()
     _in_hours = 6
 
     def get_desired_time(self, account):
@@ -50,5 +49,4 @@ class HomeworkDueInSixHoursNotifications(NotificationsConfig):
 
 
 class HomeworkDueNowNotifications(HomeworkDueInSixHoursNotifications):
-    current_notifications = set()
     _in_hours = 0
