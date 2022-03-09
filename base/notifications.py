@@ -16,7 +16,7 @@ class Notification:
 
 
 class NotificationsConfig:
-    html: bool = field(default=False)
+    html: bool = False
 
     current_notifications: Set[Notification] = set()
 
