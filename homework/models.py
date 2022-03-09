@@ -1,5 +1,5 @@
 import datetime
-from typing import Union
+from typing import Union, Type
 
 import numpy as np
 from django.contrib.contenttypes.models import ContentType
@@ -26,7 +26,7 @@ class HomeworkManager(models.Manager):
             if timezone(user.timezone).localize(assignment.due_datetime) >= datetime.datetime.now(
                     timezone(user.timezone)):
                 all_assignments.append(assignment)
-        model: Union[HomeworkAssignment, ReadingAssignment] = ReadingAssignment if reading else HomeworkAssignment
+        model: Type[Union[HomeworkAssignment, ReadingAssignment]] = ReadingAssignment if reading else HomeworkAssignment
         return model.objects.filter(id__in=list(map(lambda x: x.id, all_assignments)))
 
     def upcoming_assignments(self, user: Account, days: int = 2, **kwargs: dict) -> QuerySet:
@@ -95,7 +95,7 @@ class ReadingAssignment(HomeworkAssignment):
         ordering = ['due_date', 'due_time', 'course']
 
     @staticmethod
-    def get_recommended_readings(user: Account) -> tuple:
+    def get_recommended_readings(user: Account) -> list:
 
         out_list = []
 
@@ -107,6 +107,9 @@ class ReadingAssignment(HomeworkAssignment):
             delta: int = (due - uploaded).days + 1
             if reading.include_due_date:
                 delta += 1
+
+            if delta < 0:
+                return []
 
             if delta > reading.end_page - (reading.start_page - 1):
                 delta = reading.end_page - reading.start_page + 2
