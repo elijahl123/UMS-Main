@@ -1,4 +1,5 @@
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Set
 
 from django.contrib.admin.sites import AlreadyRegistered
 from django.core.mail import EmailMultiAlternatives, get_connection, send_mass_mail
@@ -7,68 +8,23 @@ from django.utils.module_loading import autodiscover_modules
 from users.models import Account
 
 
+@dataclass(frozen=True, order=True)
 class Notification:
-    def __init__(
-            self,
-            subject: str,
-            message: str,
-            recipient: Account,
-    ):
-        self.subject = subject
-        self.message = message
-        self.recipient = recipient
-
-
-class NotificationsFramework:
-    def __init__(self):
-        self._registry = []
-
-    @staticmethod
-    def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None,
-                            connection=None):
-        """
-        Given a datatuple of (subject, text_content, html_content, from_email,
-        recipient_list), sends each message to each recipient list. Returns the
-        number of emails sent.
-
-        If from_email is None, the DEFAULT_FROM_EMAIL setting is used.
-        If auth_user and auth_password are set, they're used to log in.
-        If auth_user is None, the EMAIL_HOST_USER setting is used.
-        If auth_password is None, the EMAIL_HOST_PASSWORD setting is used.
-
-        """
-        connection = connection or get_connection(
-            username=user, password=password, fail_silently=fail_silently)
-        messages = []
-        for subject, text, html, from_email, recipient in datatuple:
-            message = EmailMultiAlternatives(subject, text, from_email, recipient)
-            message.attach_alternative(html, 'text/html')
-            messages.append(message)
-        return connection.send_messages(messages)
-
-    def collect(self):
-        autodiscover_modules('notifications')
-
-    def register(self, config):
-        for i in self._registry:
-            if isinstance(i, type(config)):
-                raise AlreadyRegistered('This configuration is already registered')
-        self._registry.append(config())
-
-    def send_notifications(self):
-        data_tuple = []
-        data_tuple_html = []
-        for config in self._registry:
-            push_to = data_tuple_html if config.html else data_tuple
-            push_to.extend(config.generate_tuple())
-        send_mass_mail(data_tuple)
-        self.send_mass_html_mail(data_tuple_html)
+    subject: str
+    message: str
+    recipient: Account
 
 
 class NotificationsConfig:
-    html: bool = False
+    html: bool = field(default=False)
 
-    current_notifications: List[Notification] = []
+    current_notifications: Set[Notification] = set()
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(current_notifications={self.current_notifications})"
+
+    def __hash__(self):
+        return hash(tuple(self.current_notifications))
 
     def get_notifications(self):
         pass
@@ -95,10 +51,57 @@ class NotificationsConfig:
         ]
 
 
-notifications_framework = NotificationsFramework()
+class NotificationsFramework:
 
+    def __init__(self):
+        autodiscover_modules('notifications')
+        self._registry = set()
+        self.recursive_search_subclass(NotificationsConfig, self._registry)
 
-def send_all_notifications():
-    n = notifications_framework
-    n.collect()
-    n.send_notifications()
+    def print_registry(self):
+        for val in self._registry:
+            print(val)
+
+    def get_registry(self):
+        return self._registry
+
+    def recursive_search_subclass(self, cls, iterable: set):
+        for sub_cls in cls.__subclasses__():
+            iterable.add(sub_cls())
+            if sub_cls.__subclasses__():
+                self.recursive_search_subclass(sub_cls, iterable)
+
+    @staticmethod
+    def send_mass_html_mail(datatuple, fail_silently=False, user=None, password=None,
+                            connection=None):
+        """
+        Given a datatuple of (subject, text_content, html_content, from_email,
+        recipient_list), sends each message to each recipient list. Returns the
+        number of emails sent.
+
+        If from_email is None, the DEFAULT_FROM_EMAIL setting is used.
+        If auth_user and auth_password are set, they're used to log in.
+        If auth_user is None, the EMAIL_HOST_USER setting is used.
+        If auth_password is None, the EMAIL_HOST_PASSWORD setting is used.
+
+        """
+        connection = connection or get_connection(
+            username=user, password=password, fail_silently=fail_silently)
+        messages = []
+        for subject, text, html, from_email, recipient in datatuple:
+            message = EmailMultiAlternatives(subject, text, from_email, recipient)
+            message.attach_alternative(html, 'text/html')
+            messages.append(message)
+        return connection.send_messages(messages)
+
+    def send_notifications(self):
+        data_tuple = []
+        data_tuple_html = []
+        for config in self._registry:
+            if config.html:
+                data_tuple_html.extend(config.generate_tuple())
+            else:
+                data_tuple.extend(config.generate_tuple())
+
+        send_mass_mail(data_tuple)
+        self.send_mass_html_mail(data_tuple_html)

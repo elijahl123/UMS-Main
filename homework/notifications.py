@@ -3,16 +3,17 @@ import datetime
 import pytz
 from django.db.models import Count
 from django.template.loader import render_to_string
-
-from base.decorators import register_class
 from base.notifications import NotificationsConfig, Notification
 from homework.models import HomeworkAssignment
 from users.models import Account
 
 
-@register_class()
 class HomeworkDueInSixHoursNotifications(NotificationsConfig):
+    current_notifications = set()
     _in_hours = 6
+
+    def get_desired_time(self, account):
+        return datetime.datetime.now(tz=pytz.timezone(account.timezone)) + datetime.timedelta(hours=self._in_hours)
 
     def get_notifications(self):
         assignments_users = HomeworkAssignment.objects.filter(
@@ -22,7 +23,7 @@ class HomeworkDueInSixHoursNotifications(NotificationsConfig):
         ).values('course__user').annotate(assignment_count=Count('course__user')).order_by()
         for user in assignments_users:
             account = Account.objects.get(id=user['course__user'])
-            now = datetime.datetime.now(tz=pytz.timezone(account.timezone)) + datetime.timedelta(hours=self._in_hours)
+            now = self.get_desired_time(account)
             assignments = HomeworkAssignment.objects.filter(
                 course__user=account,
                 due_date=now.date(),
@@ -35,7 +36,7 @@ class HomeworkDueInSixHoursNotifications(NotificationsConfig):
                     subject += f'In {self._in_hours} Hours'
                 else:
                     subject += 'Now'
-                self.current_notifications.append(Notification(
+                self.current_notifications.add(Notification(
                     subject=subject,
                     message=render_to_string(
                         'email/homework_assignments.txt',
@@ -48,6 +49,6 @@ class HomeworkDueInSixHoursNotifications(NotificationsConfig):
                 ))
 
 
-@register_class()
 class HomeworkDueNowNotifications(HomeworkDueInSixHoursNotifications):
+    current_notifications = set()
     _in_hours = 0

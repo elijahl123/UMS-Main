@@ -21,12 +21,29 @@ class BaseTestCase(TestCase):
         self.user.timezone = 'Pacific/Honolulu'
         self.user.school = 'University of Hawaii at Manoa',
         self.user.save()
+        self.user2 = Account.objects.create_user(
+            email='elijah.lopez.1972@gmail.com',
+            username='elijahl95',
+            first_name='Jude',
+            last_name='Lopez',
+            password='password1',
+        )
+        self.user2.timezone = 'Pacific/Honolulu'
+        self.user2.school = 'University of Hawaii at Manoa',
+        self.user2.save()
         self.course = Course.objects.create(
             name='CHEM 161',
             user=self.user,
             title='General Chemistry',
             teacher='Elijah Lopez',
             color='primary'
+        )
+        self.course2 = Course.objects.create(
+            name='MATH 242',
+            user=self.user2,
+            title='Calculus 1',
+            teacher='Jude Lopez',
+            color='secondary'
         )
         self.coursetime = CourseTime.objects.create(
             course=self.course,
@@ -50,5 +67,5 @@ class BaseTestCase(TestCase):
         )
         self.now = datetime.datetime.now(tz=pytz.timezone(self.user.timezone))
         self.today = self.now.date()
-        self.today_time = datetime.time(self.now.hour, self.now.minute, self.now.second)
+        self.today_time = datetime.time(self.now.hour, self.now.minute, 0)
 
