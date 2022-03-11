@@ -8,45 +8,71 @@ from homework.models import HomeworkAssignment
 from users.models import Account
 
 
-class HomeworkDueInSixHoursNotifications(NotificationsConfig):
-    _in_hours = 6
-
-    def get_desired_time(self, account):
-        return datetime.datetime.now(tz=pytz.timezone(account.timezone)) + datetime.timedelta(hours=self._in_hours)
+class HomeworkNotifications(NotificationsConfig):
 
     def get_notifications(self):
-        assignments_users = HomeworkAssignment.objects.filter(
-            completed=False,
-            course__user__homework_notifications=True,
-            course__user__timezone__isnull=False
-        ).values('course__user').annotate(assignment_count=Count('course__user')).order_by()
+        assignments_users = Account.objects.filter(
+            homework_notifications=True,
+            timezone__isnull=False
+        )
         for user in assignments_users:
-            account = Account.objects.get(id=user['course__user'])
-            now = self.get_desired_time(account)
             assignments = HomeworkAssignment.objects.filter(
-                course__user=account,
-                due_date=now.date(),
-                due_time__hour=now.hour,
-                due_time__minute=now.minute
+                course__user=user,
+                completed=False
             )
-            if assignments.exists():
-                subject = f'{assignments.count()} Homework Assignment{"s" if assignments.count() > 1 else ""} Due '
-                if self._in_hours:
-                    subject += f'In {self._in_hours} Hours'
+            time = datetime.datetime.now()
+            now = datetime.datetime(
+                time.year, time.month, time.day, time.hour, time.minute, 0
+            )
+
+            assignments_list = {}
+
+            for assignment in assignments:
+                if assignment.alert != -1:
+                    alert = assignment.due_datetime - datetime.timedelta(minutes=assignment.alert)
                 else:
-                    subject += 'Now'
+                    alert = None
+                if assignment.second_alert != -1:
+                    second_alert = assignment.due_datetime - datetime.timedelta(minutes=assignment.second_alert)
+                else:
+                    second_alert = None
+                if alert and alert == now:
+                    val = assignments_list.get(assignment.alert, None)
+                    if not val:
+                        assignments_list[assignment.alert] = [assignment]
+                    else:
+                        assignments_list[assignment.alert].append(assignment)
+                if second_alert and second_alert == now:
+                    val = assignments_list.get(assignment.second_alert, None)
+                    if not val:
+                        assignments_list[assignment.second_alert] = [assignment]
+                    else:
+                        assignments_list[assignment.second_alert].append(assignment)
+
+            print(assignments_list)
+
+            for key, val in assignments_list.items():
+                time_dict = {
+                    0: "Now",
+                    5: "in 5 minutes",
+                    10: "in 10 minutes",
+                    15: "in 15 minutes",
+                    30: "in 30 minutes",
+                    60: "in 1 hour",
+                    120: "in 2 hours",
+                    1440: "in 1 day",
+                    2880: "in 2 days",
+                    10080: "in 1 week"
+                }
+                subject = f'{len(val)} Homework Assignment{"s" if len(val) > 1 else ""} Due {time_dict.get(key, "Soon")}'
                 self.current_notifications.add(Notification(
                     subject=subject,
                     message=render_to_string(
                         'email/homework_assignments.txt',
                         context={
                             'subject': subject,
-                            'assignments': assignments
+                            'assignments': val
                         }
                     ),
-                    recipient=account
+                    recipient=user
                 ))
-
-
-class HomeworkDueNowNotifications(HomeworkDueInSixHoursNotifications):
-    _in_hours = 0

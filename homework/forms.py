@@ -1,10 +1,11 @@
 from django import forms
 
+from base.forms import ReminderFormMixin
 from courses.models import Course
 from homework.models import HomeworkAssignment, ReadingAssignment
 
 
-class HomeworkAssignmentForm(forms.ModelForm):
+class HomeworkAssignmentForm(forms.ModelForm, ReminderFormMixin):
     course = forms.ModelChoiceField(
         queryset=Course.objects.filter(user=1),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
@@ -30,7 +31,7 @@ class HomeworkAssignmentForm(forms.ModelForm):
         self.fields['course'].queryset = Course.objects.filter(user=user)
 
 
-class ReadingAssignmentForm(forms.ModelForm):
+class ReadingAssignmentForm(forms.ModelForm, ReminderFormMixin):
     course = forms.ModelChoiceField(
         queryset=Course.objects.filter(user=1),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})

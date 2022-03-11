@@ -43,6 +43,14 @@
                     Time</p>
                 <p class="lead"
                    style="font-weight: bold;text-align: left;">{{ assignment.due_time }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Alert</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.get_alert }}</p>
+                <p style="color: slategray;margin: 0;text-align: left;">
+                    Second Alert</p>
+                <p class="lead"
+                   style="font-weight: bold;text-align: left;">{{ assignment.get_second_alert }}</p>
                 {% if assignment.is_reading %}
                     <p style="color: slategray;margin: 0;text-align: left;">
                         Pages</p>

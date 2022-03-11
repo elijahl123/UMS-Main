@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from typing import List, Set
 
 from django.contrib.admin.sites import AlreadyRegistered
@@ -21,7 +21,14 @@ class NotificationsConfig:
     current_notifications: Set[Notification] = set()
 
     def __repr__(self):
-        return f"{self.__class__.__name__}(current_notifications={self.current_notifications})"
+        out = ''
+        for notification in self.current_notifications:
+            pretty_print = 'Notification:\n' \
+                          f'    subject: {notification.subject}\n' \
+                          f'    message: {notification.message.encode()}\n' \
+                          f'    recipient: {notification.recipient}\n'
+            out += pretty_print
+        return out
 
     def __hash__(self):
         return hash(tuple(self.current_notifications))
