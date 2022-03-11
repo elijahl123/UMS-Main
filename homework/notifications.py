@@ -20,7 +20,7 @@ class HomeworkNotifications(NotificationsConfig):
                 course__user=user,
                 completed=False
             )
-            time = datetime.datetime.now()
+            time = datetime.datetime.now(tz=pytz.timezone(user.timezone))
             now = datetime.datetime(
                 time.year, time.month, time.day, time.hour, time.minute, 0
             )
@@ -48,8 +48,6 @@ class HomeworkNotifications(NotificationsConfig):
                         assignments_list[assignment.second_alert] = [assignment]
                     else:
                         assignments_list[assignment.second_alert].append(assignment)
-
-            print(assignments_list)
 
             for key, val in assignments_list.items():
                 time_dict = {
