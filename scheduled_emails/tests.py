@@ -1,5 +1,6 @@
 # Create your tests here.
 import datetime
+import timeit
 
 from base.notifications import NotificationsFramework, NotificationsConfig
 from base.tests import BaseTestCase
