@@ -1,5 +1,6 @@
 import datetime
-from typing import Union, Type
+from dataclasses import dataclass
+from typing import Union, Type, List
 
 import numpy as np
 from django.contrib.contenttypes.models import ContentType
@@ -10,6 +11,22 @@ from pytz import timezone
 from base.models import ReminderMixin
 from courses.models import Course
 from users.models import Account
+
+
+class ReadingDay:
+    reading = None
+    date: datetime.date
+    start_page: int
+    end_page: int
+
+    def __init__(self, reading, date: datetime.date, start_page: int, end_page: int):
+        self.reading = reading
+        self.date = date
+        self.start_page = start_page
+        self.end_page = end_page
+
+    def __repr__(self):
+        return f"ReadingDay(reading={self.reading}, date={self.date}, start_page={self.start_page}, end_page={self.end_page})"
 
 
 class HomeworkManager(models.Manager):
@@ -43,9 +60,10 @@ class HomeworkManager(models.Manager):
 
         for assignment in self.all_assignments(user, **kwargs):
             used_dates.append(assignment.due_date)
-        for reading, reading_date, start_page, end_page in ReadingAssignment.get_recommended_readings(user):
-            if start_page and end_page:
-                used_dates.append(reading_date)
+
+        for day in ReadingAssignment.get_recommended_readings(user):
+            if day.start_page and day.end_page:
+                used_dates.append(day.date)
 
         return set(used_dates)
 
@@ -96,9 +114,9 @@ class ReadingAssignment(HomeworkAssignment):
         ordering = ['due_date', 'due_time', 'course']
 
     @staticmethod
-    def get_recommended_readings(user: Account) -> list:
+    def get_recommended_readings(user: Account) -> ReadingDay:
 
-        out_list = []
+        out_list: List[ReadingDay] = []
 
         reading: ReadingAssignment
         for reading in ReadingAssignment.objects.filter(course__user=user, completed=False):
@@ -118,7 +136,7 @@ class ReadingAssignment(HomeworkAssignment):
             daily_pages = list(map(lambda x: round(x), np.linspace(reading.start_page - 1, reading.end_page, delta)))
 
             for val in range(delta - 1):
-                out_list.append(
-                    (reading, uploaded + datetime.timedelta(days=val), daily_pages[val] + 1, daily_pages[val + 1]))
+                reading_day = ReadingDay(reading, uploaded + datetime.timedelta(days=val), daily_pages[val] + 1, daily_pages[val + 1])
+                out_list.append(reading_day)
 
         return out_list

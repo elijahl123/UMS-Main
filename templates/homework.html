@@ -49,31 +49,31 @@
                                             {% include 'snippets/homework_button.html' with assignment=reading %}
                                         {% endif %}
                                     {% endfor %}
-                                    {% for reading, reading_date, start_page, end_page in reading_assignments %}
-                                        {% if reading_date == date.date and start_page and end_page %}
-                                            <div class="d-flex align-items-center mb-3 list-group-item-{{ reading.course.color }} flex-column flex-md-row"
+                                    {% for reading_day in reading_assignments %}
+                                        {% if reading_day.date == date.date and reading_day.start_page and reading_day.end_page %}
+                                            <div class="d-flex align-items-center mb-3 list-group-item-{{ reading_day.reading.course.color }} flex-column flex-md-row"
                                                  style="padding: 1rem;border-radius: 8px;">
                                                 <h5 class="flex-grow-1 mb-3 mb-md-0" style="font-weight: bold;">Read
-                                                    {% if start_page == end_page %}
-                                                        pg. {{ start_page }}
+                                                    {% if reading_day.start_page == reading_day.end_page %}
+                                                        pg. {{ reading_day.start_page }}
                                                     {% else %}
-                                                        pgs. {{ start_page }} - {{ end_page }}
+                                                        pgs. {{ reading_day.start_page }} - {{ reading_day.end_page }}
                                                     {% endif %}
-                                                    of {{ reading.name }}</h5>
+                                                    of {{ reading_day.reading.name }}</h5>
                                                 <div class="d-flex flex-column flex-md-row">
                                                     <button role="button"
                                                             class="btn btn-primary btn-sm mb-3 mb-md-0 me-md-3"
                                                             style="font-weight: bold;" data-bs-toggle="modal"
-                                                            data-bs-target="#homework-{{ reading.id }}">View
+                                                            data-bs-target="#homework-{{ reading_day.reading.id }}">View
                                                     </button>
                                                     <a class="btn btn-success btn-sm mb-3 mb-md-0 me-md-3" role="button"
                                                        style="font-weight: bold;"
-                                                       href="{% url 'edit_reading_assignment' reading.id %}">Edit</a>
+                                                       href="{% url 'edit_reading_assignment' reading_day.reading.id %}">Edit</a>
                                                     <button role="button" class="btn btn-danger btn-sm"
                                                             style="font-weight: bold;" data-bs-toggle="modal"
-                                                            data-bs-target="#delete-item-{{ reading.id }}">Delete
+                                                            data-bs-target="#delete-item-{{ reading_day.reading.id }}">Delete
                                                     </button>
-                                                    {% include 'snippets/are_you_sure.html' with item=reading delete_url='delete_reading_assignment' %}
+                                                    {% include 'snippets/are_you_sure.html' with item=reading_day.reading delete_url='delete_reading_assignment' %}
                                                 </div>
                                             </div>
                                         {% endif %}
