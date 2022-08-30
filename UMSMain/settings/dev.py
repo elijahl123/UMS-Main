@@ -186,7 +186,7 @@ EMAIL_HOST_USER = 'untitledmanagementsoftware@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = "%%55JUde"
+EMAIL_HOST_PASSWORD = "uccdghsvasoujktt"
 
 ADMIN_EMAIL = "Untitled Management Software <untitledmanagementsoftware@gmail.com>"
 DEFAULT_FROM_EMAIL = ADMIN_EMAIL
