@@ -24,7 +24,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements.txt --force
         echo "DJANGO_SETTINGS_MODULE = 'UMSMain.settings.dev'" > os_info.py
     - name: Run Test
       run: |
