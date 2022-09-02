@@ -13,6 +13,7 @@ django-excel-response2==3.0.2
 django-rest-framework==0.1.0
 django-six==1.0.4
 djangorestframework==3.12.4
+djangorestframework-simplejwt==5.2.0
 google-api-core==2.0.1
 google-api-python-client==2.19.1
 google-auth==2.0.2
