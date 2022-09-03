@@ -6,29 +6,3 @@ from api.serializers import CourseSerializer, AssignmentSerializer, CoursetimeSe
 from courses.models import Course, CourseTime
 from homework.models import HomeworkAssignment
 
-
-class CourseApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        courses = Course.objects.filter(user=request.user.id)
-        serializer = CourseSerializer(courses, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class AssignmentApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        assignments = HomeworkAssignment.objects.filter(course__user=request.user)
-        serializer = AssignmentSerializer(assignments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class CoursetimeApiView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, *args, **kwargs):
-        coursetimes = CourseTime.objects.filter(course__user=request.user)
-        serializer = CoursetimeSerializer(coursetimes, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
