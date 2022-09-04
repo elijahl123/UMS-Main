@@ -32,7 +32,7 @@ class ReminderMixin(models.Model):
 
 
 class ApiMixin(models.Model):
-    uid = models.UUIDField(default=uuid.uuid4, editable=False)
+    # uid = models.UUIDField(default=uuid.uuid4(), editable=False)
 
     class Meta:
         abstract = True
