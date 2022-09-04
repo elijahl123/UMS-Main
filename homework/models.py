@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models import QuerySet
 from pytz import timezone
 
-from base.models import ReminderMixin
+from base.models import ReminderMixin, ApiMixin
 from courses.models import Course
 from users.models import Account
 
@@ -68,7 +68,7 @@ class HomeworkManager(models.Manager):
         return set(used_dates)
 
 
-class HomeworkAssignment(ReminderMixin):
+class HomeworkAssignment(ReminderMixin, ApiMixin):
     objects = HomeworkManager()
 
     name = models.CharField(max_length=120, null=True)

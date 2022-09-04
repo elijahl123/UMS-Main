@@ -5,12 +5,13 @@ from django.db import models
 from google.oauth2.credentials import Credentials
 
 from UMSMain.get_settings import settings
+from base.models import ApiMixin
 from users.models import Account
 
 
 # Create your models here.
 
-class CalendarEvent(models.Model):
+class CalendarEvent(ApiMixin):
     date = models.DateField(null=True)
     user = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)
     time = models.TimeField(help_text='Leave Blank if Event is All Day', null=True, blank=True)
@@ -37,7 +38,7 @@ class CalendarTokenManager(models.Manager):
             return None
 
 
-class CalendarToken(models.Model):
+class CalendarToken(ApiMixin):
     objects = CalendarTokenManager()
 
     user = models.ForeignKey(Account, null=True, on_delete=models.CASCADE)

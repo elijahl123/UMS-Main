@@ -10,6 +10,7 @@ from django.db import models
 from django.forms import model_to_dict
 
 from UMSMain.get_settings import settings
+from base.models import ApiMixin
 
 stripe.api_key = settings.STRIPE_API_KEY
 
@@ -71,7 +72,7 @@ class MyAccountManager(BaseUserManager):
             account.update_daily_reminders()
 
 
-class Account(AbstractBaseUser):
+class Account(AbstractBaseUser, ApiMixin):
     first_name = models.CharField(max_length=20, null=True)
     last_name = models.CharField(max_length=20, null=True)
     username = models.CharField(max_length=30, unique=True)

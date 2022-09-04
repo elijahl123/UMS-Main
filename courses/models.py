@@ -1,5 +1,6 @@
 from django.db import models
 
+from base.models import ApiMixin
 from users.models import Account
 
 # Create your models here.
@@ -20,7 +21,7 @@ def upload_course_file(instance, filename):
     return file_path
 
 
-class Course(models.Model):
+class Course(ApiMixin):
     name = models.CharField(blank=False, null=True, max_length=120,
                             help_text='Name of Class (CHEM 161, POLS 110, etc.)')
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
@@ -38,7 +39,7 @@ class Course(models.Model):
         unique_together = ['user', 'name']
 
 
-class CourseTime(models.Model):
+class CourseTime(ApiMixin):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     user = models.ForeignKey(Account, on_delete=models.CASCADE, null=True, blank=True)
     location = models.TextField(blank=True, null=True, help_text='Leave Blank if Class is Online')
@@ -58,7 +59,7 @@ class CourseTime(models.Model):
         ordering = ['start_time']
 
 
-class CourseFile(models.Model):
+class CourseFile(ApiMixin):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(null=True, max_length=120)
     file = models.FileField(null=True, upload_to=upload_course_file)
@@ -68,7 +69,7 @@ class CourseFile(models.Model):
         ordering = ['uploaded']
 
 
-class CourseLink(models.Model):
+class CourseLink(ApiMixin):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     title = models.CharField(null=True, max_length=120)
     link = models.URLField(null=True)

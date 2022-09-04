@@ -3,13 +3,14 @@ from django.db import models
 from django.dispatch import receiver
 
 from UMSMain.get_settings import settings
+from base.models import ApiMixin
 from users.models import Account
 
 stripe.api_key = settings.STRIPE_API_KEY
 from django.db.models.signals import post_save
 
 
-class CustomerProfile(models.Model):
+class CustomerProfile(ApiMixin):
     user = models.OneToOneField(
         Account,
         on_delete=models.CASCADE,

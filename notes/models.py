@@ -1,11 +1,12 @@
 from django.db import models
 
+from base.models import ApiMixin
 # Create your models here.
 from courses.models import Course
 from users.models import Account
 
 
-class Note(models.Model):
+class Note(ApiMixin):
     uploaded = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True)
