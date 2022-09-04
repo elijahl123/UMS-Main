@@ -49,7 +49,7 @@ jobs:
             IdentityFile ~/.ssh/staging.key
           END
         env:
-          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          SSH_USER: ${{ secrets.STAGING_SSH_USER_API }}
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY_API }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST_API }}
 
