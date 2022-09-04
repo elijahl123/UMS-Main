@@ -1,4 +1,4 @@
-name: Django API CI
+name: Django Api CI
 
 on:
   push:
@@ -49,9 +49,9 @@ jobs:
             IdentityFile ~/.ssh/staging.key
           END
         env:
-          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
-          SSH_KEY: ${{ secrets.STAGING_SSH_KEY_API }}
-          SSH_HOST: ${{ secrets.STAGING_SSH_HOST_API }}
+          SSH_USER: ${{ secrets.STAGING_SSH_API_USER }}
+          SSH_KEY: ${{ secrets.STAGING_SSH_API_KEY }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_API_HOST }}
 
       - name: Git Pull
         run: ssh staging "cd /home/ums/UMS-Main && source venv/bin/activate && git pull"
