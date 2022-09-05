@@ -1,10 +1,10 @@
-name: Django Api CI
+name: Django CI
 
 on:
   push:
-    branches: [ Api ]
+    branches: [ main ]
   pull_request:
-    branches: [ Api ]
+    branches: [ main ]
 
 jobs:
   test:
@@ -40,19 +40,19 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/staging.key
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/staging.key
           cat >>~/.ssh/config <<END
           Host staging
             HostName $SSH_HOST
             User $SSH_USER
             IdentityFile ~/.ssh/staging.key
-            StrictHostKeyChecking no
           END
         env:
           SSH_USER: ${{ secrets.STAGING_SSH_API_USER }}
           SSH_KEY: ${{ secrets.STAGING_SSH_API_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_API_HOST }}
-          
+
       - name: Git Pull
         run: ssh staging "cd /home/ums/UMS-Main && source venv/bin/activate && git pull"
 
