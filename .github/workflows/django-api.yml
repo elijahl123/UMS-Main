@@ -38,11 +38,11 @@ jobs:
     steps:
       - name: Configure SSH
         run: |
-          sudo mkdir -p ~/.ssh/
-          sudo echo "$SSH_KEY" > ~/.ssh/staging.key
-          sudo ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
-          sudo chmod 600 ~/.ssh/staging.key
-          sudo cat >>~/.ssh/config <<END
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
           Host staging
             HostName $SSH_HOST
             User $SSH_USER
