@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.db.models import QuerySet
 
 
 class UUIDModelHelper:
@@ -46,6 +47,11 @@ class ReminderMixin(models.Model):
     class Meta:
         abstract = True
 
+
+def gen_uids(queryset: QuerySet):
+    for row in queryset:
+        row.uid = uuid.uuid4()
+        row.save(update_fields=['uid'])
 
 class ApiMixin(models.Model):
     uid = models.UUIDField(null=True, default=uuid.uuid4)

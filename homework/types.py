@@ -1,6 +1,18 @@
 from graphene_django import DjangoObjectType
 
+from homework.models import HomeworkAssignment
 
-class BaseType(DjangoObjectType):
+
+class HomeworkAssignmentType(DjangoObjectType):
     class Meta:
-        pass
+        model = HomeworkAssignment
+        fields = (
+            'uid',
+            'name',
+            'description',
+            'course',
+            'due_date',
+            'due_time',
+            'link',
+            'completed'
+        )
