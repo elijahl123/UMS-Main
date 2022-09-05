@@ -34,23 +34,20 @@ class CourseTimeType(DjangoObjectType):
 
 class CourseFileType(DjangoObjectType):
     class Meta:
-        model = CourseTime
+        model = CourseFile
         fields = [
             'uid',
             'course',
             'title',
-            'file',
-            'uploaded'
         ]
 
 
 class CourseLinkType(DjangoObjectType):
     class Meta:
-        model = CourseTime
+        model = CourseLink
         fields = [
             'uid',
             'course',
             'title',
             'link',
-            'uploaded',
         ]
