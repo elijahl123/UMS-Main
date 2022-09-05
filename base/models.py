@@ -2,6 +2,22 @@ import uuid
 
 from django.db import models
 
+
+class UUIDModelHelper:
+    app: str
+    model: str
+
+    def __init__(self, app: str, model: str):
+        self.app = app
+        self.model = model
+
+    def gen_uuid(self, apps, schema_editor):
+        model_obj = apps.get_model(self.app, self.model)
+        for row in model_obj.objects.all():
+            row.uuid = uuid.uuid4()
+            row.save(update_fields=['uid'])
+
+
 reminder_choices = [
     (-1, "None"),
     (0, "At time of event"),
@@ -32,7 +48,13 @@ class ReminderMixin(models.Model):
 
 
 class ApiMixin(models.Model):
-    uid = models.UUIDField(null=True)
+    uid = models.UUIDField(null=True, default=uuid.uuid4)
+
+    def get_uid(self) -> uuid.UUID:
+        if self.uid is None:
+            self.uid = uuid.uuid4()
+            self.save(update_fields=['uid'])
+        return self.uid
 
     class Meta:
         abstract = True
