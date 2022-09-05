@@ -62,4 +62,4 @@ jobs:
 
       - name: Restart the server
         if: ${{ always() }}
-        run: sudo ssh staging 'sudo shutdown -r now'
+        run: ssh staging 'sudo shutdown -r now'
