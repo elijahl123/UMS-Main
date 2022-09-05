@@ -13,7 +13,7 @@ class HomeworkAssignmentForm(forms.ModelForm, ReminderFormMixin):
 
     class Meta:
         model = HomeworkAssignment
-        exclude = ['completed']
+        exclude = ['completed', 'uid']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'description': forms.Textarea(attrs={'class': 'form-control form-control-lg', 'rows': '4'}),
@@ -39,7 +39,7 @@ class ReadingAssignmentForm(forms.ModelForm, ReminderFormMixin):
 
     class Meta:
         model = ReadingAssignment
-        exclude = ['completed', 'modified']
+        exclude = ['completed', 'modified', 'uid']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'description': forms.Textarea(attrs={'class': 'form-control form-control-lg', 'rows': '4'}),

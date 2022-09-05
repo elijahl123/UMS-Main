@@ -6,7 +6,7 @@ from class_calendar.models import CalendarEvent
 class AddEvent(forms.ModelForm):
     class Meta:
         model = CalendarEvent
-        exclude = []
+        exclude = ['uid']
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control form-control-lg', 'type': 'date'}),
             'time': forms.TimeInput(attrs={'class': 'form-control form-control-lg', 'type': 'time'}),

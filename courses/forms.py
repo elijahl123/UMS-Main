@@ -9,7 +9,7 @@ from courses.models import *
 class CourseForm(ModelForm):
     class Meta:
         model = Course
-        exclude = []
+        exclude = ['uid']
 
     def __init__(self, *args, **kwargs):
         super(CourseForm, self).__init__(*args, **kwargs)
@@ -31,7 +31,7 @@ class CourseTimeForm(ModelForm):
 
     class Meta:
         model = CourseTime
-        exclude = []
+        exclude = ['uid']
 
 
 class CourseTimeEditForm(ModelForm):
@@ -57,7 +57,7 @@ class CourseTimeEditForm(ModelForm):
 
     class Meta:
         model = CourseTime
-        exclude = []
+        exclude = ['uid']
         widgets = {
             'start_time': forms.TimeInput(
                 attrs={'class': 'form-control form-control-lg', 'type': 'time', 'min': '07:00', 'max': '22:00'}),
@@ -92,7 +92,7 @@ class CourseFileForm(forms.ModelForm):
 
     class Meta:
         model = CourseFile
-        exclude = ['uploaded']
+        exclude = ['uploaded', 'uid']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'file': forms.ClearableFileInput(attrs={'class': 'form-control-file', 'style': 'width: 100%'}),
@@ -116,7 +116,7 @@ class CourseLinkForm(forms.ModelForm):
 
     class Meta:
         model = CourseLink
-        exclude = ['uploaded']
+        exclude = ['uploaded', 'uid']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control form-control-lg'}),
             'link': forms.URLInput(attrs={'class': 'form-control form-control-lg'}),

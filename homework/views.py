@@ -50,7 +50,7 @@ class AddAssignmentView(ModelCreationView):
 
     form_title = 'Add Assignment'
     form_description = 'Here you can add an assignment for a specific class'
-    excluded_fields = []
+    excluded_fields = ['uid']
     success_message = 'Assignment added successfully'
     require_user = True
 
@@ -63,7 +63,7 @@ class EditAssignmentView(ModelEditView):
 
     form_title = 'Edit Assignment'
     form_description = 'Here you can edit an assignment for a specific class'
-    excluded_fields = []
+    excluded_fields = ['uid']
     success_message = 'Assignment edited successfully'
     require_user = True
 
@@ -83,7 +83,7 @@ class AddReadingAssignment(ModelCreationView):
     form_description = 'Here you can add a reading assignment for your class. This is different from a ' \
                        'regular assignment because UMS will evenly distribute your reading automatically ' \
                        'for you'
-    excluded_fields = ['include_due_date']
+    excluded_fields = ['include_due_date', 'uid']
     success_message = 'Reading Assignment added successfully'
     require_user = True
 
@@ -98,7 +98,7 @@ class EditReadingAssignment(ModelEditView):
     form_description = 'Here you can edit a reading assignment for your class. This is different from a ' \
                        'regular assignment because UMS will evenly distribute your reading automatically ' \
                        'for you'
-    excluded_fields = ['include_due_date']
+    excluded_fields = ['include_due_date', 'uid']
     success_message = 'Reading Assignment edited successfully'
     require_user = True
 
