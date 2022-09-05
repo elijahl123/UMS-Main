@@ -1,10 +1,9 @@
 from graphene_django import DjangoObjectType
 
-from base.types import BaseType
 from class_calendar.models import CalendarEvent
 
 
-class CalendarEventType(BaseType):
+class CalendarEventType(DjangoObjectType):
     class Meta:
         model = CalendarEvent
         fields = (

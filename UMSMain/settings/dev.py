@@ -95,6 +95,7 @@ SIMPLE_JWT = {
 }
 
 GRAPHENE = {
+    'SCHEMA': 'class_calendar.schema.schema',
 }
 
 MIDDLEWARE = [
