@@ -96,6 +96,7 @@ SIMPLE_JWT = {
 }
 
 GRAPHENE = {
+    'SCHEMA': 'base.schema.schema',
 }
 
 MIDDLEWARE = [
