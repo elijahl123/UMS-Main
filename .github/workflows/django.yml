@@ -49,9 +49,9 @@ jobs:
             IdentityFile ~/.ssh/staging.key
           END
         env:
-          SSH_USER: ${{ secrets.API_USER }}
-          SSH_KEY: ${{ secrets.API_KEY }}
-          SSH_HOST: ${{ secrets.API_HOST }}
+          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
 
       - name: Git Pull
         run: ssh staging "cd /home/ums/UMS-Main && source venv/bin/activate && git pull"
