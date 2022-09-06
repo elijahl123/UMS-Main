@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-zan^-=q)&l#lm%^wgsc+jss4lgk6!2!l=wtf4jg=qhjafd6=c-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['client.untitledmanagementsoftware.com', 'api.untitledmanagementsoftware.com']
+ALLOWED_HOSTS = ['api.untitledmanagementsoftware.com']
+
+CORS_ORIGIN_WHITELIST = [
+    'https://api.untitledmanagementsoftware.com',
+]
 
 # Application definition
 
@@ -41,6 +45,7 @@ INSTALLED_APPS = [
     'storages',
     'rest_framework',
     'graphene_django',
+    'corsheaders',
 
     'allauth',
     'allauth.account',
@@ -100,6 +105,7 @@ GRAPHENE = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
