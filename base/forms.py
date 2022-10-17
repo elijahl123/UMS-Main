@@ -1,6 +1,17 @@
 from django import forms
+from graphene_django.forms.mutation import DjangoFormMutation
 
 from base.models import reminder_choices
+
+
+class UmsFormMutation(DjangoFormMutation):
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def perform_mutate(cls, form, info):
+        form.save(info.context)
+        return cls(errors=[], **form.cleaned_data)
 
 
 class ReminderFormMixin(forms.Form):
@@ -21,5 +32,3 @@ class ReminderFormMixin(forms.Form):
         fields.append(fields.pop(fields.index('alert')))
         fields.append(fields.pop(fields.index('second_alert')))
         self.order_fields(field_order=fields)
-
-

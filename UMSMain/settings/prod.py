@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'graphene_django',
     'corsheaders',
+    "django_filters",
 
     'allauth',
     'allauth.account',

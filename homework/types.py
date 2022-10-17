@@ -1,3 +1,4 @@
+import graphene
 from graphene_django import DjangoObjectType
 
 from homework.models import HomeworkAssignment
@@ -16,3 +17,14 @@ class HomeworkAssignmentType(DjangoObjectType):
             'link',
             'completed'
         )
+        filter_fields = [
+            'uid',
+            'name',
+            'description',
+            'course',
+            'due_date',
+            'due_time',
+            'link',
+            'completed'
+        ]
+        interfaces = (graphene.relay.Node,)
