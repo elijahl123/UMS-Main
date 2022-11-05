@@ -9,6 +9,8 @@ from base.models import gen_uids
 from class_calendar.types import *
 from courses.types import *
 from homework.types import *
+from notes.models import Note
+from notes.types import NoteType
 from users.mutations import SignupMutation, AddEmailMutation, ChangePasswordMutation, SetPasswordMutation, \
     ResetPasswordMutation, ResetPasswordKeyMutation
 from users.types import *
@@ -24,6 +26,7 @@ class Query(graphene.ObjectType):
     course_files = DjangoFilterConnectionField(CourseFileType, token=graphene.String())
     course_links = DjangoFilterConnectionField(CourseLinkType, token=graphene.String())
     homework_assignments = DjangoFilterConnectionField(HomeworkAssignmentType, token=graphene.String())
+    notes = DjangoFilterConnectionField(NoteType, token=graphene.String())
 
     get_schedule = graphene.List(CourseTimeType, token=graphene.String(), date=graphene.Date())
 
@@ -65,6 +68,11 @@ class Query(graphene.ObjectType):
     def resolve_homework_assignments(self, info, **kwargs) -> QuerySet:
         gen_uids(HomeworkAssignment.objects.filter(uid__isnull=True))
         return HomeworkAssignment.objects.filter(course__user__uid=info.context.user.get_uid())
+
+    @login_required
+    def resolve_notes(self, info, **kwargs) -> QuerySet:
+        gen_uids(Note.objects.filter(uid__isnull=True))
+        return Note.objects.filter(course__user__uid=info.context.user.get_uid())
 
     @login_required
     def resolve_get_schedule(self, info, **kwargs) -> QuerySet:
