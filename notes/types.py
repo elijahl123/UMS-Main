@@ -20,7 +20,7 @@ class NoteType(DjangoObjectType):
             'uid',
             'uploaded',
             'modified',
-            'course',
+            'course__uid',
             'user',
             'title',
             'content'

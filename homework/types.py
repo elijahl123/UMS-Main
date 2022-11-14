@@ -21,7 +21,7 @@ class HomeworkAssignmentType(DjangoObjectType):
             'uid',
             'name',
             'description',
-            'course',
+            'course__uid',
             'due_date',
             'due_time',
             'link',

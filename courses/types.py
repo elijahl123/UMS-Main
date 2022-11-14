@@ -42,7 +42,7 @@ class CourseTimeType(DjangoObjectType):
         ]
         filter_fields = [
             'uid',
-            'course',
+            'course__uid',
             'user',
             'location',
             'start_time',
@@ -64,7 +64,7 @@ class CourseFileType(DjangoObjectType):
         ]
         filter_fields = [
             'uid',
-            'course',
+            'course__uid',
             'title',
         ]
         interfaces = (graphene.relay.Node,)
@@ -81,7 +81,7 @@ class CourseLinkType(DjangoObjectType):
         ]
         filter_fields = [
             'uid',
-            'course',
+            'course__uid',
             'title',
             'link',
         ]
