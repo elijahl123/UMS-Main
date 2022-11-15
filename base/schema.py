@@ -6,8 +6,11 @@ from graphql_jwt.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from base.models import gen_uids
+from class_calendar.mutations import AddEventMutation
 from class_calendar.types import *
+from courses.mutations import AddCourseMutation, AddCourseTimeMutation, AddCourseFileMutation, AddCourseLinkMutation
 from courses.types import *
+from homework.mutations import AddHomeworkAssignmentMutation
 from homework.types import *
 from notes.models import Note
 from notes.types import NoteType
@@ -94,6 +97,13 @@ class Mutation(graphene.ObjectType):
     set_password = SetPasswordMutation.Field()
     reset_password = ResetPasswordMutation.Field()
     reset_password_key = ResetPasswordKeyMutation.Field()
+
+    add_calendar_event = AddEventMutation.Field()
+    add_course = AddCourseMutation.Field()
+    add_course_time = AddCourseTimeMutation.Field()
+    add_course_file = AddCourseFileMutation.Field()
+    add_course_link = AddCourseLinkMutation.Field()
+    add_homework_assignment = AddHomeworkAssignmentMutation.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

@@ -84,3 +84,4 @@ class ResetPasswordKeyMutation(UmsFormMutation):
     def perform_mutate(cls, form, info):
         form.save(info.context)
         return cls(errors=[], **form.cleaned_data)
+
