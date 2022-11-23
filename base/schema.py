@@ -6,7 +6,7 @@ from graphql_jwt.decorators import login_required
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from base.models import gen_uids
-from class_calendar.mutations import AddEventMutation
+from class_calendar.mutations import AddCalendarEventMutation
 from class_calendar.types import *
 from courses.mutations import AddCourseMutation, AddCourseTimeMutation, AddCourseFileMutation, AddCourseLinkMutation
 from courses.types import *
@@ -98,7 +98,7 @@ class Mutation(graphene.ObjectType):
     reset_password = ResetPasswordMutation.Field()
     reset_password_key = ResetPasswordKeyMutation.Field()
 
-    add_calendar_event = AddEventMutation.Field()
+    add_calendar_event = AddCalendarEventMutation.Field()
     add_course = AddCourseMutation.Field()
     add_course_time = AddCourseTimeMutation.Field()
     add_course_file = AddCourseFileMutation.Field()

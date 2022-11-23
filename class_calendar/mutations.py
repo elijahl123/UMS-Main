@@ -5,7 +5,7 @@ from class_calendar.forms import AddEvent
 from class_calendar.types import CalendarEventType
 
 
-class AddEventMutation(DjangoModelFormMutation):
+class AddCalendarEventMutation(DjangoModelFormMutation):
     data = graphene.Field(CalendarEventType)
 
     class Meta:
