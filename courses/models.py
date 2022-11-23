@@ -45,7 +45,9 @@ class CourseTime(ApiMixin):
     location = models.TextField(blank=True, null=True, help_text='Leave Blank if Class is Online')
     start_time = models.TimeField(blank=False, null=True)
     end_time = models.TimeField(blank=False, null=True)
-    weekday = models.TextField(max_length=120, default='Sunday', verbose_name='Weekdays')
+    weekday = models.TextField(max_length=120, default='Sunday', verbose_name='Weekdays', help_text='Hold CTRL or CMD '
+                                                                                                    'to Select '
+                                                                                                    'Multiple Days')
     link = models.URLField(max_length=500, null=True, blank=True)
     zoom_password = models.TextField(max_length=120, null=True, blank=True)
 
