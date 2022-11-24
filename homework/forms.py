@@ -1,13 +1,14 @@
 from django import forms
 
 from base.forms import ReminderFormMixin
+from base.middleware import local
 from courses.models import Course
 from homework.models import HomeworkAssignment, ReadingAssignment
 
 
 class HomeworkAssignmentForm(forms.ModelForm, ReminderFormMixin):
     course = forms.ModelChoiceField(
-        queryset=Course.objects.filter(user=1),
+        queryset=Course.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
     )
 
@@ -25,15 +26,12 @@ class HomeworkAssignmentForm(forms.ModelForm, ReminderFormMixin):
 
     def __init__(self, *args, **kwargs):
         # Defines the user from the kwargs to prevent the multiple values error
-        user = kwargs.pop('user', None)
         super(HomeworkAssignmentForm, self).__init__(*args, **kwargs)
-        # Changes the user from the default to the request
-        self.fields['course'].queryset = Course.objects.filter(user=user)
 
 
 class ReadingAssignmentForm(forms.ModelForm, ReminderFormMixin):
     course = forms.ModelChoiceField(
-        queryset=Course.objects.filter(user=1),
+        queryset=Course.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
     )
 

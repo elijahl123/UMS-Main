@@ -5,6 +5,8 @@ from courses.models import *
 
 
 class CourseType(DjangoObjectType):
+    id = graphene.ID(source='pk', required=True)
+
     class Meta:
         model = Course
         fields = [

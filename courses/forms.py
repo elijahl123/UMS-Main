@@ -51,7 +51,7 @@ class CourseTimeEditForm(ModelForm):
     )
 
     course = forms.ModelChoiceField(
-        queryset=Course.objects.filter(user=1),
+        queryset=Course.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
     )
 
@@ -86,7 +86,7 @@ class CourseTimeEditForm(ModelForm):
 
 class CourseFileForm(forms.ModelForm):
     course = forms.ModelChoiceField(
-        queryset=Course.objects.filter(user=1),
+        queryset=Course.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
     )
 
@@ -110,7 +110,7 @@ class CourseFileForm(forms.ModelForm):
 
 class CourseLinkForm(forms.ModelForm):
     course = forms.ModelChoiceField(
-        queryset=Course.objects.filter(user=1),
+        queryset=Course.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control form-control-lg'})
     )
 

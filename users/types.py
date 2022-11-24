@@ -5,6 +5,8 @@ from users.models import Account
 
 
 class AccountType(DjangoObjectType):
+    id = graphene.ID(source='pk', required=True)
+
     class Meta:
         model = Account
         fields = (

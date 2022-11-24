@@ -15,7 +15,9 @@ class HomeworkAssignmentType(DjangoObjectType):
             'due_date',
             'due_time',
             'link',
-            'completed'
+            'completed',
+            'alert',
+            'second_alert'
         )
         filter_fields = [
             'uid',
@@ -25,6 +27,8 @@ class HomeworkAssignmentType(DjangoObjectType):
             'due_date',
             'due_time',
             'link',
-            'completed'
+            'completed',
+            'alert',
+            'second_alert'
         ]
         interfaces = (graphene.relay.Node,)
