@@ -52,6 +52,7 @@ jobs:
           SSH_USER: ${{ secrets.STAGING_SSH_USER }}
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          STRIPE_API_SECRET: ${{ secrets.STRIPE_API_SECRET }}
 
       - name: Git Pull
         run: ssh staging "cd /home/ums/UMS-Main && source venv/bin/activate && git pull"
