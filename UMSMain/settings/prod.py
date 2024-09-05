@@ -196,10 +196,10 @@ DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 
 # Use AWS_S3_ENDPOINT_URL here if you haven't enabled the CDN and got a custom domain.
 STATIC_URL = '{}/{}/'.format(AWS_S3_ENDPOINT_URL, 'static')
-# STATIC_ROOT = 'static/'
+STATIC_ROOT = 'static/'
 
 MEDIA_URL = '{}/{}/'.format(AWS_S3_ENDPOINT_URL, 'media')
-# MEDIA_ROOT = 'media/'
+MEDIA_ROOT = 'media/'
 
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/accounts/login/'
@@ -209,7 +209,7 @@ EMAIL_HOST_USER = 'untitledmanagementsoftware@gmail.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = "jrqgciivjapbakkx"
+EMAIL_HOST_PASSWORD = "ncxobmnjypqrntfk"
 
 ADMIN_EMAIL = "Untitled Management Software <untitledmanagementsoftware@gmail.com>"
 DEFAULT_FROM_EMAIL = ADMIN_EMAIL
