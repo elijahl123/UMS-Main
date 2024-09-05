@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv, dotenv_values
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -261,7 +264,7 @@ GOOGLE_API_CREDENTIALS = {
 RECAPTCHA_SITE_KEY = '6Le2Y4UcAAAAAOMRr_KcOWTH77zZ_915Z4LA4zPn'
 RECAPTCHA_SECRET_KEY = '6Le2Y4UcAAAAAI-Zz6P9_OziS1WSWXdn3TRqOXRg'
 
-STRIPE_API_KEY = 'sk_test_51Ja9LKHqoFWABg3Gh7eMg2glnzZHCSFT7GEQ9XOt9P03jIvAOLoxep7EMXvaI1vtwuRqATXAJDD9esrEygZi53Jv006kxeByvi'
+STRIPE_API_KEY = os.getenv('STRIPE_TEST_SECRET_KEY')
 STRIPE_PUBLIC_KEY = 'pk_test_51Ja9LKHqoFWABg3G5JNfwAlQIrmWAAQqrKBCqYNrM7kPZsbg3BnQQLzK0mlYSDwZjjgSb9in8v10l91H4VavRj1K000PDTnNY7'
 STRIPE_SUBSCRIPTION_PRICE_ID_MONTHLY = 'price_1JuwOOHqoFWABg3Gwy2cENja'
 STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY = 'price_1JuwNzHqoFWABg3GsgyXivZF'

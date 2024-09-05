@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv, dotenv_values
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -241,7 +244,7 @@ GOOGLE_API_CREDENTIALS = {
 RECAPTCHA_SITE_KEY = '6Le2Y4UcAAAAAOMRr_KcOWTH77zZ_915Z4LA4zPn'
 RECAPTCHA_SECRET_KEY = '6Le2Y4UcAAAAAI-Zz6P9_OziS1WSWXdn3TRqOXRg'
 
-STRIPE_API_KEY = os.environ['STRIPE_API_SECRET']
+STRIPE_API_KEY = os.getenv('STRIPE_API_SECRET')
 STRIPE_PUBLIC_KEY = 'pk_live_51Ja9LKHqoFWABg3Gc6XbaoIjXFGzhHOSU9wtqra5QqMtG8KtrL05kzoWl2ttizSJRKS8FNZtkOzWzP2hw4DDRUiU00tQ7CsGKG'
 STRIPE_SUBSCRIPTION_PRICE_ID_MONTHLY = 'price_1JuwRaHqoFWABg3GZ5CLu0xE'
 STRIPE_SUBSCRIPTION_PRICE_ID_YEARLY = 'price_1JuwQeHqoFWABg3GKWYDaboy'
